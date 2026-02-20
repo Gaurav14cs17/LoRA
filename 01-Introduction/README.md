@@ -89,17 +89,17 @@ The key insight is elegantly simple:
 
 > The change in weights during fine-tuning has a **low intrinsic rank**.
 
-Instead of updating a weight matrix $ W \in \mathbb{R}^{d \times k} $ directly, LoRA constrains the update to a low-rank decomposition:
+Instead of updating a weight matrix $W \in \mathbb{R}^{d \times k}$ directly, LoRA constrains the update to a low-rank decomposition:
 
 $$
 W' = W + \Delta W = W + BA
 $$
 
 where:
-- $ W \in \mathbb{R}^{d \times k} $ — the original pre-trained weight (frozen)
-- $ B \in \mathbb{R}^{d \times r} $ — the low-rank down-projection
-- $ A \in \mathbb{R}^{r \times k} $ — the low-rank up-projection
-- $ r \ll \min(d, k) $ — the rank (typically 4, 8, 16, or 64)
+- $W \in \mathbb{R}^{d \times k}$ — the original pre-trained weight (frozen)
+- $B \in \mathbb{R}^{d \times r}$ — the low-rank down-projection
+- $A \in \mathbb{R}^{r \times k}$ — the low-rank up-projection
+- $r \ll \min(d, k)$ — the rank (typically 4, 8, 16, or 64)
 
 ### How the Forward Pass Changes
 
@@ -137,17 +137,17 @@ The authors of LoRA built on a critical observation from prior work (Aghajanyan 
 
 ### The Intrinsic Dimensionality Argument
 
-When you fine-tune a model from pre-trained weights $ W_0 $ to task-specific weights $ W_0 + \Delta W $:
-- The matrix $ \Delta W $ (the change) does not need to be full rank
-- Empirically, $ \Delta W $ can be well-approximated by a matrix of rank $ r $, where $ r $ is very small relative to the dimensions of $ W $
+When you fine-tune a model from pre-trained weights $W_0$ to task-specific weights $W_0 + \Delta W$:
+- The matrix $\Delta W$ (the change) does not need to be full rank
+- Empirically, $\Delta W$ can be well-approximated by a matrix of rank $r$, where $r$ is very small relative to the dimensions of $W$
 - This means the "useful" information learned during fine-tuning lies in a low-dimensional subspace
 
 ### Empirical Evidence
 
 The original paper showed that:
-1. LoRA with rank $ r = 4 $ matches or exceeds full fine-tuning on GPT-3 175B
-2. Performance does **not** significantly improve beyond $ r = 8 $ for most tasks
-3. The learned $ \Delta W $ matrices from full fine-tuning indeed have rapidly decaying singular values
+1. LoRA with rank $r = 4$ matches or exceeds full fine-tuning on GPT-3 175B
+2. Performance does **not** significantly improve beyond $r = 8$ for most tasks
+3. The learned $\Delta W$ matrices from full fine-tuning indeed have rapidly decaying singular values
 
 ---
 
@@ -159,12 +159,12 @@ The original paper showed that:
 
 | Advantage | Description |
 |-----------|-------------|
-| **No additional inference latency** | Merge $ BA $ into $ W $ after training: $ W' = W + BA $ |
+| **No additional inference latency** | Merge $BA$ into $W$ after training: $W' = W + BA$ |
 | **Tiny adapter size** | A LoRA adapter for a 7B model can be < 10 MB |
 | **Task switching** | Swap adapters by simple addition/subtraction on the base weights |
 | **Composable** | Multiple LoRA adapters can be combined |
 | **Compatible** | Works with any linear layer — attention, FFN, embeddings |
-| **Memory efficient** | Only $ B $, $ A $, and their gradients/optimizer states need GPU memory |
+| **Memory efficient** | Only $B$, $A$, and their gradients/optimizer states need GPU memory |
 
 ---
 
@@ -198,7 +198,7 @@ The original LoRA paper found that applying LoRA to **Q and V projections** give
 ## Key Takeaways
 
 1. Full fine-tuning is impractical for most teams — LoRA is the dominant solution
-2. LoRA decomposes weight updates into $ \Delta W = BA $ with rank $ r \ll \min(d, k) $
+2. LoRA decomposes weight updates into $\Delta W = BA$ with rank $r \ll \min(d, k)$
 3. Only `B` and `A` are trained; the original weights stay frozen
 4. After training, `BA` merges into `W` for zero-cost inference
 5. Adapters are tiny (~10 MB for a 7B model) and swappable

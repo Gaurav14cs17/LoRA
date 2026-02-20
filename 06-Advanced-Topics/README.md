@@ -544,13 +544,13 @@ $$
 
 **Why this works (proof sketch):**
 
-For any input $ x $ processed by old adapter $ i $, the old adapter's output direction is $ B_i (A_i x) $. The new adapter's output direction is $ B_t (A_t x) $. Since $ B_t^T B_i = 0 $, these output directions are orthogonal:
+For any input $x$ processed by old adapter $i$, the old adapter's output direction is $B_i (A_i x)$. The new adapter's output direction is $B_t (A_t x)$. Since $B_t^T B_i = 0$, these output directions are orthogonal:
 
 $$
 \langle B_i(A_i x), \, B_t(A_t x) \rangle = (A_i x)^T \underbrace{B_i^T B_t}_{= \, \mathbf{0}} (A_t x) = 0
 $$
 
-Therefore, the new adapter **cannot** alter the component of the output that the old adapter controls. Task $ i $'s learned behavior is perfectly preserved. See [Chapter 3, Section 3.15](../03-Types-of-LoRA/README.md#315-o-lora-orthogonal-lora) for the full formulation.
+Therefore, the new adapter **cannot** alter the component of the output that the old adapter controls. Task $i$'s learned behavior is perfectly preserved. See [Chapter 3, Section 3.15](../03-Types-of-LoRA/README.md#315-o-lora-orthogonal-lora) for the full formulation.
 
 **Practical enforcement:**
 
@@ -563,7 +563,7 @@ def orthogonal_projection(B_new, B_old_list):
     return B_new
 ```
 
-**Capacity limit**: With rank $ r $ per adapter and hidden dimension $ d $, at most $ \lfloor d/r \rfloor $ orthogonal adapters fit. For $ d=4096, r=16 $: **256 tasks**.
+**Capacity limit**: With rank $r$ per adapter and hidden dimension $d$, at most $\lfloor d/r \rfloor$ orthogonal adapters fit. For $d=4096, r=16$: **256 tasks**.
 
 ---
 

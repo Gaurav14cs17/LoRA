@@ -63,16 +63,16 @@
 
 ### Core Idea
 
-Freeze the pre-trained weight $ W_0 $ and learn a low-rank update:
+Freeze the pre-trained weight $W_0$ and learn a low-rank update:
 
 $$
 W = W_0 + \frac{\alpha}{r} BA
 $$
 
 ### Key Properties
-- $ B $ initialized to zero, $ A $ initialized with Kaiming/Gaussian
+- $B$ initialized to zero, $A$ initialized with Kaiming/Gaussian
 - Applied to attention projections (Q, V recommended)
-- Rank $ r $ typically 4-64
+- Rank $r$ typically 4-64
 - **Zero** inference latency after merging
 
 ### Application to Different Layer Types
@@ -164,7 +164,7 @@ $$
 \text{NF4}: \text{quantile}_{i} = \Phi^{-1}\left(\frac{i}{2^k + 1}\right), \quad k = 4
 $$
 
-where $ \Phi^{-1} $ is the inverse normal CDF.
+where $\Phi^{-1}$ is the inverse normal CDF.
 
 2. **Double Quantization**: Quantize the quantization constants themselves
 
@@ -172,7 +172,7 @@ $$
 W^{\text{4bit}} = \text{round}\left(\frac{W_0}{s}\right), \quad s = \text{absmax}(W_0^{\text{block}}) / 7
 $$
 
-Then quantize $ s $ with 8-bit:
+Then quantize $s$ with 8-bit:
 
 $$
 s^{\text{8bit}} = \text{round}\left(\frac{s}{s_s}\right)
@@ -212,19 +212,19 @@ $$
 $$
 
 where:
-- $ P \in \mathbb{R}^{d \times r} $ — left singular vectors (orthogonal)
-- $ \Lambda = \text{diag}(\lambda_1, \ldots, \lambda_r) $ — singular values (importance scores)
-- $ Q \in \mathbb{R}^{r \times k} $ — right singular vectors (orthogonal)
+- $P \in \mathbb{R}^{d \times r}$ — left singular vectors (orthogonal)
+- $\Lambda = \text{diag}(\lambda_1, \ldots, \lambda_r)$ — singular values (importance scores)
+- $Q \in \mathbb{R}^{r \times k}$ — right singular vectors (orthogonal)
 
 ### Importance Scoring
 
-The importance of each singular value triplet $ (\mathbf{p}_i, \lambda_i, \mathbf{q}_i) $ is measured by:
+The importance of each singular value triplet $(\mathbf{p}_i, \lambda_i, \mathbf{q}_i)$ is measured by:
 
 $$
 S_i = \lambda_i + \beta_1 \cdot \|\nabla_{\lambda_i} \mathcal{L}\| + \beta_2 \cdot \lambda_i \cdot \|\nabla_{\lambda_i} \mathcal{L}\|
 $$
 
-Low-importance components are pruned (set $ \lambda_i = 0 $), reallocating the rank budget to more important layers.
+Low-importance components are pruned (set $\lambda_i = 0$), reallocating the rank budget to more important layers.
 
 ### Rank Scheduling
 
@@ -253,7 +253,7 @@ until the total parameter budget is met.
 
 ### Core Idea
 
-Use **different learning rates** for matrices $ A $ and $ B $:
+Use **different learning rates** for matrices $A$ and $B$:
 
 $$
 \eta_B = \eta, \quad \eta_A = \lambda \cdot \eta, \quad \lambda \gg 1
@@ -268,11 +268,11 @@ $$
 $$
 
 Using equal learning rates (as in original LoRA) leads to **suboptimal convergence** because:
-- $ A \in \mathbb{R}^{r \times k} $ has different gradient statistics than $ B \in \mathbb{R}^{d \times r} $
-- The feature learning dynamics of $ A $ and $ B $ operate at different scales
+- $A \in \mathbb{R}^{r \times k}$ has different gradient statistics than $B \in \mathbb{R}^{d \times r}$
+- The feature learning dynamics of $A$ and $B$ operate at different scales
 
 ### Practical Impact
-- Typical ratio: $ \lambda = 16 $ (i.e., $ \eta_A = 16 \times \eta_B $)
+- Typical ratio: $\lambda = 16$ (i.e., $\eta_A = 16 \times \eta_B$)
 - **1-2% improvement** on most benchmarks
 - No additional parameters or compute
 - Drop-in replacement for standard LoRA
@@ -296,9 +296,9 @@ W' = m \cdot \frac{W_0 + \frac{\alpha}{r}BA}{\|W_0 + \frac{\alpha}{r}BA\|_c}
 $$
 
 where:
-- $ m \in \mathbb{R}^{d} $ — learnable magnitude vector (one scalar per output neuron)
-- $ \|\cdot\|_c $ — column-wise norm
-- $ W_0 + \frac{\alpha}{r}BA $ — the directional component (adapted with LoRA)
+- $m \in \mathbb{R}^{d}$ — learnable magnitude vector (one scalar per output neuron)
+- $\|\cdot\|_c$ — column-wise norm
+- $W_0 + \frac{\alpha}{r}BA$ — the directional component (adapted with LoRA)
 
 ### Mathematical Decomposition
 
@@ -310,7 +310,7 @@ $$
 
 DoRA separately adapts:
 1. **Direction**: via LoRA on the full weight → captures "what features to use"
-2. **Magnitude**: via direct learning of $ m $ → captures "how strongly to activate"
+2. **Magnitude**: via direct learning of $m$ → captures "how strongly to activate"
 
 ### Why It Works Better
 
@@ -320,7 +320,7 @@ The authors show that full fine-tuning naturally decomposes into magnitude and d
 
 ### Performance
 - Consistently outperforms LoRA by **0.5-2%** on various benchmarks
-- Minimal overhead: only $ d $ additional parameters per layer for magnitude
+- Minimal overhead: only $d$ additional parameters per layer for magnitude
 - Works with QLoRA (QDoRA)
 
 ---
@@ -341,7 +341,7 @@ $$
 h = (W_0 + BA) \cdot (x + Cx) + D \cdot x + b
 $$
 
-where $ C $, $ D $ are additional low-rank adapters and $ b $ is a bias term.
+where $C$, $D$ are additional low-rank adapters and $b$ is a bias term.
 
 ### Expanded Formulation
 
@@ -420,13 +420,13 @@ Shared Base Model (GPU Memory)
 
 ### Batched LoRA Forward
 
-For a batch with $ T $ different adapters:
+For a batch with $T$ different adapters:
 
 $$
 H = W_0 X + \text{BatchedLoRA}(X, \lbrace B_t, A_t\rbrace_{t=1}^{T})
 $$
 
-where $ \text{BatchedLoRA} $ applies the correct adapter to each sample in the batch.
+where $\text{BatchedLoRA}$ applies the correct adapter to each sample in the batch.
 
 ---
 
@@ -440,7 +440,7 @@ where $ \text{BatchedLoRA} $ applies the correct adapter to each sample in the b
 
 ### Core Idea
 
-Freeze matrix $ A $ after initialization and **only train** $ B $:
+Freeze matrix $A$ after initialization and **only train** $B$:
 
 $$
 \Delta W = B \cdot A_{\text{frozen}}
@@ -448,8 +448,8 @@ $$
 
 ### Why Freeze A?
 
-- $ A $ projects the input into the low-rank space — this random projection is sufficient
-- Only $ B $ needs to learn the task-specific mapping
+- $A$ projects the input into the low-rank space — this random projection is sufficient
+- Only $B$ needs to learn the task-specific mapping
 - Reduces trainable parameters by **50%** and memory by nearly the same
 
 ### Mathematical Justification
@@ -460,7 +460,7 @@ $$
 (1-\epsilon)\|x - y\|^2 \leq \|Ax - Ay\|^2 \leq (1+\epsilon)\|x - y\|^2
 $$
 
-So a random $ A $ is a valid projection into the low-rank space, and only $ B $ needs optimization.
+So a random $A$ is a valid projection into the low-rank space, and only $B$ needs optimization.
 
 ### Performance
 - **<1% degradation** compared to full LoRA on most benchmarks
@@ -488,19 +488,19 @@ $$
 ### Mathematical Formulation
 
 At each training step:
-1. Update $ B $ and $ A $ via gradient descent as usual
-2. Compute the delta: $ \Delta = B^{(t)}A^{(t)} - B^{(t-1)}A^{(t-1)} $
-3. Apply this delta to the pre-trained weights: $ W_0 \leftarrow W_0 + \lambda \Delta $
+1. Update $B$ and $A$ via gradient descent as usual
+2. Compute the delta: $\Delta = B^{(t)}A^{(t)} - B^{(t-1)}A^{(t-1)}$
+3. Apply this delta to the pre-trained weights: $W_0 \leftarrow W_0 + \lambda \Delta$
 
 ### Why It Works
-- The rank constraint of LoRA limits the expressiveness of $ \Delta W $
-- By propagating LoRA updates into $ W_0 $, the effective update is **no longer rank-constrained**
-- Over time, $ W_0 $ accumulates full-rank updates through many small rank-$ r $ steps
+- The rank constraint of LoRA limits the expressiveness of $\Delta W$
+- By propagating LoRA updates into $W_0$, the effective update is **no longer rank-constrained**
+- Over time, $W_0$ accumulates full-rank updates through many small rank-$r$ steps
 
 ### Trade-offs
 - Better performance than standard LoRA
-- Slightly more memory (need to store previous $ B, A $)
-- $ W_0 $ is no longer shared across tasks after training
+- Slightly more memory (need to store previous $B, A$)
+- $W_0$ is no longer shared across tasks after training
 
 ---
 
@@ -520,7 +520,7 @@ $$
 \Delta W_{\text{new}} = \sum_{i=1}^{N} w_i \cdot B_i A_i
 $$
 
-where $ w_i $ are scalar blending weights optimized on a few examples of the new task.
+where $w_i$ are scalar blending weights optimized on a few examples of the new task.
 
 ### Optimization
 
@@ -530,7 +530,7 @@ $$
 \mathbf{w}^* = \arg\min_{\mathbf{w}} \frac{1}{|D_{\text{new}}|} \sum_{(x,y) \in D_{\text{new}}} \mathcal{L}\left(f_{W_0 + \sum w_i B_i A_i}(x), y\right)
 $$
 
-This is a **low-dimensional optimization** (just $ N $ scalar weights), solvable in minutes.
+This is a **low-dimensional optimization** (just $N$ scalar weights), solvable in minutes.
 
 ---
 
@@ -556,7 +556,7 @@ $$
 - Each mini adapter captures different aspects of the task
 - Ensemble effect improves robustness
 - Same total parameter count, but better utilization
-- Total rank: $ r_{\text{eff}} = \sum_i r_i $, but the factored form provides regularization
+- Total rank: $r_{\text{eff}} = \sum_i r_i$, but the factored form provides regularization
 
 ---
 
@@ -570,7 +570,7 @@ $$
 
 ### Core Idea
 
-Replace the standard $ \frac{\alpha}{r} $ scaling with $ \frac{\alpha}{\sqrt{r}} $:
+Replace the standard $\frac{\alpha}{r}$ scaling with $\frac{\alpha}{\sqrt{r}}$:
 
 $$
 h = W_0 x + \frac{\alpha}{\sqrt{r}} BAx
@@ -584,15 +584,15 @@ $$
 \text{Var}(BAx) \propto r \cdot \text{Var}(B_{ij}) \cdot \text{Var}(A_{jk}) \cdot \text{Var}(x_k)
 $$
 
-With standard scaling $ \frac{\alpha}{r} $:
+With standard scaling $\frac{\alpha}{r}$:
 
 $$
 \text{Var}\left(\frac{\alpha}{r} BAx\right) \propto \frac{\alpha^2}{r^2} \cdot r = \frac{\alpha^2}{r}
 $$
 
-This **decreases** with $ r $, meaning higher ranks produce smaller updates — suboptimal.
+This **decreases** with $r$, meaning higher ranks produce smaller updates — suboptimal.
 
-With $ \frac{\alpha}{\sqrt{r}} $:
+With $\frac{\alpha}{\sqrt{r}}$:
 
 $$
 \text{Var}\left(\frac{\alpha}{\sqrt{r}} BAx\right) \propto \frac{\alpha^2}{r} \cdot r = \alpha^2
@@ -623,8 +623,8 @@ $$
 W_0 = U_r \Sigma_r V_r^T + W_{\text{res}}
 $$
 
-- Train: $ \Delta W = B A $ initialized from $ U_r \Sigma_r^{1/2} $ and $ \Sigma_r^{1/2} V_r^T $
-- Freeze: $ W_{\text{res}} $ (the residual after removing top-$ r $ SVD components)
+- Train: $\Delta W = B A$ initialized from $U_r \Sigma_r^{1/2}$ and $\Sigma_r^{1/2} V_r^T$
+- Freeze: $W_{\text{res}}$ (the residual after removing top-$r$ SVD components)
 
 ### Mathematical Details
 
@@ -668,7 +668,7 @@ When training LoRA adapters **sequentially** for multiple tasks, constrain each 
 
 ### Mathematical Formulation
 
-Given previously learned adapters $ \lbrace(B_1, A_1), (B_2, A_2), \ldots, (B_{t-1}, A_{t-1})\rbrace $ for tasks $ 1 $ through $ t-1 $, the new adapter $ (B_t, A_t) $ for task $ t $ must satisfy:
+Given previously learned adapters $\lbrace(B_1, A_1), (B_2, A_2), \ldots, (B_{t-1}, A_{t-1})\rbrace$ for tasks $1$ through $t-1$, the new adapter $(B_t, A_t)$ for task $t$ must satisfy:
 
 **Orthogonality constraint on B (output space):**
 
@@ -684,23 +684,23 @@ $$
 
 ### Why Orthogonality Prevents Forgetting
 
-**Theorem.** If $ B_t^T B_i = 0 $ and $ A_t A_i^T = 0 $ for all $ i < t $, then the update for task $ t $ does not alter the output for inputs in the subspace of previous tasks.
+**Theorem.** If $B_t^T B_i = 0$ and $A_t A_i^T = 0$ for all $i < t$, then the update for task $t$ does not alter the output for inputs in the subspace of previous tasks.
 
 **Proof.**
 
-Consider an input $ x $ that lies in the subspace captured by previous adapter $ A_i $, i.e., $ A_i x \neq 0 $. The output contribution from task $ t $'s adapter is:
+Consider an input $x$ that lies in the subspace captured by previous adapter $A_i$, i.e., $A_i x \neq 0$. The output contribution from task $t$'s adapter is:
 
 $$
 \Delta h_t = B_t A_t x
 $$
 
-For this to not interfere with task $ i $'s representation, we need the new update to be orthogonal to the old update in output space. Since $ B_t^T B_i = 0 $, the columns of $ B_t $ are orthogonal to the columns of $ B_i $. Therefore:
+For this to not interfere with task $i$'s representation, we need the new update to be orthogonal to the old update in output space. Since $B_t^T B_i = 0$, the columns of $B_t$ are orthogonal to the columns of $B_i$. Therefore:
 
 $$
 B_i^T \Delta h_t = B_i^T B_t (A_t x) = \mathbf{0} \cdot (A_t x) = \mathbf{0}
 $$
 
-The new adapter's output has **zero projection** onto the subspace used by any previous adapter. $ \square $
+The new adapter's output has **zero projection** onto the subspace used by any previous adapter. $\square$
 
 ### Enforcing Orthogonality in Practice
 
@@ -712,11 +712,11 @@ $$
 \mathcal{L}_{\text{total}} = \mathcal{L}_{\text{task}} + \lambda_B \sum_{i < t} \|B_t^T B_i\|_F^2 + \lambda_A \sum_{i < t} \|A_t A_i^T\|_F^2
 $$
 
-where $ \lambda_B, \lambda_A > 0 $ control the strength of the orthogonality constraint.
+where $\lambda_B, \lambda_A > 0$ control the strength of the orthogonality constraint.
 
 **Method 2: Projection (Hard Constraint)**
 
-After each gradient step, project $ B_t $ and $ A_t $ onto the orthogonal complement:
+After each gradient step, project $B_t$ and $A_t$ onto the orthogonal complement:
 
 $$
 B_t \leftarrow B_t - \sum_{i < t} B_i (B_i^T B_t) \cdot (B_i^T B_i)^{-1}
@@ -726,7 +726,7 @@ $$
 A_t \leftarrow A_t - \sum_{i < t} (A_t A_i^T) \cdot (A_i A_i^T)^{-1} A_i
 $$
 
-If the previous $ B_i $ have orthonormal columns, this simplifies to:
+If the previous $B_i$ have orthonormal columns, this simplifies to:
 
 $$
 B_t \leftarrow B_t - \sum_{i < t} B_i B_i^T B_t
@@ -734,14 +734,14 @@ $$
 
 ### Capacity Budget
 
-**Key limitation**: With rank $ r $ per task and ambient dimension $ d $, at most $ \lfloor d / r \rfloor $ tasks can have strictly orthogonal adapters.
+**Key limitation**: With rank $r$ per task and ambient dimension $d$, at most $\lfloor d / r \rfloor$ tasks can have strictly orthogonal adapters.
 
-For $ d = 4096, r = 16 $: up to **256 tasks** can be accommodated — more than sufficient for most settings.
+For $d = 4096, r = 16$: up to **256 tasks** can be accommodated — more than sufficient for most settings.
 
 ### Performance
 - Eliminates catastrophic forgetting for sequential task learning
 - No need for experience replay or task-specific data retention
-- Slight overhead from orthogonality projection (negligible for small $ r $)
+- Slight overhead from orthogonality projection (negligible for small $r$)
 - Quality per task matches standard LoRA when sufficient capacity remains
 
 ---
@@ -762,7 +762,7 @@ $$
 W_0 = QR
 $$
 
-where $ Q \in \mathbb{R}^{d \times d} $ is orthogonal and $ R \in \mathbb{R}^{d \times k} $ is upper triangular.
+where $Q \in \mathbb{R}^{d \times d}$ is orthogonal and $R \in \mathbb{R}^{d \times k}$ is upper triangular.
 
 ### Mathematical Formulation
 
@@ -778,7 +778,7 @@ $$
 B^{(0)} = Q_r \in \mathbb{R}^{d \times r}, \quad A^{(0)} = R_r \in \mathbb{R}^{r \times k}
 $$
 
-where $ Q_r $ is the first $ r $ columns of $ Q $ and $ R_r $ is the first $ r $ rows of $ R $.
+where $Q_r$ is the first $r$ columns of $Q$ and $R_r$ is the first $r$ rows of $R$.
 
 **Step 3: Store the residual as frozen weight:**
 
@@ -796,21 +796,21 @@ $$
 
 | Property | PiSSA (SVD-based) | OLoRA (QR-based) |
 |----------|------------------|-----------------|
-| Initialization cost | $ O(\min(d,k) \cdot dk) $ | $ O(dk \cdot \min(d,k)) $ — but typically faster in practice |
-| Orthonormality | $ U_r $ orthonormal, $ V_r $ orthonormal | $ Q_r $ orthonormal |
+| Initialization cost | $O(\min(d,k) \cdot dk)$|$O(dk \cdot \min(d,k))$ — but typically faster in practice |
+| Orthonormality | $U_r$ orthonormal, $V_r$ orthonormal | $Q_r$ orthonormal |
 | Captures most variance? | Yes (by definition of SVD) | Not necessarily — captures a valid basis |
-| Training stability | Very good | Excellent (orthonormal columns of $ B $) |
+| Training stability | Very good | Excellent (orthonormal columns of $B$) |
 | Gradient conditioning | Good | Better — QR preserves condition number |
 
 ### Key Property: Orthonormality of B
 
-Since $ Q_r $ has orthonormal columns:
+Since $Q_r$ has orthonormal columns:
 
 $$
 (B^{(0)})^T B^{(0)} = Q_r^T Q_r = I_r
 $$
 
-**Proof.** $ Q $ is orthogonal, so $ Q^T Q = I $. The first $ r $ columns $ Q_r $ satisfy:
+**Proof.** $Q$ is orthogonal, so $Q^T Q = I$. The first $r$ columns $Q_r$ satisfy:
 
 $$
 (Q_r)_{ij} = Q_{ij}, \quad i = 1, \ldots, d, \quad j = 1, \ldots, r
@@ -821,14 +821,14 @@ $$
 $$
 
 This means:
-- The initial columns of $ B $ span an orthonormal basis in $ \mathbb{R}^d $
-- The gradient w.r.t. $ B $ is well-conditioned from the start
+- The initial columns of $B$ span an orthonormal basis in $\mathbb{R}^d$
+- The gradient w.r.t. $B$ is well-conditioned from the start
 - No vanishing/exploding gradient issues in the LoRA path at initialization
 
 ### Performance
 - Faster convergence than random initialization LoRA (by ~20-30% fewer steps)
 - Comparable to PiSSA but with simpler implementation
-- Works especially well for moderate ranks ($ r = 8\text{-}64 $)
+- Works especially well for moderate ranks ($r = 8\text{-}64$)
 - Available in HuggingFace PEFT via `init_lora_weights="olora"`
 
 ---
