@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <marker id="arr6" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+  </defs>
+  <rect width="900" height="420" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="450" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">LoRA Common Pitfalls &amp; Diagnostic Flowchart</text>
+
+  <rect x="25" y="55" width="195" height="155" rx="10" fill="white" stroke="#dc2626" stroke-width="2" filter="url(#sh)"/>
+  <rect x="25" y="55" width="195" height="30" rx="10" fill="#dc2626"/>
+  <text x="122" y="75" text-anchor="middle" font-size="11" font-weight="700" fill="white">Loss Not Decreasing</text>
+  <text x="40" y="105" text-anchor="start" font-size="9" fill="#475569">&#10007; LR too low (try 3e-4)</text>
+  <text x="40" y="120" text-anchor="start" font-size="9" fill="#475569">&#10007; Rank too low (try r=32)</text>
+  <text x="40" y="135" text-anchor="start" font-size="9" fill="#475569">&#10007; Wrong target modules</text>
+  <text x="40" y="150" text-anchor="start" font-size="9" fill="#475569">&#10007; Wrong data format</text>
+  <text x="40" y="170" text-anchor="start" font-size="9" fill="#16a34a">&#8594; Check trainable params</text>
+  <text x="40" y="185" text-anchor="start" font-size="9" fill="#16a34a">&#8594; Verify &gt;0 params unfrozen</text>
+  <text x="40" y="200" text-anchor="start" font-size="9" fill="#16a34a">&#8594; Target all-linear</text>
+
+  <rect x="235" y="55" width="195" height="155" rx="10" fill="white" stroke="#f59e0b" stroke-width="2" filter="url(#sh)"/>
+  <rect x="235" y="55" width="195" height="30" rx="10" fill="#f59e0b"/>
+  <text x="332" y="75" text-anchor="middle" font-size="11" font-weight="700" fill="white">Overfitting</text>
+  <text x="250" y="105" text-anchor="start" font-size="9" fill="#475569">&#10007; Rank too high</text>
+  <text x="250" y="120" text-anchor="start" font-size="9" fill="#475569">&#10007; No dropout (0.0)</text>
+  <text x="250" y="135" text-anchor="start" font-size="9" fill="#475569">&#10007; Too many epochs</text>
+  <text x="250" y="150" text-anchor="start" font-size="9" fill="#475569">&#10007; Dataset too small</text>
+  <text x="250" y="170" text-anchor="start" font-size="9" fill="#16a34a">&#8594; Lower rank to r=8</text>
+  <text x="250" y="185" text-anchor="start" font-size="9" fill="#16a34a">&#8594; Add dropout=0.1</text>
+  <text x="250" y="200" text-anchor="start" font-size="9" fill="#16a34a">&#8594; 1-3 epochs only</text>
+
+  <rect x="445" y="55" width="195" height="155" rx="10" fill="white" stroke="#7c3aed" stroke-width="2" filter="url(#sh)"/>
+  <rect x="445" y="55" width="195" height="30" rx="10" fill="#7c3aed"/>
+  <text x="542" y="75" text-anchor="middle" font-size="11" font-weight="700" fill="white">CUDA OOM</text>
+  <text x="460" y="105" text-anchor="start" font-size="9" fill="#475569">&#10007; Batch size too large</text>
+  <text x="460" y="120" text-anchor="start" font-size="9" fill="#475569">&#10007; No grad checkpoint</text>
+  <text x="460" y="135" text-anchor="start" font-size="9" fill="#475569">&#10007; FP32 instead of BF16</text>
+  <text x="460" y="150" text-anchor="start" font-size="9" fill="#475569">&#10007; Optimizer states large</text>
+  <text x="460" y="170" text-anchor="start" font-size="9" fill="#16a34a">&#8594; Batch=1 + accum=16</text>
+  <text x="460" y="185" text-anchor="start" font-size="9" fill="#16a34a">&#8594; gradient_checkpointing</text>
+  <text x="460" y="200" text-anchor="start" font-size="9" fill="#16a34a">&#8594; Use 4-bit QLoRA</text>
+
+  <rect x="655" y="55" width="225" height="155" rx="10" fill="white" stroke="#3b82f6" stroke-width="2" filter="url(#sh)"/>
+  <rect x="655" y="55" width="225" height="30" rx="10" fill="#3b82f6"/>
+  <text x="767" y="75" text-anchor="middle" font-size="11" font-weight="700" fill="white">Bad Generation Quality</text>
+  <text x="670" y="105" text-anchor="start" font-size="9" fill="#475569">&#10007; Catastrophic forgetting</text>
+  <text x="670" y="120" text-anchor="start" font-size="9" fill="#475569">&#10007; Too high LR (&gt;1e-3)</text>
+  <text x="670" y="135" text-anchor="start" font-size="9" fill="#475569">&#10007; Alpha too high</text>
+  <text x="670" y="150" text-anchor="start" font-size="9" fill="#475569">&#10007; Contaminated data</text>
+  <text x="670" y="170" text-anchor="start" font-size="9" fill="#16a34a">&#8594; Reduce &#945;/r ratio</text>
+  <text x="670" y="185" text-anchor="start" font-size="9" fill="#16a34a">&#8594; LR=1e-4, warmup 5%</text>
+  <text x="670" y="200" text-anchor="start" font-size="9" fill="#16a34a">&#8594; Clean &amp; filter data</text>
+
+  <rect x="25" y="230" width="855" height="170" rx="12" fill="white" stroke="#16a34a" stroke-width="2" filter="url(#sh)"/>
+  <text x="452" y="257" text-anchor="middle" font-size="14" font-weight="700" fill="#15803d">Pre-Training Checklist</text>
+  <rect x="40" y="272" width="14" height="14" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="62" y="284" text-anchor="start" font-size="10" fill="#475569">Verified trainable params count</text>
+  <rect x="40" y="298" width="14" height="14" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="62" y="310" text-anchor="start" font-size="10" fill="#475569">Base model weights are frozen</text>
+  <rect x="40" y="324" width="14" height="14" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="62" y="336" text-anchor="start" font-size="10" fill="#475569">Correct padding: pad_token = eos_token</text>
+  <rect x="40" y="350" width="14" height="14" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="62" y="362" text-anchor="start" font-size="10" fill="#475569">EOS token appended to every example</text>
+  <rect x="40" y="376" width="14" height="14" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="62" y="388" text-anchor="start" font-size="10" fill="#475569">Labels masked for prompt tokens</text>
+  <rect x="460" y="272" width="14" height="14" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="482" y="284" text-anchor="start" font-size="10" fill="#475569">Gradient checkpointing enabled</text>
+  <rect x="460" y="298" width="14" height="14" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="482" y="310" text-anchor="start" font-size="10" fill="#475569">bf16/fp16 enabled (not fp32)</text>
+  <rect x="460" y="324" width="14" height="14" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="482" y="336" text-anchor="start" font-size="10" fill="#475569">Eval loss monitored for early stop</text>
+  <rect x="460" y="350" width="14" height="14" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="482" y="362" text-anchor="start" font-size="10" fill="#475569">Test adapter load before long training</text>
+  <rect x="460" y="376" width="14" height="14" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="482" y="388" text-anchor="start" font-size="10" fill="#475569">LoRA targets: all attention + FFN</text>
+</svg>

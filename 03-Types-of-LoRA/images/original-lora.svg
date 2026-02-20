@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300">
+  <rect width="800" height="300" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">Original LoRA: W' = W + (&#945;/r)&#183;BA</text>
+
+  <!-- W frozen block -->
+  <rect x="50" y="85" width="160" height="130" rx="10" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
+  <text x="130" y="145" text-anchor="middle" fill="#ef4444" font-family="Arial,sans-serif" font-size="22" font-weight="bold">W</text>
+  <text x="130" y="172" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="12">d &#215; k</text>
+  <text x="130" y="195" text-anchor="middle" fill="#ef4444" font-family="Arial,sans-serif" font-size="11">FROZEN</text>
+
+  <!-- Plus -->
+  <text x="245" y="158" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="30" font-weight="bold">+</text>
+
+  <!-- B matrix (tall) -->
+  <rect x="280" y="75" width="70" height="155" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+  <text x="315" y="150" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="16" font-weight="bold">B</text>
+  <text x="315" y="172" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">d&#215;r</text>
+  <text x="315" y="218" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">init: 0</text>
+
+  <!-- Multiply -->
+  <text x="370" y="158" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="22">&#215;</text>
+
+  <!-- A matrix (wide) -->
+  <rect x="395" y="115" width="150" height="70" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+  <text x="470" y="150" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="16" font-weight="bold">A</text>
+  <text x="470" y="172" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">r&#215;k</text>
+  <text x="545" y="158" text-anchor="end" fill="#64748b" font-family="Arial,sans-serif" font-size="9">Kaiming</text>
+
+  <!-- Equals -->
+  <text x="585" y="158" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="30" font-weight="bold">=</text>
+
+  <!-- W' result -->
+  <rect x="615" y="85" width="160" height="130" rx="10" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="695" y="145" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="22" font-weight="bold">W'</text>
+  <text x="695" y="172" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="12">d &#215; k</text>
+  <text x="695" y="195" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="11">MERGED</text>
+
+  <!-- r label -->
+  <text x="350" y="68" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="12" font-weight="bold">r &#8810; min(d, k)</text>
+
+  <!-- Bottom stats -->
+  <text x="130" y="268" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">16M params</text>
+  <text x="400" y="268" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">131K params (r=16)</text>
+  <text x="695" y="268" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="11">Zero extra inference cost</text>
+</svg>

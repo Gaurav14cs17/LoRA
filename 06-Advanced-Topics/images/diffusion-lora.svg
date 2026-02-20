@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh5" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <marker id="arr5" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+  </defs>
+  <rect width="880" height="360" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="440" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">Diffusion Models + LoRA</text>
+  <text x="440" y="50" text-anchor="middle" font-size="12" fill="#64748b">UNet and Text Encoder injection</text>
+
+  <rect x="30" y="70" width="420" height="140" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="240" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#475569">UNet Architecture</text>
+
+  <rect x="55" y="110" width="80" height="45" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="95" y="135" text-anchor="middle" font-size="9" font-weight="700" fill="#1d4ed8">Down&#8321;</text>
+  <rect x="150" y="110" width="80" height="45" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+  <text x="190" y="135" text-anchor="middle" font-size="9" font-weight="700" fill="#1d4ed8">Down&#8322;</text>
+  <rect x="245" y="110" width="80" height="45" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+  <text x="285" y="135" text-anchor="middle" font-size="9" font-weight="700" fill="#1d4ed8">Down&#8323;</text>
+
+  <rect x="355" y="110" width="75" height="45" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="392" y="135" text-anchor="middle" font-size="9" font-weight="700" fill="#b45309">Mid</text>
+
+  <rect x="450" y="110" width="80" height="45" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+  <text x="490" y="135" text-anchor="middle" font-size="9" font-weight="700" fill="#15803d">Up&#8321;</text>
+  <rect x="545" y="110" width="80" height="45" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+  <text x="585" y="135" text-anchor="middle" font-size="9" font-weight="700" fill="#15803d">Up&#8322;</text>
+  <rect x="640" y="110" width="80" height="45" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+  <text x="680" y="135" text-anchor="middle" font-size="9" font-weight="700" fill="#15803d">Up&#8323;</text>
+
+  <text x="240" y="175" text-anchor="middle" font-size="9" fill="#64748b">Each block: attn + resnet LoRA injection</text>
+
+  <rect x="465" y="70" width="180" height="85" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="555" y="95" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9">Text Encoder</text>
+  <text x="555" y="112" text-anchor="middle" font-size="9" fill="#7c3aed">with LoRA</text>
+  <text x="555" y="130" text-anchor="middle" font-size="9" fill="#64748b">CLIP / T5</text>
+  <text x="555" y="148" text-anchor="middle" font-size="9" fill="#64748b">embeddings</text>
+
+  <rect x="30" y="225" width="270" height="115" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="165" y="250" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">Where Applied</text>
+  <text x="165" y="268" text-anchor="middle" font-size="9" fill="#475569">Cross-attention (q, k, v)</text>
+  <text x="165" y="284" text-anchor="middle" font-size="9" fill="#475569">Self-attention layers</text>
+  <text x="165" y="300" text-anchor="middle" font-size="9" fill="#475569">ResNet Conv2d blocks</text>
+  <text x="165" y="328" text-anchor="middle" font-size="9" fill="#64748b">Typically r=4-64 for SD</text>
+
+  <rect x="320" y="225" width="250" height="115" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="1"/>
+  <text x="445" y="250" text-anchor="middle" font-size="11" font-weight="700" fill="#c2410c">Use Cases</text>
+  <text x="445" y="268" text-anchor="middle" font-size="9" fill="#475569">Style transfer</text>
+  <text x="445" y="284" text-anchor="middle" font-size="9" fill="#475569">Character consistency</text>
+  <text x="445" y="300" text-anchor="middle" font-size="9" fill="#475569">Object insertion</text>
+  <text x="445" y="328" text-anchor="middle" font-size="9" fill="#64748b">One LoRA per concept</text>
+
+  <rect x="590" y="225" width="250" height="115" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1"/>
+  <text x="715" y="250" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8">Composing LoRAs</text>
+  <text x="715" y="268" text-anchor="middle" font-size="9" fill="#475569">Multiple LoRAs at inference</text>
+  <text x="715" y="284" text-anchor="middle" font-size="9" fill="#475569">Weighted merge for blend</text>
+  <text x="715" y="300" text-anchor="middle" font-size="9" fill="#475569">Character + style + object</text>
+  <text x="715" y="328" text-anchor="middle" font-size="9" fill="#64748b">~5-150 MB each</text>
+</svg>

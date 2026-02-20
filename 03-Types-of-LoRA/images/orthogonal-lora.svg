@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh5" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <marker id="arr5" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+  </defs>
+  <rect width="800" height="380" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">O-LoRA: Orthogonal Low-Rank Adaptation</text>
+  <text x="400" y="50" text-anchor="middle" font-size="12" fill="#64748b">Task adapters occupy perpendicular subspaces</text>
+
+  <rect x="80" y="75" width="280" height="220" rx="12" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="220" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#475569">Parameter Space</text>
+
+  <line x1="130" y1="250" x2="280" y2="250" stroke="#3b82f6" stroke-width="3" marker-end="url(#arr5)"/>
+  <text x="205" y="235" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8">S&#8321;</text>
+  <text x="220" y="270" text-anchor="middle" font-size="9" fill="#3b82f6">Task 1 subspace</text>
+
+  <line x1="220" y1="150" x2="220" y2="270" stroke="#16a34a" stroke-width="3" marker-end="url(#arr5)"/>
+  <text x="235" y="215" text-anchor="start" font-size="11" font-weight="700" fill="#15803d">S&#8322;</text>
+  <text x="270" y="210" text-anchor="start" font-size="9" fill="#16a34a">Task 2 subspace</text>
+
+  <rect x="125" y="170" width="95" height="55" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="172" y="192" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8">B&#8321;&#7491;B&#8321;</text>
+  <text x="172" y="208" text-anchor="middle" font-size="9" fill="#3b82f6">(Task 1)</text>
+  <text x="172" y="222" text-anchor="middle" font-size="8" fill="#64748b">active</text>
+
+  <rect x="240" y="155" width="95" height="55" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="287" y="177" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">B&#8322;&#7491;B&#8322;</text>
+  <text x="287" y="193" text-anchor="middle" font-size="9" fill="#16a34a">(Task 2)</text>
+  <text x="287" y="207" text-anchor="middle" font-size="8" fill="#64748b">perpendicular</text>
+
+  <rect x="400" y="75" width="320" height="220" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" filter="url(#sh5)"/>
+  <text x="560" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">Constraint: B_t&#7491;B_i = 0 for all i &lt; t</text>
+
+  <rect x="425" y="125" width="270" height="45" rx="8" fill="white" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="560" y="152" text-anchor="middle" font-size="11" font-weight="600" fill="#15803d">Adapters orthogonal = no interference</text>
+
+  <rect x="425" y="185" width="270" height="90" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="560" y="212" text-anchor="middle" font-size="12" font-weight="700" fill="#15803d">&#10003; No Forgetting Benefit</text>
+  <text x="560" y="232" text-anchor="middle" font-size="10" fill="#475569">Task 1 knowledge preserved when training Task 2</text>
+  <text x="560" y="250" text-anchor="middle" font-size="10" fill="#475569">Continual learning without catastrophic forgetting</text>
+  <text x="560" y="268" text-anchor="middle" font-size="10" fill="#475569">Each new adapter in distinct subspace</text>
+</svg>

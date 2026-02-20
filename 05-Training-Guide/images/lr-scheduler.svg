@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 310">
+  <rect width="800" height="310" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">Learning Rate Schedulers for LoRA Training</text>
+
+  <!-- Axes -->
+  <line x1="70" y1="250" x2="380" y2="250" stroke="#475569" stroke-width="1.5"/>
+  <line x1="70" y1="250" x2="70" y2="65" stroke="#475569" stroke-width="1.5"/>
+  <text x="225" y="275" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Training Steps</text>
+  <text x="40" y="157" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10" transform="rotate(-90,40,157)">Learning Rate</text>
+
+  <!-- Cosine (recommended) -->
+  <path d="M85,85 Q90,85 100,85 Q140,85 160,100 Q200,130 240,170 Q280,210 320,235 Q350,245 370,248" fill="none" stroke="#10b981" stroke-width="2.5"/>
+  <text x="375" y="240" fill="#10b981" font-family="Arial,sans-serif" font-size="10" font-weight="bold">Cosine &#9733;</text>
+
+  <!-- Linear -->
+  <line x1="85" y1="85" x2="370" y2="248" stroke="#3b82f6" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="375" y="255" fill="#3b82f6" font-family="Arial,sans-serif" font-size="10">Linear</text>
+
+  <!-- Constant -->
+  <line x1="85" y1="85" x2="370" y2="85" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3,3"/>
+  <text x="375" y="82" fill="#f59e0b" font-family="Arial,sans-serif" font-size="10">Constant</text>
+
+  <!-- Warmup zone -->
+  <rect x="71" y="65" width="28" height="185" rx="0" fill="#f59e0b" opacity="0.08"/>
+  <text x="85" y="60" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="8">3% warmup</text>
+
+  <!-- Right side: recommendation cards -->
+  <rect x="420" y="60" width="360" height="80" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+  <text x="450" y="82" fill="#10b981" font-family="Arial,sans-serif" font-size="12" font-weight="bold">&#9733; Cosine (Recommended)</text>
+  <text x="450" y="102" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">lr=2e-4, warmup_ratio=0.03</text>
+  <text x="450" y="118" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Smooth decay prevents overfitting</text>
+  <text x="450" y="134" fill="#10b981" font-family="Arial,sans-serif" font-size="10">Best for: instruction tuning, chat, code</text>
+
+  <rect x="420" y="152" width="360" height="60" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="450" y="172" fill="#3b82f6" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Linear Decay</text>
+  <text x="450" y="192" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Simple, predictable decrease</text>
+  <text x="450" y="205" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Good for: classification, short training</text>
+
+  <rect x="420" y="224" width="360" height="60" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="450" y="244" fill="#f59e0b" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Constant + Warmup</text>
+  <text x="450" y="264" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Simplest, risk of late overfitting</text>
+  <text x="450" y="277" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Use with: very short training (&lt;500 steps)</text>
+
+  <text x="400" y="303" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">LoRA overfits faster than full FT &#8594; cosine decay with warmup is the safest default</text>
+</svg>

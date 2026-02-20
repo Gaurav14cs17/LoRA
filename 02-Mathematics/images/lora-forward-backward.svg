@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh" x="-4%" y="-4%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#475569"/>
+    </marker>
+    <marker id="arr-o" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#ea580c"/>
+    </marker>
+    <marker id="arr-b" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#3b82f6"/>
+    </marker>
+    <marker id="arr-g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#16a34a"/>
+    </marker>
+  </defs>
+  <rect width="800" height="400" rx="14" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="400" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#1e293b">LoRA Forward and Backward Pass</text>
+  <!-- FORWARD -->
+  <rect x="20" y="50" width="370" height="320" rx="12" fill="white" stroke="#3b82f6" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="205" y="75" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">Forward Pass</text>
+  <text x="205" y="95" text-anchor="middle" font-size="10" fill="#3b82f6">h = W&#8320;x + (&#945;/r) BAx</text>
+  <!-- Steps -->
+  <rect x="40" y="115" width="330" height="35" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+  <text x="205" y="137" text-anchor="middle" font-size="10" fill="#1d4ed8">1. h_base = W&#8320; @ x   (frozen, no grad needed)</text>
+  <rect x="40" y="160" width="330" height="35" rx="6" fill="#fff7ed" stroke="#fdba74" stroke-width="1"/>
+  <text x="205" y="182" text-anchor="middle" font-size="10" fill="#c2410c">2. z = A @ dropout(x)   (rank-r bottleneck)</text>
+  <rect x="40" y="205" width="330" height="35" rx="6" fill="#fff7ed" stroke="#fdba74" stroke-width="1"/>
+  <text x="205" y="227" text-anchor="middle" font-size="10" fill="#c2410c">3. h_lora = B @ z       (expand back to d)</text>
+  <rect x="40" y="250" width="330" height="35" rx="6" fill="#fef3c7" stroke="#fbbf24" stroke-width="1"/>
+  <text x="205" y="272" text-anchor="middle" font-size="10" fill="#92400e">4. h_lora = (&#945;/r) &#215; h_lora  (scale)</text>
+  <rect x="40" y="295" width="330" height="35" rx="6" fill="#ede9fe" stroke="#a78bfa" stroke-width="1"/>
+  <text x="205" y="317" text-anchor="middle" font-size="10" fill="#6d28d9">5. h = h_base + h_lora  (sum both paths)</text>
+  <!-- BACKWARD -->
+  <rect x="410" y="50" width="370" height="320" rx="12" fill="white" stroke="#ea580c" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="595" y="75" text-anchor="middle" font-size="13" font-weight="700" fill="#c2410c">Backward Pass</text>
+  <text x="595" y="95" text-anchor="middle" font-size="10" fill="#ea580c">Only A and B get gradients</text>
+  <rect x="430" y="115" width="330" height="35" rx="6" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+  <text x="595" y="137" text-anchor="middle" font-size="10" fill="#991b1b">&#8706;L/&#8706;W&#8320; = 0 (frozen, not computed)</text>
+  <rect x="430" y="165" width="330" height="55" rx="6" fill="#fff7ed" stroke="#fdba74" stroke-width="1"/>
+  <text x="595" y="187" text-anchor="middle" font-size="10" fill="#c2410c">&#8706;L/&#8706;B = (&#945;/r) &#215; (&#8706;L/&#8706;h) @ z^T</text>
+  <text x="595" y="208" text-anchor="middle" font-size="8" fill="#ea580c">shape: (d, r) -- same as B</text>
+  <rect x="430" y="235" width="330" height="55" rx="6" fill="#fff7ed" stroke="#fdba74" stroke-width="1"/>
+  <text x="595" y="257" text-anchor="middle" font-size="10" fill="#c2410c">&#8706;L/&#8706;A = (&#945;/r) &#215; B^T @ (&#8706;L/&#8706;h) @ x^T</text>
+  <text x="595" y="278" text-anchor="middle" font-size="8" fill="#ea580c">shape: (r, k) -- same as A</text>
+  <rect x="430" y="305" width="330" height="50" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="595" y="327" text-anchor="middle" font-size="10" fill="#15803d" font-weight="600">Memory: only store grads for A, B</text>
+  <text x="595" y="345" text-anchor="middle" font-size="9" fill="#16a34a">r(d+k) vs dk for full fine-tuning</text>
+</svg>

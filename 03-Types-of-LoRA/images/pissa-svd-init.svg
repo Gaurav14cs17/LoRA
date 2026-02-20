@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 320" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <marker id="arr2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+  </defs>
+  <rect width="880" height="320" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="440" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">PiSSA: SVD-Based Initialization vs Standard LoRA</text>
+
+  <rect x="25" y="55" width="390" height="240" rx="12" fill="white" stroke="#94a3b8" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="220" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#475569">Standard LoRA Init</text>
+
+  <rect x="50" y="100" width="80" height="100" rx="6" fill="#f5f5f5" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="90" y="147" text-anchor="middle" font-size="10" font-weight="700" fill="#94a3b8">B = 0</text>
+  <text x="90" y="163" text-anchor="middle" font-size="9" fill="#a3a3a3">all zeros</text>
+
+  <text x="145" y="155" text-anchor="middle" font-size="14" font-weight="700" fill="#475569">&#215;</text>
+
+  <rect x="162" y="120" width="100" height="55" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="212" y="147" text-anchor="middle" font-size="10" font-weight="700" fill="#ea580c">A ~ random</text>
+  <text x="212" y="163" text-anchor="middle" font-size="9" fill="#f97316">Kaiming init</text>
+
+  <text x="280" y="155" text-anchor="middle" font-size="14" fill="#475569">&#8594;</text>
+
+  <rect x="300" y="125" width="90" height="45" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
+  <text x="345" y="153" text-anchor="middle" font-size="10" fill="#94a3b8">&#916;W = 0</text>
+
+  <text x="220" y="230" text-anchor="middle" font-size="10" fill="#64748b">Starts from zero - learns from scratch</text>
+  <text x="220" y="248" text-anchor="middle" font-size="10" fill="#dc2626">Slower convergence</text>
+  <text x="220" y="270" text-anchor="middle" font-size="9" fill="#94a3b8">W_frozen = W&#8320; (full original weight)</text>
+
+  <text x="440" y="180" text-anchor="middle" font-size="24" fill="#16a34a">&#8594;</text>
+
+  <rect x="465" y="55" width="395" height="240" rx="12" fill="white" stroke="#16a34a" stroke-width="2" filter="url(#sh)"/>
+  <text x="662" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">PiSSA Init (SVD-based)</text>
+
+  <rect x="485" y="100" width="80" height="100" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="525" y="140" text-anchor="middle" font-size="9" font-weight="700" fill="#6d28d9">B = U_r &#215; &#931;^&#189;</text>
+  <text x="525" y="158" text-anchor="middle" font-size="8" fill="#7c3aed">top-r left</text>
+  <text x="525" y="170" text-anchor="middle" font-size="8" fill="#7c3aed">singular vecs</text>
+
+  <text x="580" y="155" text-anchor="middle" font-size="14" font-weight="700" fill="#475569">&#215;</text>
+
+  <rect x="598" y="120" width="100" height="55" rx="6" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+  <text x="648" y="140" text-anchor="middle" font-size="9" font-weight="700" fill="#be185d">A = &#931;^&#189; V_r^T</text>
+  <text x="648" y="158" text-anchor="middle" font-size="8" fill="#db2777">top-r right</text>
+  <text x="648" y="170" text-anchor="middle" font-size="8" fill="#db2777">singular vecs</text>
+
+  <text x="715" y="155" text-anchor="middle" font-size="14" fill="#475569">&#8594;</text>
+
+  <rect x="733" y="118" width="110" height="60" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="788" y="142" text-anchor="middle" font-size="9" font-weight="700" fill="#15803d">principal</text>
+  <text x="788" y="158" text-anchor="middle" font-size="9" font-weight="700" fill="#15803d">components</text>
+  <text x="788" y="172" text-anchor="middle" font-size="8" fill="#16a34a">of W&#8320;</text>
+
+  <text x="662" y="218" text-anchor="middle" font-size="10" fill="#64748b">Starts from most important directions</text>
+  <text x="662" y="236" text-anchor="middle" font-size="10" fill="#16a34a" font-weight="600">Faster convergence (+20-30%)</text>
+  <text x="662" y="258" text-anchor="middle" font-size="9" fill="#475569">W_frozen = W&#8320; - U_r &#931;_r V_r^T (residual)</text>
+  <text x="662" y="276" text-anchor="middle" font-size="9" fill="#16a34a">= less important components (frozen)</text>
+</svg>

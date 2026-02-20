@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+  </defs>
+  <rect width="800" height="400" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">7B Model: GPU Memory and Trainable Params</text>
+
+  <text x="400" y="65" text-anchor="middle" font-size="12" font-weight="700" fill="#475569">GPU Memory (GB)</text>
+  <line x1="80" y1="85" x2="80" y2="240" stroke="#94a3b8" stroke-width="1.2"/>
+  <line x1="80" y1="240" x2="720" y2="240" stroke="#94a3b8" stroke-width="1.2"/>
+
+  <rect x="120" y="165" width="90" height="75" rx="8" fill="#dc2626" opacity="0.85"/>
+  <text x="165" y="155" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b">~120 GB</text>
+  <text x="165" y="255" text-anchor="middle" font-size="10" fill="#dc2626">Full FT</text>
+
+  <rect x="230" y="195" width="90" height="45" rx="8" fill="#f97316" opacity="0.9"/>
+  <text x="275" y="185" text-anchor="middle" font-size="11" font-weight="700" fill="#c2410c">~32 GB</text>
+  <text x="275" y="255" text-anchor="middle" font-size="10" fill="#ea580c">LoRA FP16</text>
+
+  <rect x="340" y="210" width="90" height="30" rx="8" fill="#eab308" opacity="0.9"/>
+  <text x="385" y="200" text-anchor="middle" font-size="11" font-weight="700" fill="#a16207">~18 GB</text>
+  <text x="385" y="255" text-anchor="middle" font-size="10" fill="#eab308">LoRA INT8</text>
+
+  <rect x="450" y="225" width="90" height="15" rx="6" fill="#16a34a" opacity="0.95"/>
+  <text x="495" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">~6 GB</text>
+  <text x="495" y="255" text-anchor="middle" font-size="10" fill="#16a34a">QLoRA 4-bit</text>
+
+  <text x="400" y="290" text-anchor="middle" font-size="12" font-weight="700" fill="#475569">Trainable Parameters (tiny scale)</text>
+  <line x1="80" y1="310" x2="80" y2="375" stroke="#94a3b8" stroke-width="1.2"/>
+  <line x1="80" y1="375" x2="720" y2="375" stroke="#94a3b8" stroke-width="1.2"/>
+
+  <rect x="120" y="365" width="90" height="8" rx="2" fill="#dc2626"/>
+  <text x="165" y="395" text-anchor="middle" font-size="9" fill="#dc2626">7B full</text>
+
+  <rect x="230" y="370" width="15" height="5" rx="1" fill="#f97316"/>
+  <text x="275" y="395" text-anchor="middle" font-size="9" fill="#ea580c">~4M</text>
+
+  <rect x="340" y="371" width="10" height="4" rx="1" fill="#eab308"/>
+  <text x="385" y="395" text-anchor="middle" font-size="9" fill="#eab308">~4M</text>
+
+  <rect x="450" y="372" width="10" height="3" rx="1" fill="#16a34a"/>
+  <text x="495" y="395" text-anchor="middle" font-size="9" fill="#16a34a">~4M</text>
+</svg>

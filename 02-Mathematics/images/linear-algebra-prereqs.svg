@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300">
+  <rect width="800" height="300" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">Linear Algebra Foundations for LoRA</text>
+
+  <rect x="25" y="58" width="175" height="100" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="112" y="82" text-anchor="middle" fill="#3b82f6" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Matrix Rank</text>
+  <text x="112" y="102" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">rank(AB) &#8804; min(rank A, rank B)</text>
+  <text x="112" y="122" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">rank(BA) &#8804; r</text>
+  <text x="112" y="142" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">&#8594; LoRA update is low-rank</text>
+
+  <rect x="215" y="58" width="175" height="100" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+  <text x="302" y="82" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Frobenius Norm</text>
+  <text x="302" y="102" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">||M||_F = &#8730;(&#8721; m&#178;_ij)</text>
+  <text x="302" y="122" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">= &#8730;(&#8721; &#963;&#178;_i)</text>
+  <text x="302" y="142" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">&#8594; measures approximation error</text>
+
+  <rect x="405" y="58" width="185" height="100" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="497" y="82" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="12" font-weight="bold">SVD</text>
+  <text x="497" y="102" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">M = U&#931;V&#7488;</text>
+  <text x="497" y="122" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">&#963;&#8321; &#8805; &#963;&#8322; &#8805; ... &#8805; 0</text>
+  <text x="497" y="142" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">&#8594; optimal low-rank factorization</text>
+
+  <rect x="605" y="58" width="175" height="100" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.5"/>
+  <text x="692" y="82" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Spectral Norm</text>
+  <text x="692" y="102" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">||M||&#8322; = &#963;_max(M)</text>
+  <text x="692" y="122" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">= max ||Mx|| / ||x||</text>
+  <text x="692" y="142" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">&#8594; worst-case error bound</text>
+
+  <!-- Connection flow -->
+  <rect x="120" y="195" width="560" height="60" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+  <text x="400" y="218" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="12">Rank + SVD + Norms &#8594; Eckart-Young Theorem &#8594; Low-rank &#916;W is provably optimal</text>
+  <text x="400" y="240" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">These four concepts form the complete mathematical foundation for why LoRA works</text>
+
+  <text x="400" y="285" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="11">All proofs in this chapter build on these prerequisites</text>
+</svg>

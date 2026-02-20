@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 500" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh5a" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.08"/></filter>
+    <marker id="arr5a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#475569"/></marker>
+    <marker id="arr5b" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#ea580c"/></marker>
+    <marker id="arr5c" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#3b82f6"/></marker>
+  </defs>
+  <rect width="820" height="500" rx="14" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <text x="410" y="30" text-anchor="middle" font-size="17" font-weight="700" fill="#1e293b">LoRALinear Forward Pass Data Flow</text>
+
+  <rect x="30" y="195" width="100" height="60" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2.5" filter="url(#sh5a)"/>
+  <text x="80" y="220" text-anchor="middle" font-size="14" font-weight="700" fill="#15803d">x</text>
+  <text x="80" y="240" text-anchor="middle" font-size="9" fill="#16a34a">(B, S, k)</text>
+
+  <line x1="130" y1="210" x2="270" y2="100" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arr5c)"/>
+
+  <rect x="275" y="65" width="230" height="70" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="2.5" filter="url(#sh5a)"/>
+  <rect x="275" y="65" width="230" height="25" rx="12" fill="#3b82f6"/>
+  <text x="390" y="82" text-anchor="middle" font-size="10" font-weight="700" fill="white">FROZEN</text>
+  <text x="390" y="108" text-anchor="middle" font-size="16" font-weight="700" fill="#1d4ed8">W&#8320;</text>
+  <text x="390" y="126" text-anchor="middle" font-size="10" fill="#3b82f6">(d &#215; k)</text>
+
+  <rect x="555" y="72" width="85" height="50" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="597" y="94" text-anchor="middle" font-size="11" font-weight="600" fill="#1d4ed8">h_base</text>
+  <text x="597" y="112" text-anchor="middle" font-size="9" fill="#3b82f6">(B, S, d)</text>
+  <line x1="505" y1="97" x2="553" y2="97" stroke="#3b82f6" stroke-width="2" marker-end="url(#arr5c)"/>
+
+  <line x1="130" y1="240" x2="175" y2="310" stroke="#ea580c" stroke-width="2.5" marker-end="url(#arr5b)"/>
+
+  <rect x="178" y="285" width="78" height="55" rx="26" fill="#fefce8" stroke="#eab308" stroke-width="2" filter="url(#sh5a)"/>
+  <text x="217" y="310" text-anchor="middle" font-size="10" font-weight="600" fill="#a16207">Dropout</text>
+  <text x="217" y="325" text-anchor="middle" font-size="8" fill="#ca8a04">p=0.05</text>
+
+  <line x1="256" y1="312" x2="298" y2="312" stroke="#ea580c" stroke-width="2.5" marker-end="url(#arr5b)"/>
+
+  <rect x="302" y="278" width="80" height="70" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5" filter="url(#sh5a)"/>
+  <text x="342" y="305" text-anchor="middle" font-size="14" font-weight="800" fill="#c2410c">A</text>
+  <text x="342" y="325" text-anchor="middle" font-size="9" fill="#ea580c">(r &#215; k)</text>
+  <text x="342" y="340" text-anchor="middle" font-size="7" fill="#f97316">kaiming init</text>
+
+  <line x1="382" y1="312" x2="414" y2="312" stroke="#ea580c" stroke-width="2.5" marker-end="url(#arr5b)"/>
+  <circle cx="440" cy="312" r="22" fill="#fef3c7" stroke="#f59e0b" stroke-width="2.5" filter="url(#sh5a)"/>
+  <text x="440" y="309" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">z</text>
+  <text x="440" y="323" text-anchor="middle" font-size="7" fill="#d97706">r dims</text>
+
+  <line x1="462" y1="312" x2="494" y2="312" stroke="#ea580c" stroke-width="2.5" marker-end="url(#arr5b)"/>
+  <rect x="498" y="278" width="80" height="70" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5" filter="url(#sh5a)"/>
+  <text x="538" y="305" text-anchor="middle" font-size="14" font-weight="800" fill="#c2410c">B</text>
+  <text x="538" y="325" text-anchor="middle" font-size="9" fill="#ea580c">(d &#215; r)</text>
+  <text x="538" y="340" text-anchor="middle" font-size="7" fill="#f97316">zero init</text>
+
+  <line x1="578" y1="312" x2="610" y2="312" stroke="#ea580c" stroke-width="2.5" marker-end="url(#arr5b)"/>
+  <circle cx="640" cy="312" r="26" fill="#fef3c7" stroke="#f59e0b" stroke-width="2.5" filter="url(#sh5a)"/>
+  <text x="640" y="308" text-anchor="middle" font-size="14" font-weight="800" fill="#b45309">&#215;</text>
+  <text x="640" y="327" text-anchor="middle" font-size="8" font-weight="700" fill="#92400e">&#945;/r</text>
+
+  <rect x="690" y="288" width="85" height="50" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="732" y="310" text-anchor="middle" font-size="11" font-weight="600" fill="#c2410c">h_lora</text>
+  <text x="732" y="328" text-anchor="middle" font-size="9" fill="#ea580c">(B, S, d)</text>
+  <line x1="666" y1="312" x2="688" y2="312" stroke="#ea580c" stroke-width="2" marker-end="url(#arr5b)"/>
+
+  <line x1="597" y1="122" x2="712" y2="195" stroke="#3b82f6" stroke-width="2"/>
+  <line x1="732" y1="288" x2="712" y2="240" stroke="#ea580c" stroke-width="2"/>
+
+  <circle cx="712" cy="218" r="28" fill="#f0f9ff" stroke="#6366f1" stroke-width="3" filter="url(#sh5a)"/>
+  <text x="712" y="224" text-anchor="middle" font-size="26" font-weight="800" fill="#4f46e5">+</text>
+
+  <line x1="740" y1="218" x2="765" y2="218" stroke="#6366f1" stroke-width="2.5" marker-end="url(#arr5a)"/>
+  <rect x="770" y="192" width="40" height="52" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5" filter="url(#sh5a)"/>
+  <text x="790" y="215" text-anchor="middle" font-size="16" font-weight="800" fill="#6d28d9">h</text>
+  <text x="790" y="234" text-anchor="middle" font-size="8" fill="#7c3aed">(B,S,d)</text>
+
+  <rect x="30" y="395" width="760" height="88" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5" filter="url(#sh5a)"/>
+
+  <rect x="50" y="410" width="100" height="28" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="100" y="429" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">k = 4096</text>
+  <text x="168" y="428" text-anchor="middle" font-size="16" fill="#ea580c">&#8594;</text>
+  <rect x="185" y="410" width="75" height="28" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="2.5"/>
+  <text x="222" y="429" text-anchor="middle" font-size="10" font-weight="800" fill="#b45309">r = 16</text>
+  <text x="278" y="428" text-anchor="middle" font-size="16" fill="#ea580c">&#8594;</text>
+  <rect x="295" y="410" width="100" height="28" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="345" y="429" text-anchor="middle" font-size="10" font-weight="700" fill="#6d28d9">d = 4096</text>
+
+  <line x1="430" y1="405" x2="430" y2="465" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <text x="470" y="420" font-size="9" fill="#dc2626" font-weight="600">Full W&#8320;: 4096 &#215; 4096 = 16,777,216</text>
+  <text x="470" y="440" font-size="9" fill="#16a34a" font-weight="600">A params: 16 &#215; 4096 = 65,536</text>
+  <text x="470" y="458" font-size="9" fill="#16a34a" font-weight="600">B params: 4096 &#215; 16 = 65,536</text>
+  <text x="470" y="476" font-size="9" fill="#6366f1" font-weight="700">LoRA total: 131,072 (0.78%)</text>
+</svg>

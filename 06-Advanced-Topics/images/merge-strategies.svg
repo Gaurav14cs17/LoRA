@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 380" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+  </defs>
+  <rect width="820" height="380" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="410" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">LoRA Merge Strategies</text>
+
+  <rect x="30" y="60" width="235" height="295" rx="12" fill="white" stroke="#3b82f6" stroke-width="2" filter="url(#sh)"/>
+  <text x="147" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">1. Simple Merge</text>
+
+  <rect x="55" y="110" width="185" height="50" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="147" y="135" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8">W&#8320;</text>
+  <text x="147" y="152" text-anchor="middle" font-size="9" fill="#3b82f6">+ &#945;/r &#215; BA</text>
+
+  <text x="147" y="185" text-anchor="middle" font-size="12" font-weight="700" fill="#475569">W' = W&#8320; + &#945;/r BA</text>
+
+  <rect x="60" y="205" width="165" height="80" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
+  <text x="142" y="228" text-anchor="middle" font-size="9" fill="#64748b">Direct addition.</text>
+  <text x="142" y="243" text-anchor="middle" font-size="9" fill="#64748b">Single adapter.</text>
+  <text x="142" y="258" text-anchor="middle" font-size="9" fill="#64748b">Most common.</text>
+
+  <line x1="147" y1="295" x2="147" y2="315" stroke="#3b82f6" stroke-width="2"/>
+  <circle cx="147" cy="325" r="12" fill="#3b82f6"/>
+  <text x="147" y="330" text-anchor="middle" font-size="12" font-weight="700" fill="white">W'</text>
+
+  <rect x="292" y="60" width="235" height="295" rx="12" fill="white" stroke="#7c3aed" stroke-width="2" filter="url(#sh)"/>
+  <text x="409" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#6d28d9">2. Task Arithmetic</text>
+
+  <rect x="317" y="110" width="185" height="55" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="409" y="130" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9">W&#8320;</text>
+  <text x="409" y="148" text-anchor="middle" font-size="9" fill="#7c3aed">+ &#964;&#8321; + &#964;&#8322;</text>
+
+  <text x="409" y="185" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">W' = W&#8320; + &#964;&#8321; + &#964;&#8322;</text>
+
+  <rect x="322" y="205" width="175" height="80" rx="8" fill="#faf5ff" stroke="#a78bfa" stroke-width="1"/>
+  <text x="409" y="228" text-anchor="middle" font-size="9" fill="#64748b">Combine multiple</text>
+  <text x="409" y="243" text-anchor="middle" font-size="9" fill="#64748b">task adapters.</text>
+  <text x="409" y="258" text-anchor="middle" font-size="9" fill="#64748b">Linear combination.</text>
+
+  <line x1="380" y1="295" x2="380" y2="310" stroke="#7c3aed" stroke-width="1.5"/>
+  <line x1="438" y1="295" x2="438" y2="310" stroke="#7c3aed" stroke-width="1.5"/>
+  <circle cx="409" cy="335" r="12" fill="#7c3aed"/>
+  <text x="409" y="340" text-anchor="middle" font-size="12" font-weight="700" fill="white">W'</text>
+
+  <rect x="554" y="60" width="235" height="295" rx="12" fill="white" stroke="#16a34a" stroke-width="2" filter="url(#sh)"/>
+  <text x="671" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">3. TIES Merge</text>
+
+  <rect x="579" y="105" width="185" height="90" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="671" y="125" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">Trim</text>
+  <text x="671" y="142" text-anchor="middle" font-size="9" fill="#16a34a">low-magnitude params</text>
+  <text x="671" y="162" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">Elect sign</text>
+  <text x="671" y="179" text-anchor="middle" font-size="9" fill="#16a34a">majority vote per dim</text>
+  <text x="671" y="197" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">Merge</text>
+  <text x="671" y="210" text-anchor="middle" font-size="9" fill="#16a34a">average remaining</text>
+
+  <rect x="604" y="215" width="134" height="50" rx="8" fill="#f0fdf4" stroke="#4ade80" stroke-width="1"/>
+  <text x="671" y="240" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">Best for many</text>
+  <text x="671" y="257" text-anchor="middle" font-size="9" fill="#16a34a">task merger</text>
+
+  <line x1="671" y1="275" x2="671" y2="310" stroke="#16a34a" stroke-width="2"/>
+  <circle cx="671" cy="335" r="12" fill="#16a34a"/>
+  <text x="671" y="340" text-anchor="middle" font-size="12" font-weight="700" fill="white">W'</text>
+</svg>

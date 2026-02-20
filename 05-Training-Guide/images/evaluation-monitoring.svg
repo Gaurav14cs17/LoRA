@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300">
+  <rect width="800" height="300" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">Evaluation and Monitoring During LoRA Training</text>
+
+  <!-- Training metrics (left) -->
+  <rect x="20" y="60" width="240" height="195" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="140" y="85" text-anchor="middle" fill="#3b82f6" font-family="Arial,sans-serif" font-size="13" font-weight="bold">Track During Training</text>
+  <line x1="40" y1="95" x2="240" y2="95" stroke="#334155" stroke-width="1"/>
+  <circle cx="42" cy="115" r="4" fill="#10b981"/>
+  <text x="55" y="119" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">train_loss (should decrease)</text>
+  <circle cx="42" cy="140" r="4" fill="#10b981"/>
+  <text x="55" y="144" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">eval_loss (watch for diverge)</text>
+  <circle cx="42" cy="165" r="4" fill="#f59e0b"/>
+  <text x="55" y="169" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">learning_rate (verify schedule)</text>
+  <circle cx="42" cy="190" r="4" fill="#f59e0b"/>
+  <text x="55" y="194" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">grad_norm (watch for spikes)</text>
+  <circle cx="42" cy="215" r="4" fill="#8b5cf6"/>
+  <text x="55" y="219" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">GPU memory usage</text>
+  <circle cx="42" cy="240" r="4" fill="#8b5cf6"/>
+  <text x="55" y="244" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">tokens/second throughput</text>
+
+  <!-- Eval metrics (middle) -->
+  <rect x="280" y="60" width="240" height="195" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+  <text x="400" y="85" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="13" font-weight="bold">Evaluate After Training</text>
+  <line x1="300" y1="95" x2="500" y2="95" stroke="#334155" stroke-width="1"/>
+  <circle cx="302" cy="115" r="4" fill="#10b981"/>
+  <text x="315" y="119" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">Perplexity on held-out set</text>
+  <circle cx="302" cy="140" r="4" fill="#10b981"/>
+  <text x="315" y="144" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">Task-specific benchmarks</text>
+  <circle cx="302" cy="165" r="4" fill="#10b981"/>
+  <text x="315" y="169" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">Generation quality (manual)</text>
+  <circle cx="302" cy="190" r="4" fill="#f59e0b"/>
+  <text x="315" y="194" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">Base model perf (forgetting?)</text>
+  <circle cx="302" cy="215" r="4" fill="#f59e0b"/>
+  <text x="315" y="219" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">MT-Bench / AlpacaEval</text>
+  <circle cx="302" cy="240" r="4" fill="#8b5cf6"/>
+  <text x="315" y="244" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">Compare vs base (sanity)</text>
+
+  <!-- Red flags (right) -->
+  <rect x="540" y="60" width="240" height="195" rx="8" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="660" y="85" text-anchor="middle" fill="#ef4444" font-family="Arial,sans-serif" font-size="13" font-weight="bold">Red Flags</text>
+  <line x1="560" y1="95" x2="760" y2="95" stroke="#334155" stroke-width="1"/>
+  <text x="562" y="115" fill="#ef4444" font-family="Arial,sans-serif" font-size="10">&#9888; eval_loss rising while</text>
+  <text x="572" y="130" fill="#ef4444" font-family="Arial,sans-serif" font-size="10">train_loss drops &#8594; overfit</text>
+  <text x="562" y="155" fill="#ef4444" font-family="Arial,sans-serif" font-size="10">&#9888; NaN/Inf in loss</text>
+  <text x="572" y="170" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">&#8594; lower LR, check data</text>
+  <text x="562" y="195" fill="#ef4444" font-family="Arial,sans-serif" font-size="10">&#9888; Good loss, bad generations</text>
+  <text x="572" y="210" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">&#8594; wrong eval, data issue</text>
+  <text x="562" y="235" fill="#ef4444" font-family="Arial,sans-serif" font-size="10">&#9888; Grad norm spikes &gt;10x</text>
+  <text x="572" y="250" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">&#8594; clip grads, check data</text>
+
+  <text x="400" y="285" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="11" font-weight="bold">Use wandb/tensorboard: logging_steps=10, eval every 0.25 epoch</text>
+</svg>

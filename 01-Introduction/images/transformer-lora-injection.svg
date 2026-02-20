@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 540" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh" x="-4%" y="-4%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#475569"/>
+    </marker>
+    <marker id="arr-o" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#ea580c"/>
+    </marker>
+    <marker id="arr-b" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#3b82f6"/>
+    </marker>
+    <marker id="arr-g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#16a34a"/>
+    </marker>
+  </defs>
+  <rect width="760" height="540" rx="14" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="380" y="30" text-anchor="middle" font-size="17" font-weight="700" fill="#1e293b">Transformer Block with LoRA Injection Points</text>
+  <!-- Block outline -->
+  <rect x="100" y="50" width="560" height="460" rx="14" fill="white" stroke="#94a3b8" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="380" y="75" text-anchor="middle" font-size="13" font-weight="600" fill="#475569">Transformer Layer i</text>
+  <!-- Multi-Head Attention -->
+  <rect x="130" y="90" width="500" height="170" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="380" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8">Multi-Head Attention</text>
+  <!-- Q -->
+  <rect x="155" y="125" width="80" height="40" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="195" y="142" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">W_q</text>
+  <text x="195" y="158" text-anchor="middle" font-size="7" fill="#16a34a">+ LoRA &#9733;</text>
+  <!-- K -->
+  <rect x="255" y="125" width="80" height="40" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="295" y="142" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">W_k</text>
+  <text x="295" y="158" text-anchor="middle" font-size="7" fill="#16a34a">+ LoRA</text>
+  <!-- V -->
+  <rect x="355" y="125" width="80" height="40" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="395" y="142" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">W_v</text>
+  <text x="395" y="158" text-anchor="middle" font-size="7" fill="#16a34a">+ LoRA &#9733;</text>
+  <!-- O -->
+  <rect x="455" y="125" width="80" height="40" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="495" y="142" text-anchor="middle" font-size="10" font-weight="700" fill="#b45309">W_o</text>
+  <text x="495" y="158" text-anchor="middle" font-size="7" fill="#d97706">+ LoRA (opt)</text>
+  <!-- Attn computation -->
+  <rect x="210" y="185" width="340" height="30" rx="6" fill="#bfdbfe" stroke="#3b82f6" stroke-width="1"/>
+  <text x="380" y="205" text-anchor="middle" font-size="9" fill="#1d4ed8">Attention(Q, K, V) = softmax(QK^T / &#8730;d_k) V</text>
+  <!-- Residual + LayerNorm -->
+  <rect x="200" y="230" width="360" height="28" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"/>
+  <text x="380" y="249" text-anchor="middle" font-size="10" fill="#475569">Add &amp; LayerNorm</text>
+  <!-- FFN -->
+  <rect x="130" y="275" width="500" height="140" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="380" y="297" text-anchor="middle" font-size="12" font-weight="700" fill="#c2410c">Feed-Forward Network</text>
+  <!-- Gate -->
+  <rect x="155" y="310" width="100" height="38" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="205" y="328" text-anchor="middle" font-size="9" font-weight="700" fill="#b45309">W_gate</text>
+  <text x="205" y="342" text-anchor="middle" font-size="7" fill="#d97706">+ LoRA (opt)</text>
+  <!-- Up -->
+  <rect x="275" y="310" width="100" height="38" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="325" y="328" text-anchor="middle" font-size="9" font-weight="700" fill="#b45309">W_up</text>
+  <text x="325" y="342" text-anchor="middle" font-size="7" fill="#d97706">+ LoRA (opt)</text>
+  <!-- SiLU -->
+  <rect x="260" y="358" width="240" height="25" rx="5" fill="#fde68a" stroke="#fbbf24" stroke-width="1"/>
+  <text x="380" y="375" text-anchor="middle" font-size="9" fill="#92400e">SiLU activation</text>
+  <!-- Down -->
+  <rect x="395" y="310" width="100" height="38" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="445" y="328" text-anchor="middle" font-size="9" font-weight="700" fill="#b45309">W_down</text>
+  <text x="445" y="342" text-anchor="middle" font-size="7" fill="#d97706">+ LoRA (opt)</text>
+  <!-- Residual + LayerNorm -->
+  <rect x="200" y="420" width="360" height="28" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"/>
+  <text x="380" y="439" text-anchor="middle" font-size="10" fill="#475569">Add &amp; LayerNorm</text>
+  <!-- Legend -->
+  <rect x="200" y="465" width="360" height="35" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="380" y="488" text-anchor="middle" font-size="10" fill="#15803d">&#9733; = applied in original paper | (opt) = commonly added in practice</text>
+</svg>

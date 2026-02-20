@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320">
+  <rect width="800" height="320" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">6 Key Advantages of LoRA</text>
+
+  <rect x="25" y="60" width="235" height="85" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="142" y="85" text-anchor="middle" fill="#3b82f6" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Zero Inference Latency</text>
+  <text x="142" y="105" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Merge BA into W after training</text>
+  <text x="142" y="122" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">W' = W + BA &#8594; same speed</text>
+
+  <rect x="282" y="60" width="235" height="85" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+  <text x="400" y="85" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Tiny Adapter Size</text>
+  <text x="400" y="105" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">7B model adapter &#8776; 10 MB</text>
+  <text x="400" y="122" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">vs 14 GB full model</text>
+
+  <rect x="539" y="60" width="235" height="85" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="657" y="85" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Fast Task Switching</text>
+  <text x="657" y="105" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Swap adapters by add/subtract</text>
+  <text x="657" y="122" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">No full model reload needed</text>
+
+  <rect x="25" y="165" width="235" height="85" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.5"/>
+  <text x="142" y="190" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Composable</text>
+  <text x="142" y="210" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Merge multiple adapters</text>
+  <text x="142" y="227" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">code + math + safety</text>
+
+  <rect x="282" y="165" width="235" height="85" rx="8" fill="#1e293b" stroke="#ec4899" stroke-width="1.5"/>
+  <text x="400" y="190" text-anchor="middle" fill="#ec4899" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Universal Compatibility</text>
+  <text x="400" y="210" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Works on any linear layer</text>
+  <text x="400" y="227" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Attention, FFN, Embeddings</text>
+
+  <rect x="539" y="165" width="235" height="85" rx="8" fill="#1e293b" stroke="#14b8a6" stroke-width="1.5"/>
+  <text x="657" y="190" text-anchor="middle" fill="#14b8a6" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Memory Efficient</text>
+  <text x="657" y="210" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Only B, A need gradients</text>
+  <text x="657" y="227" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Optimizer states: 0.1% of full FT</text>
+
+  <text x="400" y="295" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="13">All advantages stem from one insight: &#916;W has low intrinsic rank</text>
+</svg>

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 330" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh5" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <marker id="arr5" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+  </defs>
+  <rect width="820" height="330" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="410" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">LoRA Save Strategies</text>
+
+  <rect x="30" y="55" width="365" height="250" rx="12" fill="#fff7ed" stroke="#ea580c" stroke-width="2" filter="url(#sh5)"/>
+  <text x="212" y="85" text-anchor="middle" font-size="14" font-weight="700" fill="#c2410c">merge_weights=False</text>
+
+  <rect x="55" y="105" width="320" height="55" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1"/>
+  <text x="215" y="128" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">LoRA model</text>
+  <text x="215" y="145" text-anchor="middle" font-size="9" fill="#64748b">filter requires_grad</text>
+
+  <line x1="215" y1="160" x2="215" y2="180" stroke="#ea580c" stroke-width="1.8" marker-end="url(#arr5)"/>
+
+  <rect x="95" y="185" width="240" height="55" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="215" y="208" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">tiny adapter file</text>
+  <text x="215" y="225" text-anchor="middle" font-size="12" font-weight="800" fill="#92400e">~10 MB</text>
+
+  <rect x="55" y="255" width="320" height="35" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
+  <text x="215" y="277" text-anchor="middle" font-size="9" fill="#475569">adapter_config.json + adapter_model.safetensors</text>
+
+  <rect x="425" y="55" width="365" height="250" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" filter="url(#sh5)"/>
+  <text x="607" y="85" text-anchor="middle" font-size="14" font-weight="700" fill="#15803d">merge_weights=True</text>
+
+  <rect x="450" y="105" width="315" height="55" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+  <text x="607" y="128" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">W&#8320; + BA merge</text>
+  <text x="607" y="145" text-anchor="middle" font-size="9" fill="#64748b">single W' weight matrix</text>
+
+  <line x1="607" y1="160" x2="607" y2="180" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arr5)"/>
+
+  <rect x="490" y="185" width="235" height="55" rx="8" fill="#bbf7d0" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="607" y="208" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">full model file</text>
+  <text x="607" y="225" text-anchor="middle" font-size="12" font-weight="800" fill="#0f766e">~14 GB</text>
+
+  <rect x="450" y="255" width="315" height="35" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
+  <text x="607" y="277" text-anchor="middle" font-size="9" fill="#475569">model.safetensors (full weights, no adapter)</text>
+
+  <text x="410" y="320" text-anchor="middle" font-size="10" fill="#64748b">Left: deploy with base + adapter. Right: deploy merged model only.</text>
+</svg>

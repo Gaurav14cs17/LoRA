@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280">
+  <rect width="800" height="280" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">GLoRA: Generalized Adapter Search Space</text>
+
+  <!-- Standard LoRA (left) -->
+  <rect x="30" y="60" width="300" height="160" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="180" y="88" text-anchor="middle" fill="#3b82f6" font-family="Arial,sans-serif" font-size="14" font-weight="bold">Standard LoRA</text>
+  <text x="180" y="120" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="13">h = Wx + BAx</text>
+  <text x="180" y="152" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">Additive only</text>
+  <text x="180" y="172" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">Fixed structure</text>
+  <text x="180" y="192" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">No prompt component</text>
+
+  <!-- Arrow -->
+  <text x="365" y="148" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="28">&#8594;</text>
+
+  <!-- GLoRA (right) -->
+  <rect x="400" y="60" width="370" height="160" rx="10" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+  <text x="585" y="88" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="14" font-weight="bold">GLoRA (Generalized)</text>
+  <text x="585" y="120" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="13">h = (W + BA)x + Cx + Db + b</text>
+
+  <rect x="420" y="138" width="90" height="25" rx="4" fill="#3b82f6" opacity="0.2" stroke="#3b82f6" stroke-width="1"/>
+  <text x="465" y="155" text-anchor="middle" fill="#60a5fa" font-family="Arial,sans-serif" font-size="10">BA: low-rank</text>
+
+  <rect x="520" y="138" width="80" height="25" rx="4" fill="#f59e0b" opacity="0.2" stroke="#f59e0b" stroke-width="1"/>
+  <text x="560" y="155" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="10">C: scaling</text>
+
+  <rect x="610" y="138" width="90" height="25" rx="4" fill="#8b5cf6" opacity="0.2" stroke="#8b5cf6" stroke-width="1"/>
+  <text x="655" y="155" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="10">D, b: prompt</text>
+
+  <text x="585" y="198" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">Subsumes LoRA + adapters + prompt tuning</text>
+
+  <text x="400" y="260" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">GLoRA searches over a wider adapter space to find the optimal combination per layer</text>
+</svg>

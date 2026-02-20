@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380">
+  <defs>
+    <marker id="arwY" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#f59e0b"/>
+    </marker>
+  </defs>
+  <rect width="800" height="380" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">Why LoRA Works: Low Intrinsic Dimensionality</text>
+
+  <!-- Full parameter space -->
+  <circle cx="220" cy="210" r="140" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+  <text x="220" y="100" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="12">Full Parameter Space</text>
+  <text x="220" y="85" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="11">(d = millions)</text>
+
+  <!-- Low-rank subspace -->
+  <ellipse cx="220" cy="220" rx="45" ry="30" fill="#3b82f6" opacity="0.3" stroke="#3b82f6" stroke-width="2"/>
+  <text x="220" y="225" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-size="11" font-weight="bold">r = 16</text>
+
+  <!-- Scattered dots (full space noise) -->
+  <circle cx="140" cy="160" r="2" fill="#475569"/>
+  <circle cx="300" cy="170" r="2" fill="#475569"/>
+  <circle cx="160" cy="300" r="2" fill="#475569"/>
+  <circle cx="280" cy="310" r="2" fill="#475569"/>
+  <circle cx="120" cy="250" r="2" fill="#475569"/>
+  <circle cx="330" cy="230" r="2" fill="#475569"/>
+  <circle cx="310" cy="150" r="2" fill="#475569"/>
+  <circle cx="150" cy="140" r="2" fill="#475569"/>
+
+  <!-- Concentrated dots (subspace) -->
+  <circle cx="205" cy="215" r="3" fill="#60a5fa"/>
+  <circle cx="230" cy="210" r="3" fill="#60a5fa"/>
+  <circle cx="215" cy="230" r="3" fill="#60a5fa"/>
+  <circle cx="240" cy="220" r="3" fill="#60a5fa"/>
+  <circle cx="200" cy="225" r="3" fill="#60a5fa"/>
+  <circle cx="225" cy="205" r="3" fill="#60a5fa"/>
+
+  <!-- Singular values bar chart -->
+  <text x="600" y="80" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="14" font-weight="bold">Singular Values of &#916;W</text>
+  <text x="600" y="98" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">(decay rapidly after rank ~8)</text>
+
+  <!-- Axes -->
+  <line x1="480" y1="310" x2="720" y2="310" stroke="#475569" stroke-width="1.5"/>
+  <line x1="480" y1="310" x2="480" y2="120" stroke="#475569" stroke-width="1.5"/>
+  <text x="600" y="340" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">Component index</text>
+
+  <!-- Bars -->
+  <rect x="495" y="140" width="18" height="170" rx="2" fill="#3b82f6"/>
+  <rect x="518" y="170" width="18" height="140" rx="2" fill="#3b82f6"/>
+  <rect x="541" y="200" width="18" height="110" rx="2" fill="#3b82f6"/>
+  <rect x="564" y="240" width="18" height="70" rx="2" fill="#3b82f6"/>
+  <rect x="587" y="270" width="18" height="40" rx="2" fill="#3b82f6" opacity="0.6"/>
+  <rect x="610" y="285" width="18" height="25" rx="2" fill="#3b82f6" opacity="0.4"/>
+  <rect x="633" y="295" width="18" height="15" rx="2" fill="#3b82f6" opacity="0.3"/>
+  <rect x="656" y="300" width="18" height="10" rx="2" fill="#3b82f6" opacity="0.2"/>
+  <rect x="679" y="303" width="18" height="7" rx="2" fill="#3b82f6" opacity="0.15"/>
+
+  <!-- Bracket -->
+  <line x1="495" y1="125" x2="582" y2="125" stroke="#10b981" stroke-width="2"/>
+  <line x1="495" y1="125" x2="495" y2="132" stroke="#10b981" stroke-width="2"/>
+  <line x1="582" y1="125" x2="582" y2="132" stroke="#10b981" stroke-width="2"/>
+  <text x="538" y="118" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="10" font-weight="bold">Captured by LoRA (r=4)</text>
+
+  <text x="400" y="370" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="12">Fine-tuning updates concentrate in a tiny subspace &#8594; low-rank approximation loses almost nothing</text>
+</svg>

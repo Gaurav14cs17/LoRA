@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 310">
+  <rect width="800" height="310" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">LoRA Convergence: Loss Landscape and Implicit Regularization</text>
+
+  <!-- Loss curve axes -->
+  <line x1="60" y1="250" x2="380" y2="250" stroke="#475569" stroke-width="1.5"/>
+  <line x1="60" y1="250" x2="60" y2="60" stroke="#475569" stroke-width="1.5"/>
+  <text x="220" y="280" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">Training Steps</text>
+  <text x="30" y="155" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11" transform="rotate(-90,30,155)">Loss</text>
+
+  <!-- Full FT curve -->
+  <polyline points="80,90 120,110 160,140 200,170 240,195 280,210 320,218 360,222" fill="none" stroke="#ef4444" stroke-width="2"/>
+  <text x="370" y="215" fill="#ef4444" font-family="Arial,sans-serif" font-size="10">Full FT</text>
+
+  <!-- LoRA curve -->
+  <polyline points="80,90 120,115 160,150 200,180 240,200 280,215 320,225 360,230" fill="none" stroke="#3b82f6" stroke-width="2"/>
+  <text x="370" y="235" fill="#3b82f6" font-family="Arial,sans-serif" font-size="10">LoRA</text>
+
+  <!-- Annotation -->
+  <line x1="340" y1="222" x2="340" y2="230" stroke="#f59e0b" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="340" y="248" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="9">small gap</text>
+
+  <!-- Right: Key properties -->
+  <rect x="420" y="55" width="355" height="210" rx="10" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+  <text x="597" y="80" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="13" font-weight="bold">Convergence Properties</text>
+  <line x1="440" y1="90" x2="755" y2="90" stroke="#334155" stroke-width="1"/>
+
+  <circle cx="450" cy="115" r="5" fill="#10b981"/>
+  <text x="465" y="119" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="11">GD on BA favors min nuclear norm</text>
+
+  <circle cx="450" cy="145" r="5" fill="#10b981"/>
+  <text x="465" y="149" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="11">||&#916;W||_* &#8804; &#8730;r &#183; ||&#916;W||_F</text>
+
+  <circle cx="450" cy="175" r="5" fill="#10b981"/>
+  <text x="465" y="179" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="11">Low rank &#8594; fewer local minima</text>
+
+  <circle cx="450" cy="205" r="5" fill="#10b981"/>
+  <text x="465" y="209" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="11">Smooth loss landscape near W&#8320;</text>
+
+  <circle cx="450" cy="235" r="5" fill="#f59e0b"/>
+  <text x="465" y="239" fill="#f59e0b" font-family="Arial,sans-serif" font-size="11">Rate: O(1/&#8730;T) for convex, O(1/T) SGD</text>
+
+  <text x="400" y="298" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">LoRA converges to solutions within &#949; of full FT optimum, with implicit low-rank regularization</text>
+</svg>

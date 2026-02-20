@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340">
+  <defs>
+    <marker id="ad" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="800" height="340" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">DoRA: Weight-Decomposed Low-Rank Adaptation</text>
+
+  <!-- Input -->
+  <rect x="20" y="130" width="70" height="60" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+  <text x="55" y="165" text-anchor="middle" fill="#60a5fa" font-family="Arial,sans-serif" font-size="13" font-weight="bold">x</text>
+
+  <!-- Fork -->
+  <line x1="90" y1="145" x2="140" y2="90" stroke="#475569" stroke-width="2" marker-end="url(#ad)"/>
+  <line x1="90" y1="175" x2="140" y2="230" stroke="#475569" stroke-width="2" marker-end="url(#ad)"/>
+
+  <!-- Magnitude path (top) -->
+  <rect x="145" y="55" width="160" height="70" rx="8" fill="#1e293b" stroke="#ec4899" stroke-width="2"/>
+  <text x="225" y="82" text-anchor="middle" fill="#ec4899" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Magnitude m</text>
+  <text x="225" y="102" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">||W + &#916;W||_col</text>
+  <text x="225" y="117" text-anchor="middle" fill="#ec4899" font-family="Arial,sans-serif" font-size="9">TRAINABLE scalar per column</text>
+
+  <!-- Direction path (bottom) with LoRA -->
+  <rect x="145" y="195" width="100" height="65" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+  <text x="195" y="225" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="12" font-weight="bold">A</text>
+  <text x="195" y="245" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">r &#215; k</text>
+
+  <line x1="245" y1="227" x2="275" y2="227" stroke="#475569" stroke-width="2" marker-end="url(#ad)"/>
+
+  <rect x="280" y="195" width="100" height="65" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+  <text x="330" y="225" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="12" font-weight="bold">B</text>
+  <text x="330" y="245" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">d &#215; r</text>
+
+  <line x1="380" y1="227" x2="410" y2="227" stroke="#475569" stroke-width="2" marker-end="url(#ad)"/>
+
+  <!-- W + BA -->
+  <rect x="415" y="175" width="120" height="50" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="475" y="200" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="11" font-weight="bold">W + BA</text>
+  <text x="475" y="218" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">updated weight</text>
+
+  <!-- Normalize direction -->
+  <line x1="535" y1="200" x2="565" y2="200" stroke="#475569" stroke-width="2" marker-end="url(#ad)"/>
+  <rect x="570" y="175" width="100" height="50" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="620" y="195" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="11" font-weight="bold">Normalize</text>
+  <text x="620" y="215" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">V / ||V||_col</text>
+
+  <!-- Merge magnitude &#215; direction -->
+  <line x1="305" y1="90" x2="540" y2="90" stroke="#475569" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <line x1="670" y1="200" x2="700" y2="200" stroke="#475569" stroke-width="2"/>
+  <line x1="540" y1="90" x2="540" y2="130" stroke="#475569" stroke-width="2"/>
+
+  <!-- Multiply circle -->
+  <circle cx="700" cy="145" r="22" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="700" y="152" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="18" font-weight="bold">&#215;</text>
+
+  <line x1="540" y1="130" x2="678" y2="140" stroke="#475569" stroke-width="2" marker-end="url(#ad)"/>
+  <line x1="700" y1="175" x2="700" y2="200" stroke="#475569" stroke-width="2"/>
+  <line x1="700" y1="200" x2="672" y2="200" stroke="#475569" stroke-width="1"/>
+
+  <!-- Output -->
+  <line x1="722" y1="145" x2="745" y2="145" stroke="#475569" stroke-width="2" marker-end="url(#ad)"/>
+  <rect x="748" y="115" width="40" height="60" rx="6" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="768" y="150" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="13" font-weight="bold">h</text>
+
+  <!-- Formula -->
+  <text x="400" y="285" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="13">h = m &#183; (W + BA) / ||(W + BA)||_col &#183; x</text>
+
+  <!-- Legend -->
+  <rect x="100" y="310" width="10" height="10" rx="2" fill="#ec4899"/>
+  <text x="118" y="320" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Magnitude (trainable)</text>
+  <rect x="280" y="310" width="10" height="10" rx="2" fill="#10b981"/>
+  <text x="298" y="320" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">LoRA B, A (trainable)</text>
+  <rect x="460" y="310" width="10" height="10" rx="2" fill="#f59e0b"/>
+  <text x="478" y="320" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Direction (normalized)</text>
+  <rect x="620" y="310" width="10" height="10" rx="2" fill="#8b5cf6"/>
+  <text x="638" y="320" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Output</text>
+</svg>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 310">
+  <rect width="800" height="310" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">LoraConfig: Configuration Dataclass</text>
+
+  <!-- Config box -->
+  <rect x="40" y="55" width="340" height="220" rx="10" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+  <text x="210" y="80" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="14" font-weight="bold">@dataclass LoraConfig</text>
+  <line x1="60" y1="90" x2="360" y2="90" stroke="#334155" stroke-width="1"/>
+
+  <text x="70" y="112" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">rank: int = 8</text>
+  <text x="70" y="132" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">lora_alpha: int = 8</text>
+  <text x="70" y="152" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">lora_dropout: float = 0.0</text>
+  <text x="70" y="172" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">use_rslora: bool = True</text>
+  <text x="70" y="192" fill="#3b82f6" font-family="Arial,sans-serif" font-size="11" font-weight="bold">target_modules: list[str]</text>
+  <text x="70" y="212" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">layers_to_ignore: list[str]</text>
+  <text x="70" y="232" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">layers_pattern: str</text>
+  <text x="70" y="252" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="11" font-weight="bold">save_path: str</text>
+  <text x="70" y="268" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">dtype: torch.dtype</text>
+
+  <!-- Arrow to LoraModel -->
+  <line x1="380" y1="165" x2="430" y2="165" stroke="#f59e0b" stroke-width="2.5"/>
+  <polygon points="430,159 442,165 430,171" fill="#f59e0b"/>
+
+  <!-- LoraModel box -->
+  <rect x="450" y="55" width="320" height="220" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+  <text x="610" y="80" text-anchor="middle" fill="#3b82f6" font-family="Arial,sans-serif" font-size="14" font-weight="bold">LoraModel</text>
+  <line x1="470" y1="90" x2="750" y2="90" stroke="#334155" stroke-width="1"/>
+
+  <text x="470" y="112" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">1. Reads target_modules</text>
+  <text x="470" y="135" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">2. Walks model tree</text>
+  <text x="470" y="158" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">3. Pattern matches names</text>
+  <text x="470" y="181" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">4. Swaps nn.Linear &#8594; LoRALinear</text>
+  <text x="470" y="204" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">5. Swaps nn.Embedding &#8594; LoRAEmb</text>
+  <text x="470" y="227" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">6. Swaps nn.Conv2d &#8594; LoRAConv2d</text>
+  <text x="470" y="250" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">7. Freezes all original weights</text>
+  <text x="470" y="268" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">8. Copies original W into LoRA layers</text>
+
+  <!-- Bottom -->
+  <text x="400" y="300" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">Config drives the model &#8212; change target_modules and rank to control what gets adapted</text>
+</svg>

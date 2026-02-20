@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 420" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+  </defs>
+  <rect width="820" height="420" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="410" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">QLoRA Architecture</text>
+  <text x="410" y="50" text-anchor="middle" font-size="12" fill="#64748b">4-bit NF4 base + BF16 LoRA adapters</text>
+
+  <rect x="40" y="75" width="180" height="200" rx="12" fill="#f0f9ff" stroke="#3b82f6" stroke-width="2" filter="url(#sh)"/>
+  <text x="130" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">Base Model (NF4)</text>
+  <text x="130" y="118" text-anchor="middle" font-size="10" fill="#3b82f6">4-bit quantized</text>
+  <rect x="60" y="135" width="140" height="35" rx="6" fill="#bfdbfe" stroke="#60a5fa" stroke-width="1"/>
+  <text x="130" y="157" text-anchor="middle" font-size="10" font-weight="600" fill="#1d4ed8">W&#8320;, W&#8321;, W&#8322;...</text>
+  <text x="130" y="175" text-anchor="middle" font-size="9" fill="#64748b">FROZEN</text>
+  <rect x="50" y="190" width="160" height="50" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="130" y="210" text-anchor="middle" font-size="10" font-weight="700" fill="#b45309">Double Quant</text>
+  <text x="130" y="228" text-anchor="middle" font-size="9" fill="#d97706">FP32 &#8594; FP8 constants</text>
+
+  <line x1="220" y1="175" x2="268" y2="175" stroke="#475569" stroke-width="1.8" marker-end="url(#arr)"/>
+
+  <rect x="275" y="145" width="130" height="60" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" filter="url(#sh)"/>
+  <text x="340" y="170" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">Dequantize</text>
+  <text x="340" y="188" text-anchor="middle" font-size="10" fill="#d97706">4-bit &#8594; BF16</text>
+
+  <rect x="275" y="225" width="130" height="55" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" filter="url(#sh)"/>
+  <text x="340" y="248" text-anchor="middle" font-size="12" font-weight="700" fill="#15803d">Compute</text>
+  <text x="340" y="265" text-anchor="middle" font-size="10" fill="#16a34a">in BF16</text>
+
+  <line x1="340" y1="205" x2="340" y2="223" stroke="#475569" stroke-width="1.5"/>
+
+  <rect x="455" y="75" width="180" height="200" rx="12" fill="#fff7ed" stroke="#ea580c" stroke-width="2" filter="url(#sh)"/>
+  <text x="545" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#c2410c">LoRA Adapters</text>
+  <text x="545" y="118" text-anchor="middle" font-size="10" fill="#ea580c">BF16 (trainable)</text>
+  <rect x="475" y="135" width="65" height="28" rx="5" fill="#fed7aa" stroke="#f97316" stroke-width="1"/>
+  <text x="507" y="153" text-anchor="middle" font-size="9" font-weight="600" fill="#c2410c">A&#8320;</text>
+  <rect x="550" y="135" width="65" height="28" rx="5" fill="#fed7aa" stroke="#f97316" stroke-width="1"/>
+  <text x="582" y="153" text-anchor="middle" font-size="9" font-weight="600" fill="#c2410c">B&#8320;</text>
+  <rect x="475" y="175" width="65" height="28" rx="5" fill="#fed7aa" stroke="#f97316" stroke-width="1"/>
+  <text x="507" y="193" text-anchor="middle" font-size="9" font-weight="600" fill="#c2410c">A&#8321;</text>
+  <rect x="550" y="175" width="65" height="28" rx="5" fill="#fed7aa" stroke="#f97316" stroke-width="1"/>
+  <text x="582" y="193" text-anchor="middle" font-size="9" font-weight="600" fill="#c2410c">B&#8321;</text>
+  <text x="545" y="225" text-anchor="middle" font-size="14" fill="#fdba74">...</text>
+  <text x="545" y="255" text-anchor="middle" font-size="9" fill="#ea580c">TRAINABLE ~50 MB</text>
+
+  <line x1="453" y1="175" x2="438" y2="175" stroke="#ea580c" stroke-width="1.8" marker-end="url(#arr)"/>
+
+  <rect x="40" y="300" width="360" height="95" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="220" y="325" text-anchor="middle" font-size="12" font-weight="700" fill="#991b1b">Full FT: 7B model ~120 GB</text>
+  <text x="220" y="345" text-anchor="middle" font-size="10" fill="#dc2626">Full precision weights + gradients + optimizer</text>
+  <text x="220" y="370" text-anchor="middle" font-size="10" fill="#dc2626">Requires multi-GPU or massive VRAM</text>
+
+  <rect x="420" y="300" width="360" height="95" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="600" y="325" text-anchor="middle" font-size="12" font-weight="700" fill="#15803d">QLoRA: 7B model ~6 GB</text>
+  <text x="600" y="345" text-anchor="middle" font-size="10" fill="#16a34a">4-bit base (~3.5 GB) + LoRA + optimizer</text>
+  <text x="600" y="370" text-anchor="middle" font-size="10" fill="#16a34a">20&#215; memory savings</text>
+</svg>

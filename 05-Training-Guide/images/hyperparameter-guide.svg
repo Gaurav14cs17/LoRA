@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <marker id="arr5" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+  </defs>
+  <rect width="880" height="440" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="440" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">LoRA Hyperparameter Decision Guide</text>
+
+  <rect x="20" y="55" width="275" height="170" rx="12" fill="white" stroke="#ea580c" stroke-width="2" filter="url(#sh)"/>
+  <text x="157" y="80" text-anchor="middle" font-size="14" font-weight="700" fill="#c2410c">Rank (r)</text>
+  <text x="157" y="97" text-anchor="middle" font-size="10" fill="#ea580c">Most important hyperparameter</text>
+  <rect x="35" y="108" width="55" height="40" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+  <text x="62" y="125" text-anchor="middle" font-size="10" font-weight="700" fill="#b45309">r=4-8</text>
+  <rect x="100" y="108" width="55" height="40" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="127" y="125" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">r=16*</text>
+  <rect x="165" y="108" width="55" height="40" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+  <text x="192" y="125" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8">r=32</text>
+  <rect x="230" y="108" width="55" height="40" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+  <text x="257" y="125" text-anchor="middle" font-size="10" font-weight="700" fill="#6d28d9">r=64+</text>
+  <text x="157" y="175" text-anchor="middle" font-size="9" fill="#475569">Underfit? Increase rank</text>
+  <text x="157" y="190" text-anchor="middle" font-size="9" fill="#475569">Overfit? Decrease rank</text>
+
+  <rect x="305" y="55" width="270" height="170" rx="12" fill="white" stroke="#16a34a" stroke-width="2" filter="url(#sh)"/>
+  <text x="440" y="80" text-anchor="middle" font-size="14" font-weight="700" fill="#15803d">Alpha (&#945;)</text>
+  <text x="440" y="97" text-anchor="middle" font-size="10" fill="#16a34a">Scaling: effective scale = &#945;/r</text>
+  <rect x="320" y="110" width="100" height="35" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="370" y="132" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">&#945; = 2r*</text>
+  <rect x="430" y="110" width="65" height="35" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="462" y="132" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">&#945; = r</text>
+  <rect x="505" y="110" width="60" height="35" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
+  <text x="535" y="132" text-anchor="middle" font-size="10" fill="#475569">&#945; = 16</text>
+  <text x="440" y="170" text-anchor="middle" font-size="9" fill="#475569">Set &#945; = 2&#215;r and tune LR instead</text>
+
+  <rect x="585" y="55" width="275" height="170" rx="12" fill="white" stroke="#7c3aed" stroke-width="2" filter="url(#sh)"/>
+  <text x="722" y="80" text-anchor="middle" font-size="14" font-weight="700" fill="#6d28d9">Target Modules</text>
+  <text x="722" y="97" text-anchor="middle" font-size="10" fill="#7c3aed">Which layers get LoRA adapters</text>
+  <rect x="600" y="110" width="120" height="28" rx="5" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
+  <text x="660" y="129" text-anchor="middle" font-size="9" fill="#475569">Q, V only</text>
+  <rect x="730" y="110" width="120" height="28" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="790" y="129" text-anchor="middle" font-size="9" fill="#15803d">Q, K, V, O</text>
+  <rect x="630" y="148" width="175" height="28" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="717" y="167" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">all-linear*</text>
+
+  <rect x="20" y="240" width="275" height="180" rx="12" fill="white" stroke="#f59e0b" stroke-width="2" filter="url(#sh)"/>
+  <text x="157" y="265" text-anchor="middle" font-size="14" font-weight="700" fill="#b45309">Learning Rate</text>
+  <rect x="40" y="280" width="230" height="25" rx="5" fill="#fefce8" stroke="#eab308" stroke-width="1"/>
+  <text x="155" y="297" text-anchor="middle" font-size="10" font-weight="600" fill="#92400e">LoRA: 1e-4 to 3e-4</text>
+  <text x="157" y="358" text-anchor="middle" font-size="9" fill="#475569">Scheduler: cosine (recommended)</text>
+
+  <rect x="305" y="240" width="270" height="180" rx="12" fill="white" stroke="#db2777" stroke-width="2" filter="url(#sh)"/>
+  <text x="440" y="265" text-anchor="middle" font-size="14" font-weight="700" fill="#be185d">Dropout</text>
+  <rect x="320" y="284" width="55" height="30" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="347" y="303" text-anchor="middle" font-size="9" font-weight="600" fill="#15803d">0.0</text>
+  <rect x="382" y="284" width="55" height="30" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="409" y="303" text-anchor="middle" font-size="9" font-weight="700" fill="#15803d">0.05*</text>
+  <rect x="444" y="284" width="55" height="30" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+  <text x="471" y="303" text-anchor="middle" font-size="9" font-weight="600" fill="#b45309">0.1</text>
+  <rect x="506" y="284" width="55" height="30" rx="5" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+  <text x="533" y="303" text-anchor="middle" font-size="9" font-weight="600" fill="#991b1b">0.2</text>
+
+  <rect x="585" y="240" width="275" height="180" rx="12" fill="white" stroke="#6366f1" stroke-width="2" filter="url(#sh)"/>
+  <text x="722" y="265" text-anchor="middle" font-size="14" font-weight="700" fill="#4f46e5">Optimizer</text>
+  <rect x="600" y="294" width="130" height="30" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="665" y="313" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">paged_adamw_8bit*</text>
+  <text x="722" y="358" text-anchor="middle" font-size="9" fill="#475569">* = recommended defaults</text>
+</svg>

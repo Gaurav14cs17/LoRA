@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh5" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <marker id="arr5" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+  </defs>
+  <rect width="880" height="360" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="440" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">LoRA Task Vectors and Weighted Composition</text>
+
+  <rect x="30" y="55" width="380" height="270" rx="12" fill="#f8fafc" stroke="#6366f1" stroke-width="2" filter="url(#sh5)"/>
+  <text x="220" y="85" text-anchor="middle" font-size="13" font-weight="700" fill="#4f46e5">LoRA Task Vectors</text>
+
+  <rect x="55" y="110" width="330" height="55" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="220" y="135" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9">W&#8320; + &#964;_chat + &#964;_code = combined model</text>
+
+  <rect x="55" y="180" width="330" height="55" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="220" y="205" text-anchor="middle" font-size="10" font-weight="700" fill="#991b1b">Subtraction: Chat - &#955;&#964;_toxic = less toxic</text>
+  <text x="220" y="225" text-anchor="middle" font-size="9" fill="#dc2626">Task vector removal for debiasing</text>
+
+  <rect x="450" y="55" width="400" height="270" rx="12" fill="#fff7ed" stroke="#ea580c" stroke-width="2" filter="url(#sh5)"/>
+  <text x="650" y="85" text-anchor="middle" font-size="13" font-weight="700" fill="#c2410c">Weighted Composition</text>
+
+  <rect x="485" y="105" width="330" height="45" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="650" y="132" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">W' = W&#8320; + a&#8321;t&#8321; + ... + a&#8324;t&#8324;</text>
+
+  <rect x="485" y="170" width="140" height="25" rx="6" fill="#fed7aa" stroke="#f97316" stroke-width="1"/>
+  <text x="555" y="188" text-anchor="middle" font-size="10" font-weight="600" fill="#c2410c">Code: 0.8</text>
+  <rect x="485" y="172" width="105" height="18" rx="4" fill="#f97316" opacity="0.8"/>
+  <rect x="485" y="205" width="140" height="25" rx="6" fill="#fed7aa" stroke="#f97316" stroke-width="1"/>
+  <text x="555" y="223" text-anchor="middle" font-size="10" font-weight="600" fill="#c2410c">Chat: 0.5</text>
+  <rect x="485" y="207" width="70" height="18" rx="4" fill="#f97316" opacity="0.8"/>
+  <rect x="485" y="240" width="140" height="25" rx="6" fill="#fed7aa" stroke="#f97316" stroke-width="1"/>
+  <text x="555" y="258" text-anchor="middle" font-size="10" font-weight="600" fill="#c2410c">Math: 0.3</text>
+  <rect x="485" y="242" width="42" height="18" rx="4" fill="#f97316" opacity="0.8"/>
+  <rect x="485" y="275" width="140" height="25" rx="6" fill="#fed7aa" stroke="#f97316" stroke-width="1"/>
+  <text x="555" y="293" text-anchor="middle" font-size="10" font-weight="600" fill="#c2410c">Safety: 1.0</text>
+  <rect x="485" y="277" width="128" height="18" rx="4" fill="#f97316" opacity="0.8"/>
+
+  <rect x="660" y="170" width="170" height="130" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="745" y="200" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">No retraining needed</text>
+  <text x="745" y="220" text-anchor="middle" font-size="9" fill="#16a34a">Mix adapters at inference</text>
+  <text x="745" y="238" text-anchor="middle" font-size="9" fill="#16a34a">Slider bars control blend</text>
+  <text x="745" y="256" text-anchor="middle" font-size="9" fill="#16a34a">Composition on the fly</text>
+  <text x="745" y="288" text-anchor="middle" font-size="9" fill="#475569">a&#8321;, a&#8322;, ... = weights</text>
+</svg>

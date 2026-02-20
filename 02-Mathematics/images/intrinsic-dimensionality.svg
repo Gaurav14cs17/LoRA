@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 370" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+  </defs>
+  <rect width="860" height="370" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="430" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">Intrinsic Dimensionality: Why Low Rank Works</text>
+  <text x="430" y="52" text-anchor="middle" font-size="12" fill="#64748b">Pre-trained models fine-tuned in a tiny subspace</text>
+
+  <ellipse cx="220" cy="200" rx="180" ry="140" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5" opacity="0.4"/>
+  <text x="220" y="85" text-anchor="middle" font-size="12" font-weight="600" fill="#991b1b">Full Parameter Space</text>
+  <text x="220" y="102" text-anchor="middle" font-size="10" fill="#dc2626">D = 6.7 billion dims</text>
+
+  <ellipse cx="220" cy="210" rx="100" ry="80" fill="#fef9c3" stroke="#f59e0b" stroke-width="1.5" opacity="0.5"/>
+  <text x="220" y="150" text-anchor="middle" font-size="10" fill="#b45309">Useful subspace</text>
+
+  <ellipse cx="220" cy="220" rx="35" ry="25" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+  <text x="220" y="218" text-anchor="middle" font-size="9" font-weight="700" fill="#15803d">Intrinsic</text>
+  <text x="220" y="232" text-anchor="middle" font-size="9" font-weight="700" fill="#15803d">d_int &#8776; 200</text>
+
+  <circle cx="220" cy="220" r="5" fill="#4f46e5"/>
+  <text x="260" y="242" font-size="9" fill="#4f46e5" font-weight="600">theta (pre-trained)</text>
+
+  <line x1="225" y1="218" x2="240" y2="205" stroke="#16a34a" stroke-width="2"/>
+  <circle cx="242" cy="203" r="4" fill="#16a34a"/>
+  <text x="268" y="200" font-size="8" fill="#16a34a">fine-tuned theta*</text>
+
+  <rect x="440" y="72" width="400" height="270" rx="12" fill="white" stroke="#e2e8f0" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="640" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#1e293b">Dimension Comparison</text>
+
+  <text x="465" y="135" font-size="10" fill="#64748b">Full model D</text>
+  <rect x="560" y="122" width="260" height="20" rx="4" fill="#dc2626" opacity="0.8"/>
+  <text x="825" y="137" font-size="9" fill="#991b1b" font-weight="600">6.7B</text>
+
+  <text x="465" y="170" font-size="10" fill="#64748b">LoRA (r=16)</text>
+  <rect x="560" y="157" width="4" height="20" rx="2" fill="#ea580c"/>
+  <text x="572" y="172" font-size="9" fill="#c2410c" font-weight="600">~4M (0.06%)</text>
+
+  <text x="465" y="205" font-size="10" fill="#64748b">LoRA (r=4)</text>
+  <rect x="560" y="192" width="1.5" height="20" rx="1" fill="#f97316"/>
+  <text x="572" y="207" font-size="9" fill="#ea580c" font-weight="600">~1M (0.015%)</text>
+
+  <text x="465" y="240" font-size="10" fill="#64748b">d_int (intrinsic)</text>
+  <rect x="560" y="227" width="0.5" height="20" rx="0.5" fill="#16a34a"/>
+  <text x="572" y="242" font-size="9" fill="#15803d" font-weight="600">~200 (0.000003%)</text>
+
+  <rect x="460" y="270" width="365" height="55" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="642" y="290" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">Key Insight</text>
+  <text x="642" y="310" text-anchor="middle" font-size="10" fill="#475569">Even r = 1 has more capacity than d_int needs</text>
+  <text x="642" y="325" text-anchor="middle" font-size="9" fill="#16a34a">r = 4-16 provides huge headroom over intrinsic dim</text>
+</svg>

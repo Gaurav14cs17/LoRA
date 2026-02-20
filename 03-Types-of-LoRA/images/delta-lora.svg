@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 260">
+  <rect width="800" height="260" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">Delta-LoRA: Update Base W via LoRA Deltas</text>
+
+  <!-- Step 1 -->
+  <rect x="25" y="65" width="215" height="125" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="132" y="90" text-anchor="middle" fill="#3b82f6" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Step t: Compute</text>
+  <text x="132" y="120" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="12">&#916;W&#8321; = B&#8321;A&#8321;</text>
+  <text x="132" y="148" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">SGD update &#8594; B&#8322;, A&#8322;</text>
+
+  <!-- Arrow -->
+  <text x="268" y="132" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="24">&#8594;</text>
+
+  <!-- Step 2 -->
+  <rect x="295" y="65" width="215" height="125" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="402" y="90" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Delta Computation</text>
+  <text x="402" y="120" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="12">&#948; = B&#8322;A&#8322; - B&#8321;A&#8321;</text>
+  <text x="402" y="148" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="12" font-weight="bold">W &#8592; W + &#955;&#183;&#948;</text>
+
+  <!-- Arrow -->
+  <text x="538" y="132" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="24">&#8594;</text>
+
+  <!-- Step 3 -->
+  <rect x="565" y="65" width="210" height="125" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+  <text x="670" y="90" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Result</text>
+  <text x="670" y="120" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="12">Base W gets updated</text>
+  <text x="670" y="148" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">High-rank changes via</text>
+  <text x="670" y="168" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">accumulated low-rank deltas</text>
+
+  <text x="400" y="230" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="12">Bridges LoRA and full fine-tuning: low-rank deltas accumulate into high-rank base weight updates</text>
+</svg>

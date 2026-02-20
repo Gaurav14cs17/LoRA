@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300">
+  <rect width="800" height="300" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">Multi-LoRA Composition Strategies</text>
+
+  <!-- Strategy 1: Stacking -->
+  <rect x="15" y="58" width="245" height="192" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="137" y="82" text-anchor="middle" fill="#3b82f6" font-family="Arial,sans-serif" font-size="13" font-weight="bold">Stacking</text>
+  <rect x="35" y="98" width="200" height="25" rx="4" fill="#ef4444" opacity="0.2"/>
+  <text x="135" y="116" text-anchor="middle" fill="#ef4444" font-family="Arial,sans-serif" font-size="10">Base W</text>
+  <rect x="35" y="128" width="200" height="25" rx="4" fill="#10b981" opacity="0.2"/>
+  <text x="135" y="146" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="10">+ LoRA A (code)</text>
+  <rect x="35" y="158" width="200" height="25" rx="4" fill="#f59e0b" opacity="0.2"/>
+  <text x="135" y="176" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="10">+ LoRA B (math)</text>
+  <text x="137" y="210" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">h = Wx + B&#8321;A&#8321;x + B&#8322;A&#8322;x</text>
+  <text x="137" y="238" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">Adds latency per adapter</text>
+
+  <!-- Strategy 2: Weighted Merge -->
+  <rect x="275" y="58" width="245" height="192" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+  <text x="397" y="82" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="13" font-weight="bold">Weighted Merge</text>
+  <rect x="300" y="102" width="85" height="48" rx="4" fill="#10b981" opacity="0.2"/>
+  <text x="342" y="123" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="10">LoRA A</text>
+  <text x="342" y="140" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="9">&#955;=0.7</text>
+  <rect x="400" y="102" width="85" height="48" rx="4" fill="#f59e0b" opacity="0.2"/>
+  <text x="442" y="123" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="10">LoRA B</text>
+  <text x="442" y="140" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="9">&#955;=0.3</text>
+  <text x="397" y="172" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18">&#8595;</text>
+  <rect x="335" y="180" width="125" height="28" rx="4" fill="#8b5cf6" opacity="0.2"/>
+  <text x="397" y="199" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="10">Merged Adapter</text>
+  <text x="397" y="238" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">Zero extra latency</text>
+
+  <!-- Strategy 3: Dynamic Switch -->
+  <rect x="535" y="58" width="250" height="192" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="660" y="82" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="13" font-weight="bold">Dynamic Switching</text>
+  <rect x="555" y="100" width="80" height="35" rx="4" fill="#10b981" opacity="0.3"/>
+  <text x="595" y="122" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="9">Code</text>
+  <rect x="645" y="100" width="80" height="35" rx="4" fill="#f59e0b" opacity="0.3"/>
+  <text x="685" y="122" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="9">Math</text>
+  <rect x="555" y="142" width="80" height="35" rx="4" fill="#8b5cf6" opacity="0.3"/>
+  <text x="595" y="164" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="9">Medical</text>
+  <rect x="645" y="142" width="80" height="35" rx="4" fill="#ec4899" opacity="0.3"/>
+  <text x="685" y="164" text-anchor="middle" fill="#ec4899" font-family="Arial,sans-serif" font-size="9">Legal</text>
+  <text x="660" y="206" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">set_adapter("code")</text>
+  <text x="660" y="238" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">Most flexible, one active at a time</text>
+
+  <text x="400" y="285" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">Choose: latency tolerance (stack) vs zero overhead (merge) vs flexibility (switch)</text>
+</svg>

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 830 400" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+  </defs>
+  <rect width="830" height="400" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="415" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">Multi-Adapter Serving (vLLM / S-LoRA)</text>
+  <text x="415" y="50" text-anchor="middle" font-size="12" fill="#64748b">Base model + swap LoRA per request</text>
+
+  <rect x="40" y="75" width="220" height="270" rx="14" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" filter="url(#sh)"/>
+  <text x="150" y="105" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8">Base Model</text>
+  <text x="150" y="123" text-anchor="middle" font-size="11" fill="#3b82f6">7B params (frozen)</text>
+  <rect x="65" y="140" width="170" height="100" rx="8" fill="#bfdbfe" stroke="#60a5fa" stroke-width="1"/>
+  <text x="150" y="170" text-anchor="middle" font-size="11" font-weight="600" fill="#1d4ed8">W&#8320; on GPU</text>
+  <text x="150" y="195" text-anchor="middle" font-size="10" fill="#3b82f6">~14 GB VRAM</text>
+  <text x="150" y="218" text-anchor="middle" font-size="10" fill="#3b82f6">loaded once</text>
+  <rect x="55" y="255" width="190" height="75" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1"/>
+  <text x="150" y="280" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8">Memory: 14 GB</text>
+  <text x="150" y="300" text-anchor="middle" font-size="9" fill="#64748b">+ activations</text>
+  <text x="150" y="318" text-anchor="middle" font-size="9" fill="#64748b">+ KV cache</text>
+
+  <line x1="260" y1="210" x2="298" y2="210" stroke="#94a3b8" stroke-width="1.8" marker-end="url(#arr)"/>
+  <text x="280" y="200" text-anchor="middle" font-size="9" fill="#64748b">swap</text>
+
+  <rect x="305" y="75" width="200" height="270" rx="14" fill="#fff7ed" stroke="#ea580c" stroke-width="2" filter="url(#sh)"/>
+  <text x="405" y="105" text-anchor="middle" font-size="14" font-weight="700" fill="#c2410c">LoRA Adapters</text>
+  <text x="405" y="123" text-anchor="middle" font-size="10" fill="#ea580c">swap in/out per request</text>
+
+  <rect x="325" y="145" width="160" height="35" rx="8" fill="#fed7aa" stroke="#f97316" stroke-width="1.5"/>
+  <text x="405" y="168" text-anchor="middle" font-size="10" font-weight="600" fill="#c2410c">Code (8 MB)</text>
+
+  <rect x="325" y="190" width="160" height="35" rx="8" fill="#fed7aa" stroke="#f97316" stroke-width="1"/>
+  <text x="405" y="213" text-anchor="middle" font-size="10" font-weight="600" fill="#c2410c">Chat (12 MB)</text>
+
+  <rect x="325" y="235" width="160" height="35" rx="8" fill="#fed7aa" stroke="#f97316" stroke-width="1"/>
+  <text x="405" y="258" text-anchor="middle" font-size="10" font-weight="600" fill="#c2410c">Medical (6 MB)</text>
+
+  <rect x="325" y="280" width="160" height="45" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+  <text x="405" y="302" text-anchor="middle" font-size="10" font-weight="600" fill="#b45309">+ N more adapters</text>
+  <text x="405" y="318" text-anchor="middle" font-size="9" fill="#d97706">~10 MB each typical</text>
+
+  <rect x="535" y="75" width="255" height="270" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" filter="url(#sh)"/>
+  <text x="662" y="105" text-anchor="middle" font-size="14" font-weight="700" fill="#15803d">Batched Serving</text>
+  <text x="662" y="123" text-anchor="middle" font-size="10" fill="#16a34a">vLLM / S-LoRA</text>
+
+  <rect x="555" y="145" width="215" height="80" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1"/>
+  <text x="662" y="170" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">Request batch</text>
+  <text x="662" y="190" text-anchor="middle" font-size="9" fill="#475569">Req1: adapter A</text>
+  <text x="662" y="205" text-anchor="middle" font-size="9" fill="#475569">Req2: adapter B</text>
+  <text x="662" y="220" text-anchor="middle" font-size="9" fill="#475569">Req3: adapter A</text>
+
+  <rect x="555" y="245" width="215" height="65" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
+  <text x="662" y="268" text-anchor="middle" font-size="10" font-weight="700" fill="#475569">Memory Breakdown</text>
+  <text x="662" y="285" text-anchor="middle" font-size="9" fill="#64748b">Base 14 GB + active adapters</text>
+  <text x="662" y="300" text-anchor="middle" font-size="9" fill="#64748b">vs 14 GB &#215; N full copies</text>
+</svg>

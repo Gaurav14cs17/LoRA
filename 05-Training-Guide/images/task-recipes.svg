@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300">
+  <rect width="800" height="300" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">Task-Specific LoRA Recipes</text>
+
+  <!-- Instruction Tuning -->
+  <rect x="15" y="58" width="182" height="118" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="106" y="82" text-anchor="middle" fill="#3b82f6" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Instruction Tuning</text>
+  <text x="106" y="104" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">r=16, &#945;=32</text>
+  <text x="106" y="120" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">lr=2e-4, epochs=3</text>
+  <text x="106" y="136" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">all-linear</text>
+  <text x="106" y="162" text-anchor="middle" fill="#3b82f6" font-family="Arial,sans-serif" font-size="9">SFTTrainer + chat tmpl</text>
+
+  <!-- Code -->
+  <rect x="207" y="58" width="182" height="118" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+  <text x="298" y="82" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Code Generation</text>
+  <text x="298" y="104" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">r=32, &#945;=64</text>
+  <text x="298" y="120" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">lr=1e-4, epochs=2</text>
+  <text x="298" y="136" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">all-linear</text>
+  <text x="298" y="162" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="9">Higher rank for syntax</text>
+
+  <!-- Classification -->
+  <rect x="399" y="58" width="182" height="118" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="490" y="82" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Classification</text>
+  <text x="490" y="104" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">r=8, &#945;=16</text>
+  <text x="490" y="120" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">lr=3e-4, epochs=5</text>
+  <text x="490" y="136" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">q_proj, v_proj</text>
+  <text x="490" y="162" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="9">Low rank is enough</text>
+
+  <!-- DPO -->
+  <rect x="591" y="58" width="192" height="118" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.5"/>
+  <text x="687" y="82" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="12" font-weight="bold">DPO / RLHF</text>
+  <text x="687" y="104" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">r=16, &#945;=32</text>
+  <text x="687" y="120" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">lr=5e-5, epochs=1</text>
+  <text x="687" y="136" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">all-linear</text>
+  <text x="687" y="162" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="9">Low LR, &#946;=0.1</text>
+
+  <!-- QLoRA banner -->
+  <rect x="130" y="200" width="540" height="50" rx="8" fill="#1e293b" stroke="#ec4899" stroke-width="1.5"/>
+  <text x="400" y="222" text-anchor="middle" fill="#ec4899" font-family="Arial,sans-serif" font-size="12" font-weight="bold">QLoRA (Any Task, Single GPU)</text>
+  <text x="400" y="240" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Add: load_in_4bit=True, bnb_4bit_compute_dtype=bf16, paged_adamw_8bit</text>
+
+  <text x="400" y="286" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">All recipes: gradient_checkpointing=True, bf16=True, cosine scheduler, warmup 3%</text>
+</svg>

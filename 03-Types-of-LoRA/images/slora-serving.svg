@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320">
+  <defs>
+    <marker id="asl" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="800" height="320" rx="12" fill="#0f172a"/>
+  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">S-LoRA: Serving 1000+ Adapters from One GPU</text>
+
+  <!-- GPU box -->
+  <rect x="280" y="55" width="240" height="200" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+  <text x="400" y="80" text-anchor="middle" fill="#3b82f6" font-family="Arial,sans-serif" font-size="13" font-weight="bold">Single GPU</text>
+
+  <!-- Base model -->
+  <rect x="305" y="95" width="190" height="45" rx="6" fill="#0f172a" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="400" y="123" text-anchor="middle" fill="#ef4444" font-family="Arial,sans-serif" font-size="12">Base Model (shared)</text>
+
+  <!-- Adapter pool -->
+  <rect x="305" y="155" width="42" height="30" rx="4" fill="#10b981" opacity="0.6"/>
+  <rect x="352" y="155" width="42" height="30" rx="4" fill="#f59e0b" opacity="0.6"/>
+  <rect x="399" y="155" width="42" height="30" rx="4" fill="#8b5cf6" opacity="0.6"/>
+  <rect x="446" y="155" width="42" height="30" rx="4" fill="#ec4899" opacity="0.6"/>
+  <text x="400" y="218" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Adapters paged in/out dynamically</text>
+
+  <!-- Requests from left -->
+  <rect x="30" y="75" width="130" height="28" rx="6" fill="#10b981" opacity="0.2" stroke="#10b981" stroke-width="1"/>
+  <text x="95" y="94" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="10">User A: code</text>
+  <rect x="30" y="113" width="130" height="28" rx="6" fill="#f59e0b" opacity="0.2" stroke="#f59e0b" stroke-width="1"/>
+  <text x="95" y="132" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="10">User B: math</text>
+  <rect x="30" y="151" width="130" height="28" rx="6" fill="#8b5cf6" opacity="0.2" stroke="#8b5cf6" stroke-width="1"/>
+  <text x="95" y="170" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="10">User C: medical</text>
+  <rect x="30" y="189" width="130" height="28" rx="6" fill="#ec4899" opacity="0.2" stroke="#ec4899" stroke-width="1"/>
+  <text x="95" y="208" text-anchor="middle" fill="#ec4899" font-family="Arial,sans-serif" font-size="10">User D: legal</text>
+
+  <!-- Arrows -->
+  <line x1="160" y1="89" x2="278" y2="118" stroke="#10b981" stroke-width="1.5" marker-end="url(#asl)"/>
+  <line x1="160" y1="127" x2="278" y2="125" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#asl)"/>
+  <line x1="160" y1="165" x2="278" y2="140" stroke="#8b5cf6" stroke-width="1.5" marker-end="url(#asl)"/>
+  <line x1="160" y1="203" x2="278" y2="165" stroke="#ec4899" stroke-width="1.5" marker-end="url(#asl)"/>
+
+  <!-- Host memory -->
+  <rect x="600" y="65" width="170" height="180" rx="10" fill="#1e293b" stroke="#475569" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <text x="685" y="90" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Host Memory</text>
+  <rect x="618" y="105" width="134" height="18" rx="3" fill="#475569" opacity="0.3"/>
+  <rect x="618" y="128" width="134" height="18" rx="3" fill="#475569" opacity="0.3"/>
+  <rect x="618" y="151" width="134" height="18" rx="3" fill="#475569" opacity="0.3"/>
+  <rect x="618" y="174" width="134" height="18" rx="3" fill="#475569" opacity="0.3"/>
+  <rect x="618" y="197" width="134" height="18" rx="3" fill="#475569" opacity="0.3"/>
+  <text x="685" y="119" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">Adapter pool (1000+)</text>
+
+  <!-- Page arrows -->
+  <line x1="522" y1="145" x2="598" y2="145" stroke="#475569" stroke-width="1.5" stroke-dasharray="4,4" marker-end="url(#asl)"/>
+  <text x="560" y="137" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">page</text>
+
+  <!-- Features -->
+  <text x="200" y="290" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">Unified Paging</text>
+  <text x="400" y="290" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="11" font-weight="bold">Batched Requests</text>
+  <text x="600" y="290" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="11" font-weight="bold">Custom CUDA Kernels</text>
+  <text x="400" y="312" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Each request uses the shared base + its own tiny adapter</text>
+</svg>

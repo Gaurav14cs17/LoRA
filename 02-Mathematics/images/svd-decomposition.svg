@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh" x="-4%" y="-4%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#475569"/>
+    </marker>
+    <marker id="arr-o" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#ea580c"/>
+    </marker>
+    <marker id="arr-b" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#3b82f6"/>
+    </marker>
+    <marker id="arr-g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#16a34a"/>
+    </marker>
+  </defs>
+  <rect width="800" height="340" rx="14" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="700" fill="#1e293b">Singular Value Decomposition (SVD)</text>
+  <text x="400" y="50" text-anchor="middle" font-size="11" fill="#64748b">W = U &#931; V^T</text>
+  <!-- W matrix -->
+  <rect x="40" y="80" width="140" height="180" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" filter="url(#sh)"/>
+  <text x="110" y="170" text-anchor="middle" font-size="18" font-weight="700" fill="#1d4ed8">W</text>
+  <text x="110" y="195" text-anchor="middle" font-size="10" fill="#3b82f6">m &#215; n</text>
+  <text x="110" y="275" text-anchor="middle" font-size="10" fill="#64748b">Original</text>
+  <!-- = -->
+  <text x="210" y="175" text-anchor="middle" font-size="28" font-weight="700" fill="#475569">=</text>
+  <!-- U matrix -->
+  <rect x="240" y="80" width="100" height="180" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2" filter="url(#sh)"/>
+  <text x="290" y="170" text-anchor="middle" font-size="18" font-weight="700" fill="#15803d">U</text>
+  <text x="290" y="195" text-anchor="middle" font-size="10" fill="#16a34a">m &#215; m</text>
+  <text x="290" y="275" text-anchor="middle" font-size="9" fill="#16a34a">Left singular</text>
+  <text x="290" y="288" text-anchor="middle" font-size="9" fill="#16a34a">vectors</text>
+  <!-- Sigma -->
+  <rect x="360" y="100" width="100" height="100" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" filter="url(#sh)"/>
+  <text x="410" y="155" text-anchor="middle" font-size="18" font-weight="700" fill="#b45309">&#931;</text>
+  <text x="410" y="175" text-anchor="middle" font-size="10" fill="#d97706">m &#215; n</text>
+  <line x1="370" y1="112" x2="450" y2="190" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="410" y="218" text-anchor="middle" font-size="9" fill="#b45309">Singular</text>
+  <text x="410" y="231" text-anchor="middle" font-size="9" fill="#b45309">values (diag)</text>
+  <text x="410" y="275" text-anchor="middle" font-size="9" fill="#b45309">&#931;&#8321; &gt;= &#931;&#8322; &gt;= ... &gt;= 0</text>
+  <!-- V^T matrix -->
+  <rect x="480" y="100" width="160" height="100" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2" filter="url(#sh)"/>
+  <text x="560" y="155" text-anchor="middle" font-size="16" font-weight="700" fill="#6d28d9">V^T</text>
+  <text x="560" y="175" text-anchor="middle" font-size="10" fill="#7c3aed">n &#215; n</text>
+  <text x="560" y="218" text-anchor="middle" font-size="9" fill="#7c3aed">Right singular</text>
+  <text x="560" y="231" text-anchor="middle" font-size="9" fill="#7c3aed">vectors</text>
+  <!-- Key insight -->
+  <rect x="490" y="260" width="280" height="60" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="630" y="285" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">Top-r singular values capture</text>
+  <text x="630" y="302" text-anchor="middle" font-size="10" fill="#16a34a">most of the information in W</text>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 320" font-family="Segoe UI,system-ui,sans-serif">
+  <defs>
+    <filter id="sh" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+  </defs>
+  <rect width="840" height="320" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="420" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">LoRA+: Asymmetric Learning Rates for A and B</text>
+
+  <rect x="30" y="55" width="370" height="240" rx="12" fill="white" stroke="#94a3b8" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="215" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#475569">Standard LoRA</text>
+  <text x="215" y="97" text-anchor="middle" font-size="10" fill="#dc2626">Same learning rate for both</text>
+
+  <rect x="55" y="115" width="130" height="70" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="120" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#c2410c">A (r &#215; k)</text>
+  <text x="120" y="158" text-anchor="middle" font-size="11" fill="#ea580c">&#951;_A = &#951;</text>
+  <rect x="70" y="167" width="100" height="8" rx="4" fill="#f97316"/>
+
+  <rect x="215" y="115" width="130" height="70" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="280" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#c2410c">B (d &#215; r)</text>
+  <text x="280" y="158" text-anchor="middle" font-size="11" fill="#ea580c">&#951;_B = &#951;</text>
+  <rect x="230" y="167" width="100" height="8" rx="4" fill="#f97316"/>
+
+  <text x="197" y="175" text-anchor="middle" font-size="14" font-weight="700" fill="#94a3b8">=</text>
+
+  <rect x="55" y="210" width="330" height="55" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+  <text x="220" y="232" text-anchor="middle" font-size="10" font-weight="600" fill="#991b1b">Suboptimal: A and B have different gradient</text>
+  <text x="220" y="248" text-anchor="middle" font-size="10" fill="#dc2626">statistics, equal LR leads to slower convergence</text>
+
+  <rect x="430" y="55" width="385" height="240" rx="12" fill="white" stroke="#16a34a" stroke-width="2" filter="url(#sh)"/>
+  <text x="622" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">LoRA+ (Asymmetric)</text>
+  <text x="622" y="97" text-anchor="middle" font-size="10" fill="#16a34a">&#951;_A &#8811; &#951;_B</text>
+
+  <rect x="455" y="115" width="130" height="70" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="520" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">A (r &#215; k)</text>
+  <text x="520" y="158" text-anchor="middle" font-size="11" font-weight="600" fill="#16a34a">&#951;_A = 16&#951;</text>
+  <rect x="465" y="167" width="120" height="12" rx="4" fill="#16a34a"/>
+  <text x="520" y="196" text-anchor="middle" font-size="9" fill="#16a34a">higher LR (16&#215;)</text>
+
+  <rect x="625" y="115" width="130" height="70" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="690" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">B (d &#215; r)</text>
+  <text x="690" y="158" text-anchor="middle" font-size="11" fill="#16a34a">&#951;_B = &#951;</text>
+  <rect x="648" y="167" width="80" height="8" rx="4" fill="#86efac"/>
+  <text x="690" y="196" text-anchor="middle" font-size="9" fill="#16a34a">base LR</text>
+
+  <text x="607" y="175" text-anchor="middle" font-size="14" font-weight="700" fill="#16a34a">&#8800;</text>
+
+  <rect x="455" y="210" width="345" height="55" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="627" y="232" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">Optimal ratio: &#951;_A / &#951;_B ~ d/r</text>
+  <text x="627" y="248" text-anchor="middle" font-size="10" fill="#16a34a">+1-2% better, zero extra cost, drop-in replacement</text>
+</svg>
