@@ -137,7 +137,7 @@ The authors of LoRA built on a critical observation from prior work (Aghajanyan 
 
 ### The Intrinsic Dimensionality Argument
 
-When you fine-tune a model from pre-trained weights $W_0$ to task-specific weights $W_0 + \Delta W$:
+When you fine-tune a model from pre-trained weights $W\_0$ to task-specific weights $W\_0 + \Delta W$:
 - The matrix $\Delta W$ (the change) does not need to be full rank
 - Empirically, $\Delta W$ can be well-approximated by a matrix of rank $r$, where $r$ is very small relative to the dimensions of $W$
 - This means the "useful" information learned during fine-tuning lies in a low-dimensional subspace

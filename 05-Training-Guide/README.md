@@ -80,7 +80,7 @@ $$
 \lVert \Delta W^* - \Delta W_r \rVert_F = \sqrt{\sum_{i=r+1}^{p} \sigma_i^2(\Delta W^*)}
 $$
 
-If the singular values of $\Delta W^*$ decay rapidly (empirically verified for fine-tuning), then small $r$ suffices. The intrinsic dimensionality framework shows $d_{\text{int}} \ll D$ for pre-trained models, so:
+If the singular values of $\Delta W^*$ decay rapidly (empirically verified for fine-tuning), then small $r$ suffices. The intrinsic dimensionality framework shows $d\_{\text{int}} \ll D$ for pre-trained models, so:
 
 $$
 r \geq \frac{d_{\text{int}}}{L(d+k)}
@@ -94,7 +94,7 @@ $$
 \lVert \Delta h \rVert = \frac{\alpha}{r} \lVert BAx \rVert
 $$
 
-With typical initialization where $\text{Var}(B_{ij}) \sim O(1/r)$ after early training, $\lVert BAx \rVert \sim O(\sqrt{r})$, so:
+With typical initialization where $\text{Var}(B\_{ij}) \sim O(1/r)$ after early training, $\lVert BAx \rVert \sim O(\sqrt{r})$, so:
 
 $$
 \lVert \Delta h \rVert \sim \frac{\alpha}{r} \cdot \sqrt{r} = \frac{\alpha}{\sqrt{r}}
@@ -225,15 +225,15 @@ $$
 
 since $\mathbb{E}[\lVert Ax \rVert^2] = r$ with proper initialization.
 
-For full fine-tuning, the effective learning rate is simply $\eta_{\text{full}}$. To match the update magnitude:
+For full fine-tuning, the effective learning rate is simply $\eta\_{\text{full}}$. To match the update magnitude:
 
 $$
 \eta \cdot \frac{\alpha^2}{r} \approx \eta_{\text{full}} \implies \eta \approx \eta_{\text{full}} \cdot \frac{r}{\alpha^2}
 $$
 
-With $r = 16$, $\alpha = 32$: $\eta \approx \eta_{\text{full}} \cdot \frac{16}{1024} = \eta_{\text{full}} / 64$. But this is the first-step rate. As $B$ grows from zero during training, the output sensitivity increases, so the initial learning rate needs to be high to bootstrap the adapter. Empirically, $\eta \approx 10\text{-}100 \times \eta_{\text{full}}$.
+With $r = 16$, $\alpha = 32$: $\eta \approx \eta\_{\text{full}} \cdot \frac{16}{1024} = \eta\_{\text{full}} / 64$. But this is the first-step rate. As $B$ grows from zero during training, the output sensitivity increases, so the initial learning rate needs to be high to bootstrap the adapter. Empirically, $\eta \approx 10\text{-}100 \times \eta\_{\text{full}}$.
 
-**Why warmup is critical for LoRA.** At initialization, $B = 0$, so $\nabla_A \mathcal{L} = \frac{\alpha}{r} B^T \frac{\partial \mathcal{L}}{\partial h} x^T = 0$ (Chapter 2, Section 2.6). Only $B$ receives gradients initially. Without warmup, a large learning rate on $B$ at step 1 can cause:
+**Why warmup is critical for LoRA.** At initialization, $B = 0$, so $\nabla\_A \mathcal{L} = \frac{\alpha}{r} B^T \frac{\partial \mathcal{L}}{\partial h} x^T = 0$ (Chapter 2, Section 2.6). Only $B$ receives gradients initially. Without warmup, a large learning rate on $B$ at step 1 can cause:
 
 $$
 \lVert B^{(1)} \rVert = \eta \cdot \frac{\alpha}{r} \lVert \frac{\partial \mathcal{L}}{\partial h} \rVert \lVert Ax \rVert
@@ -287,7 +287,7 @@ training_args = TrainingArguments(
 
 ### Mathematical Derivation: GPU Memory Footprint
 
-Training a model requires GPU memory for four components. Let $P$ = total parameters, $P_{\text{LoRA}}$ = trainable LoRA parameters, $b$ = bytes per element.
+Training a model requires GPU memory for four components. Let $P$ = total parameters, $P\_{\text{LoRA}}$ = trainable LoRA parameters, $b$ = bytes per element.
 
 **1. Model weights.** The frozen base model weights consume:
 
@@ -295,7 +295,7 @@ $$
 M_{\text{weights}} = P \cdot b_{\text{weight}}
 $$
 
-For FP16: $b_{\text{weight}} = 2$ bytes. For 4-bit (QLoRA): $b_{\text{weight}} = 0.5$ bytes.
+For FP16: $b\_{\text{weight}} = 2$ bytes. For 4-bit (QLoRA): $b\_{\text{weight}} = 0.5$ bytes.
 
 **2. Optimizer states.** AdamW stores first moment ($m$) and second moment ($v$) for each trainable parameter:
 
@@ -303,11 +303,11 @@ $$
 M_{\text{optimizer}} = P_{\text{trainable}} \cdot (b_m + b_v + b_{\text{copy}})
 $$
 
-For standard AdamW in FP32: $b_m = b_v = b_{\text{copy}} = 4$ bytes → $12 P_{\text{trainable}}$ bytes.
-For 8-bit AdamW: $b_m = b_v = 1$ byte, $b_{\text{copy}} = 4$ → $6 P_{\text{trainable}}$ bytes.
+For standard AdamW in FP32: $b\_m = b\_v = b\_{\text{copy}} = 4$ bytes → $12 P\_{\text{trainable}}$ bytes.
+For 8-bit AdamW: $b\_m = b\_v = 1$ byte, $b\_{\text{copy}} = 4$ → $6 P\_{\text{trainable}}$ bytes.
 
-In full fine-tuning: $P_{\text{trainable}} = P$ → optimizer states dominate.
-In LoRA: $P_{\text{trainable}} = P_{\text{LoRA}} \ll P$ → optimizer states are negligible.
+In full fine-tuning: $P\_{\text{trainable}} = P$ → optimizer states dominate.
+In LoRA: $P\_{\text{trainable}} = P\_{\text{LoRA}} \ll P$ → optimizer states are negligible.
 
 **3. Gradients.** Only trainable parameters need gradient storage:
 
@@ -315,7 +315,7 @@ $$
 M_{\text{gradients}} = P_{\text{trainable}} \cdot b_{\text{grad}}
 $$
 
-For mixed precision: $b_{\text{grad}} = 2$ bytes (FP16/BF16).
+For mixed precision: $b\_{\text{grad}} = 2$ bytes (FP16/BF16).
 
 **4. Activations.** For a sequence of length $n$, model dimension $d$, and $L$ layers:
 
@@ -335,7 +335,7 @@ $$
 M_{\text{total}} = M_{\text{weights}} + M_{\text{optimizer}} + M_{\text{gradients}} + M_{\text{activations}}
 $$
 
-**Worked example — LLaMA-7B ($P = 6.7\text{B}$, $P_{\text{LoRA}} = 16.8\text{M}$):**
+**Worked example — LLaMA-7B ($P = 6.7\text{B}$, $P\_{\text{LoRA}} = 16.8\text{M}$):**
 
 | Component | Full FT (FP16) | LoRA (FP16) | QLoRA (4-bit) |
 |---|---|---|---|

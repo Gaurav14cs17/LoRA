@@ -48,7 +48,7 @@ $$
 f(x; W_0, \Delta W) = (W_0 + \Delta W)\, x = W_0 x + \Delta W \cdot x
 $$
 
-*Theorem (Merge Superposition).* If adapter $i$ produces update $\Delta W_i = \frac{\alpha_i}{r_i} B_i A_i$, then the merged model $W_0 + \sum_i \lambda_i \Delta W_i$ produces the same output as running a weighted combination of all adapters simultaneously.
+*Theorem (Merge Superposition).* If adapter $i$ produces update $\Delta W\_i = \frac{\alpha\_i}{r\_i} B\_i A\_i$, then the merged model $W\_0 + \sum\_i \lambda\_i \Delta W\_i$ produces the same output as running a weighted combination of all adapters simultaneously.
 
 *Proof.* For any input $x$:
 
@@ -56,11 +56,11 @@ $$
 \left(W_0 + \sum_{i=1}^N \lambda_i \Delta W_i\right) x = W_0 x + \sum_{i=1}^N \lambda_i \Delta W_i \cdot x = W_0 x + \sum_{i=1}^N \lambda_i \frac{\alpha_i}{r_i} B_i A_i x
 $$
 
-By linearity of matrix-vector multiplication, this equals the sum of each adapter's individual contribution scaled by $\lambda_i$. $\square$
+By linearity of matrix-vector multiplication, this equals the sum of each adapter's individual contribution scaled by $\lambda\_i$. $\square$
 
 *Caveat:* This linearity holds per-layer but **not** end-to-end through a full transformer, because non-linearities (softmax, GELU, SiLU) break the superposition. Merging is therefore an approximation for deep networks.
 
-**Rank of merged adapter.** The merged update has rank at most $\sum_i r_i$:
+**Rank of merged adapter.** The merged update has rank at most $\sum\_i r\_i$:
 
 $$
 \text{rank}\left(\sum_{i=1}^N \lambda_i B_i A_i\right) \leq \sum_{i=1}^N \text{rank}(B_i A_i) \leq \sum_{i=1}^N r_i
@@ -96,7 +96,7 @@ model.set_adapter("merged")
 
 **TIES (Trim, Elect Sign, Merge)** resolves conflicts between adapters.
 
-**Mathematical Formulation.** Given $N$ adapter weight vectors $\tau_1, \ldots, \tau_N \in \mathbb{R}^P$ (flattened), TIES proceeds in three steps:
+**Mathematical Formulation.** Given $N$ adapter weight vectors $\tau\_1, \ldots, \tau\_N \in \mathbb{R}^P$ (flattened), TIES proceeds in three steps:
 
 **Step 1 — Trim.** For each adapter $i$, keep only the top-$k\%$ parameters by magnitude:
 
@@ -118,7 +118,7 @@ $$
 \tau_{\text{merged}}^{(j)} = \gamma^{(j)} \cdot \frac{\sum_{i=1}^{N} |\hat{\tau}_i^{(j)}| \cdot \mathbb{1}[\text{sign}(\hat{\tau}_i^{(j)}) = \gamma^{(j)}]}{\sum_{i=1}^{N} \mathbb{1}[\text{sign}(\hat{\tau}_i^{(j)}) = \gamma^{(j)}]}
 $$
 
-*Theorem (TIES reduces sign interference).* If adapters $A$ and $B$ have opposing signs at parameter $j$ ($\tau_A^{(j)} > 0$, $\tau_B^{(j)} < 0$), simple averaging gives $\frac{\tau_A^{(j)} + \tau_B^{(j)}}{2}$ which may be near zero (destructive interference). TIES instead keeps only the winning direction, preserving at least one adapter's signal. $\square$
+*Theorem (TIES reduces sign interference).* If adapters $A$ and $B$ have opposing signs at parameter $j$ ($\tau\_A^{(j)} > 0$, $\tau\_B^{(j)} < 0$), simple averaging gives $\frac{\tau\_A^{(j)} + \tau\_B^{(j)}}{2}$ which may be near zero (destructive interference). TIES instead keeps only the winning direction, preserving at least one adapter's signal. $\square$
 
 ```python
 model.add_weighted_adapter(
@@ -136,15 +136,15 @@ model.add_weighted_adapter(
 
 **Mathematical Formulation and Unbiased Estimator Proof.**
 
-For each adapter's weight update $\Delta W_i$, DARE applies random dropout and rescaling:
+For each adapter's weight update $\Delta W\_i$, DARE applies random dropout and rescaling:
 
 $$
 \tilde{\Delta W}_i = \frac{1}{1-p} \cdot \text{mask}_p(\Delta W_i)
 $$
 
-where $\text{mask}_p$ generates i.i.d. Bernoulli masks: $m_j \sim \text{Bernoulli}(1-p)$.
+where $\text{mask}\_p$ generates i.i.d. Bernoulli masks: $m\_j \sim \text{Bernoulli}(1-p)$.
 
-*Theorem (DARE is an unbiased estimator).* $\mathbb{E}[\tilde{\Delta W}_i] = \Delta W_i$.
+*Theorem (DARE is an unbiased estimator).* $\mathbb{E}[\tilde{\Delta W}\_i] = \Delta W\_i$.
 
 *Proof.* For each element $j$:
 
@@ -180,7 +180,7 @@ model.add_weighted_adapter(
 
 Merge multiple adapters and re-compress via SVD to maintain a target rank.
 
-**Mathematical Derivation.** After linear merging, the combined update $\Delta W_{\text{sum}} = \sum_i \lambda_i B_i A_i$ may have rank up to $\sum_i r_i$. To compress back to rank $r$:
+**Mathematical Derivation.** After linear merging, the combined update $\Delta W\_{\text{sum}} = \sum\_i \lambda\_i B\_i A\_i$ may have rank up to $\sum\_i r\_i$. To compress back to rank $r$:
 
 **Step 1 — Form the merged matrix:**
 
@@ -188,7 +188,7 @@ $$
 \Delta W_{\text{sum}} = \sum_{i=1}^N \lambda_i B_i A_i \in \mathbb{R}^{d \times k}
 $$
 
-**Step 2 — Compute SVD:** $\Delta W_{\text{sum}} = U \Sigma V^T$
+**Step 2 — Compute SVD:** $\Delta W\_{\text{sum}} = U \Sigma V^T$
 
 **Step 3 — Truncate to rank $r$:**
 
@@ -202,7 +202,7 @@ $$
 B_{\text{new}} = U_r \Sigma_r^{1/2} \in \mathbb{R}^{d \times r}, \quad A_{\text{new}} = \Sigma_r^{1/2} V_r^T \in \mathbb{R}^{r \times k}
 $$
 
-*Optimality (Eckart-Young).* This re-compressed adapter is the **best possible** rank-$r$ approximation to $\Delta W_{\text{sum}}$:
+*Optimality (Eckart-Young).* This re-compressed adapter is the **best possible** rank-$r$ approximation to $\Delta W\_{\text{sum}}$:
 
 $$
 \lVert \Delta W_{\text{sum}} - B_{\text{new}} A_{\text{new}} \rVert_F = \sqrt{\sum_{i=r+1}^{p} \sigma_i^2} \leq \lVert \Delta W_{\text{sum}} - N \rVert_F \quad \forall N \text{ with rank} \leq r
@@ -265,13 +265,13 @@ $$
 
 **Rank bound for stacked adapters.**
 
-*Theorem.* The effective rank of the stacked update is at most $r_1 + r_2$:
+*Theorem.* The effective rank of the stacked update is at most $r\_1 + r\_2$:
 
 $$
 \text{rank}\left(\frac{\alpha_1}{r_1} B_1 A_1 + \frac{\alpha_2}{r_2} B_2 A_2\right) \leq r_1 + r_2
 $$
 
-*Proof.* By sub-additivity: $\text{rank}(X + Y) \leq \text{rank}(X) + \text{rank}(Y)$. Since $\text{rank}(B_i A_i) \leq r_i$, the result follows. $\square$
+*Proof.* By sub-additivity: $\text{rank}(X + Y) \leq \text{rank}(X) + \text{rank}(Y)$. Since $\text{rank}(B\_i A\_i) \leq r\_i$, the result follows. $\square$
 
 *Corollary.* Stacking $T$ adapters of rank $r$ gives an effective rank of at most $Tr$, providing a richer update space than any single adapter — but each adapter was trained independently, so the combined subspace may not be optimal.
 
@@ -544,7 +544,7 @@ $$
 
 **Why this works (proof sketch):**
 
-For any input $x$ processed by old adapter $i$, the old adapter's output direction is $B_i (A_i x)$. The new adapter's output direction is $B_t (A_t x)$. Since $B_t^T B_i = 0$, these output directions are orthogonal:
+For any input $x$ processed by old adapter $i$, the old adapter's output direction is $B\_i (A\_i x)$. The new adapter's output direction is $B\_t (A\_t x)$. Since $B\_t^T B\_i = 0$, these output directions are orthogonal:
 
 $$
 \langle B_i(A_i x), \, B_t(A_t x) \rangle = (A_i x)^T \underbrace{B_i^T B_t}_{= \, \mathbf{0}} (A_t x) = 0
@@ -583,13 +583,13 @@ $$
 
 For LoRA, the task vector is exactly $\tau = \text{vec}(\frac{\alpha}{r} BA)$ for each adapted layer, concatenated across layers.
 
-**Theorem (Linearity of task vectors in the tangent space).** For small perturbations $\lVert \tau \rVert \ll \lVert \theta_0 \rVert$, the model's output is approximately linear in the task vector:
+**Theorem (Linearity of task vectors in the tangent space).** For small perturbations $\lVert \tau \rVert \ll \lVert \theta\_0 \rVert$, the model's output is approximately linear in the task vector:
 
 $$
 f(\theta_0 + \tau; x) \approx f(\theta_0; x) + \nabla_\theta f(\theta_0; x)^T \tau
 $$
 
-*Proof.* First-order Taylor expansion around $\theta_0$:
+*Proof.* First-order Taylor expansion around $\theta\_0$:
 
 $$
 f(\theta_0 + \tau; x) = f(\theta_0; x) + \nabla_\theta f(\theta_0; x)^T \tau + O(\lVert \tau \rVert^2)
@@ -599,13 +599,13 @@ When $\lVert \tau \rVert$ is small (as in LoRA with moderate $\alpha/r$), the se
 
 **Corollary (Arithmetic operations are approximately linear).**
 
-*Addition* — adding task vector $\tau_{\text{skill}}$ shifts the output by approximately $\nabla_\theta f^T \tau_{\text{skill}}$:
+*Addition* — adding task vector $\tau\_{\text{skill}}$ shifts the output by approximately $\nabla\_\theta f^T \tau\_{\text{skill}}$:
 
 $$
 f(\theta_0 + \lambda \tau_{\text{skill}}; x) \approx f(\theta_0; x) + \lambda \nabla_\theta f^T \tau_{\text{skill}}
 $$
 
-*Subtraction* — negating $\tau_{\text{toxic}}$ removes approximately $\nabla_\theta f^T \tau_{\text{toxic}}$ from the output:
+*Subtraction* — negating $\tau\_{\text{toxic}}$ removes approximately $\nabla\_\theta f^T \tau\_{\text{toxic}}$ from the output:
 
 $$
 f(\theta_0 - \lambda \tau_{\text{toxic}}; x) \approx f(\theta_0; x) - \lambda \nabla_\theta f^T \tau_{\text{toxic}}
@@ -617,9 +617,9 @@ $$
 f(\theta_0 + \lambda_1 \tau_1 + \lambda_2 \tau_2; x) \approx f(\theta_0; x) + \lambda_1 \nabla_\theta f^T \tau_1 + \lambda_2 \nabla_\theta f^T \tau_2
 $$
 
-This holds well when the task vectors are approximately orthogonal ($\tau_1^T \tau_2 \approx 0$), which is empirically observed for adapters trained on different tasks.
+This holds well when the task vectors are approximately orthogonal ($\tau\_1^T \tau\_2 \approx 0$), which is empirically observed for adapters trained on different tasks.
 
-**Why LoRA enables cleaner arithmetic than full fine-tuning.** LoRA task vectors are low-rank: $\text{rank}(\Delta W_i) \leq r$. Low-rank vectors in high-dimensional spaces are generically near-orthogonal:
+**Why LoRA enables cleaner arithmetic than full fine-tuning.** LoRA task vectors are low-rank: $\text{rank}(\Delta W\_i) \leq r$. Low-rank vectors in high-dimensional spaces are generically near-orthogonal:
 
 $$
 \mathbb{E}\left[\frac{|\langle \tau_1, \tau_2 \rangle|}{\lVert \tau_1 \rVert \lVert \tau_2 \rVert}\right] = O\left(\sqrt{\frac{r}{d \cdot k}}\right)
@@ -669,9 +669,9 @@ $$
 
 **Mathematical analysis of the interpolation path.**
 
-*Claim:* The interpolation path $W_\alpha$ traces a linear path in weight space, which corresponds to an approximately linear path in function space (for small adapters).
+*Claim:* The interpolation path $W\_\alpha$ traces a linear path in weight space, which corresponds to an approximately linear path in function space (for small adapters).
 
-*Proof:* Define $g(\alpha) = f(W_\alpha; x)$. By the first-order approximation:
+*Proof:* Define $g(\alpha) = f(W\_\alpha; x)$. By the first-order approximation:
 
 $$
 g(\alpha) \approx f(W_0; x) + (1-\alpha) \nabla_W f^T \text{vec}(B_1 A_1) + \alpha \nabla_W f^T \text{vec}(B_2 A_2)
@@ -689,7 +689,7 @@ $$
 \text{rank}(\Delta W_\alpha) = \text{rank}((1-\alpha) B_1 A_1 + \alpha B_2 A_2) \leq r_1 + r_2
 $$
 
-For generic adapters, the rank is exactly $r_1 + r_2$ for all $\alpha \in (0, 1)$, and drops to $r_1$ at $\alpha = 0$ and $r_2$ at $\alpha = 1$.
+For generic adapters, the rank is exactly $r\_1 + r\_2$ for all $\alpha \in (0, 1)$, and drops to $r\_1$ at $\alpha = 0$ and $r\_2$ at $\alpha = 1$.
 
 This enables applications like smoothly transitioning between formal and casual writing styles.
 
