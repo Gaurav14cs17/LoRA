@@ -64,6 +64,58 @@ training_args = TrainingArguments(
   <img src="./images/hyperparameter-guide.svg" alt="LoRA Hyperparameter Decision Guide" width="100%"/>
 </p>
 
+### Mathematical Foundations for Hyperparameter Choices
+
+Before the practical tables, here is the mathematical justification for every recommendation in this section.
+
+**Why rank controls expressiveness — connection to intrinsic dimensionality.** The update $\Delta W = BA$ spans a rank-$r$ subspace. For a model with $L$ LoRA layers, each $d \times k$, the total degrees of freedom are:
+
+$$
+d_{\text{LoRA}} = L \cdot r \cdot (d + k)
+$$
+
+By the Eckart-Young theorem (Chapter 2), the best rank-$r$ approximation to the true update $\Delta W^*$ incurs error:
+
+$$
+\lVert \Delta W^* - \Delta W_r \rVert_F = \sqrt{\sum_{i=r+1}^{p} \sigma_i^2(\Delta W^*)}
+$$
+
+If the singular values of $\Delta W^*$ decay rapidly (empirically verified for fine-tuning), then small $r$ suffices. The intrinsic dimensionality framework shows $d_{\text{int}} \ll D$ for pre-trained models, so:
+
+$$
+r \geq \frac{d_{\text{int}}}{L(d+k)}
+$$
+
+For LLaMA-7B: $r \geq \frac{1000}{128 \times 8192} \approx 0.001$, confirming that even $r = 4$ provides enormous headroom.
+
+**Why $\alpha = 2r$ — effective scale analysis.** The effective contribution of the LoRA path is:
+
+$$
+\lVert \Delta h \rVert = \frac{\alpha}{r} \lVert BAx \rVert
+$$
+
+With typical initialization where $\text{Var}(B_{ij}) \sim O(1/r)$ after early training, $\lVert BAx \rVert \sim O(\sqrt{r})$, so:
+
+$$
+\lVert \Delta h \rVert \sim \frac{\alpha}{r} \cdot \sqrt{r} = \frac{\alpha}{\sqrt{r}}
+$$
+
+Setting $\alpha = 2r$ gives $\lVert \Delta h \rVert \sim 2\sqrt{r}$. For $r = 16$: $\lVert \Delta h \rVert \sim 8$, a moderate perturbation. This provides a good balance between adaptation strength and stability. Tuning the learning rate then fine-adjusts this scale.
+
+**Why dropout regularizes — generalization bound.** The Rademacher complexity of the LoRA hypothesis class satisfies (Chapter 2, Section 2.11):
+
+$$
+\hat{\mathcal{R}}_n(\mathcal{H}_r) \leq \frac{C \sqrt{r(d+k)} \cdot \lVert X \rVert_F}{\sqrt{n}}
+$$
+
+Dropout with probability $p$ on the LoRA path effectively reduces the rank to $r(1-p)$ in expectation, tightening the bound:
+
+$$
+\hat{\mathcal{R}}_n(\mathcal{H}_{r,p}) \leq \frac{C \sqrt{r(1-p)(d+k)} \cdot \lVert X \rVert_F}{\sqrt{n}}
+$$
+
+This means the generalization gap is $\propto \sqrt{r(1-p)/n}$. With small $n$ (limited data), increasing $p$ shrinks the gap.
+
 ### Rank (r)
 
 The rank is the **most important** hyperparameter. It controls the expressiveness of the adaptation.
@@ -157,6 +209,38 @@ Later layers tend to be more task-specific, earlier layers more general.
   <img src="./images/lr-scheduler.svg" alt="Learning Rate Schedulers for LoRA" width="100%"/>
 </p>
 
+### Mathematical Justification: Why LoRA Needs Higher Learning Rate
+
+**Effective learning rate analysis.** Consider the gradient update for $B$ with learning rate $\eta$. The resulting change in the output $h$ is (derived in Chapter 2, Section 2.12):
+
+$$
+\delta h = \frac{\alpha}{r} \Delta B \cdot (Ax) = -\eta \frac{\alpha^2}{r^2} \frac{\partial \mathcal{L}}{\partial h} \lVert Ax \rVert^2
+$$
+
+The effective learning rate for the output change is:
+
+$$
+\eta_{\text{eff}} = \eta \cdot \frac{\alpha^2}{r^2} \cdot \mathbb{E}[\lVert Ax \rVert^2] = \eta \cdot \frac{\alpha^2}{r}
+$$
+
+since $\mathbb{E}[\lVert Ax \rVert^2] = r$ with proper initialization.
+
+For full fine-tuning, the effective learning rate is simply $\eta_{\text{full}}$. To match the update magnitude:
+
+$$
+\eta \cdot \frac{\alpha^2}{r} \approx \eta_{\text{full}} \implies \eta \approx \eta_{\text{full}} \cdot \frac{r}{\alpha^2}
+$$
+
+With $r = 16$, $\alpha = 32$: $\eta \approx \eta_{\text{full}} \cdot \frac{16}{1024} = \eta_{\text{full}} / 64$. But this is the first-step rate. As $B$ grows from zero during training, the output sensitivity increases, so the initial learning rate needs to be high to bootstrap the adapter. Empirically, $\eta \approx 10\text{-}100 \times \eta_{\text{full}}$.
+
+**Why warmup is critical for LoRA.** At initialization, $B = 0$, so $\nabla_A \mathcal{L} = \frac{\alpha}{r} B^T \frac{\partial \mathcal{L}}{\partial h} x^T = 0$ (Chapter 2, Section 2.6). Only $B$ receives gradients initially. Without warmup, a large learning rate on $B$ at step 1 can cause:
+
+$$
+\lVert B^{(1)} \rVert = \eta \cdot \frac{\alpha}{r} \lVert \frac{\partial \mathcal{L}}{\partial h} \rVert \lVert Ax \rVert
+$$
+
+If $\eta$ is too large, $\lVert B^{(1)} \rVert$ is large, causing instability when $A$ begins receiving gradients at step 2. Warmup ramps $\eta$ gradually, allowing $B$ and $A$ to co-adapt smoothly.
+
 ### Learning Rate
 
 LoRA typically uses a **higher learning rate** than full fine-tuning because the LoRA parameters are initialized near zero and need to learn quickly.
@@ -200,6 +284,68 @@ training_args = TrainingArguments(
 <p align="center">
   <img src="./images/parameter-memory-comparison.svg" alt="GPU Memory Comparison" width="100%"/>
 </p>
+
+### Mathematical Derivation: GPU Memory Footprint
+
+Training a model requires GPU memory for four components. Let $P$ = total parameters, $P_{\text{LoRA}}$ = trainable LoRA parameters, $b$ = bytes per element.
+
+**1. Model weights.** The frozen base model weights consume:
+
+$$
+M_{\text{weights}} = P \cdot b_{\text{weight}}
+$$
+
+For FP16: $b_{\text{weight}} = 2$ bytes. For 4-bit (QLoRA): $b_{\text{weight}} = 0.5$ bytes.
+
+**2. Optimizer states.** AdamW stores first moment ($m$) and second moment ($v$) for each trainable parameter:
+
+$$
+M_{\text{optimizer}} = P_{\text{trainable}} \cdot (b_m + b_v + b_{\text{copy}})
+$$
+
+For standard AdamW in FP32: $b_m = b_v = b_{\text{copy}} = 4$ bytes → $12 P_{\text{trainable}}$ bytes.
+For 8-bit AdamW: $b_m = b_v = 1$ byte, $b_{\text{copy}} = 4$ → $6 P_{\text{trainable}}$ bytes.
+
+In full fine-tuning: $P_{\text{trainable}} = P$ → optimizer states dominate.
+In LoRA: $P_{\text{trainable}} = P_{\text{LoRA}} \ll P$ → optimizer states are negligible.
+
+**3. Gradients.** Only trainable parameters need gradient storage:
+
+$$
+M_{\text{gradients}} = P_{\text{trainable}} \cdot b_{\text{grad}}
+$$
+
+For mixed precision: $b_{\text{grad}} = 2$ bytes (FP16/BF16).
+
+**4. Activations.** For a sequence of length $n$, model dimension $d$, and $L$ layers:
+
+$$
+M_{\text{activations}} = L \cdot n \cdot d \cdot b_{\text{act}} \cdot k
+$$
+
+where $k$ is the number of intermediate tensors stored per layer ($k \approx 10\text{-}15$ for a transformer). Gradient checkpointing reduces this by a factor of $\sqrt{L}$ by recomputing activations during backward:
+
+$$
+M_{\text{activations}}^{\text{checkpoint}} \approx \frac{M_{\text{activations}}}{\sqrt{L}} + \sqrt{L} \cdot n \cdot d \cdot b_{\text{act}}
+$$
+
+**Total memory formula:**
+
+$$
+M_{\text{total}} = M_{\text{weights}} + M_{\text{optimizer}} + M_{\text{gradients}} + M_{\text{activations}}
+$$
+
+**Worked example — LLaMA-7B ($P = 6.7\text{B}$, $P_{\text{LoRA}} = 16.8\text{M}$):**
+
+| Component | Full FT (FP16) | LoRA (FP16) | QLoRA (4-bit) |
+|---|---|---|---|
+| Weights | $6.7\text{B} \times 2 = 13.4$ GB | $6.7\text{B} \times 2 = 13.4$ GB | $6.7\text{B} \times 0.5 = 3.35$ GB |
+| Optimizer | $6.7\text{B} \times 12 = 80.4$ GB | $16.8\text{M} \times 6 = 0.1$ GB | $16.8\text{M} \times 6 = 0.1$ GB |
+| Gradients | $6.7\text{B} \times 2 = 13.4$ GB | $16.8\text{M} \times 2 = 0.03$ GB | $16.8\text{M} \times 2 = 0.03$ GB |
+| Activations | ~12 GB | ~12 GB | ~2.5 GB (checkpt) |
+| **Total** | **~120 GB** | **~26 GB → 16 GB** (checkpt) | **~6 GB** |
+
+The key insight: LoRA reduces optimizer states from 80 GB to 0.1 GB by training only 0.25% of parameters. QLoRA further reduces weight storage by 4x.
 
 ### Technique Comparison
 

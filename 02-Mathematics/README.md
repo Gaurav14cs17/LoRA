@@ -26,6 +26,9 @@
 - [2.2 Singular Value Decomposition — Existence and Proof](#22-singular-value-decomposition--existence-and-proof)
 - [2.3 Eckart-Young-Mirsky Theorem — Full Proof](#23-eckart-young-mirsky-theorem--full-proof)
 - [2.4 The LoRA Formulation — Derivation](#24-the-lora-formulation--derivation)
+  - [2.4.5 LoRA Applied to Linear Layers](#245-lora-applied-to-linear-fully-connected-layers)
+  - [2.4.6 LoRA Applied to Convolutional Layers](#246-lora-applied-to-convolutional-layers)
+  - [2.4.7 LoRA Applied to Transformer Blocks](#247-lora-applied-to-transformer-blocks)
 - [2.5 Proof: LoRA Update is Rank-Constrained](#25-proof-lora-update-is-rank-constrained)
 - [2.6 Initialization — Variance Preservation Proof](#26-initialization--variance-preservation-proof)
 - [2.7 Scaling Factor — Output Variance Analysis](#27-scaling-factor--output-variance-analysis)
@@ -519,6 +522,666 @@ Per layer: $131{,}072$ LoRA params vs. $16{,}777{,}216$ full params.
 For all 4 attention projections across 32 layers:
 - LoRA: $4 \times 32 \times 131{,}072 = 16{,}777{,}216$ params ($\sim 0.25\%$ of 6.7B)
 - Full: $4 \times 32 \times 16{,}777{,}216 = 2{,}147{,}483{,}648$ params
+
+---
+
+### 2.4.5 LoRA Applied to Linear (Fully Connected) Layers
+
+A **linear layer** (fully connected layer) is the most fundamental building block and the primary target for LoRA. Here we derive the complete mathematics from first principles.
+
+**Standard linear layer.** For input $x \in \mathbb{R}^{d\_{in}}$, a linear layer computes:
+
+$$
+y = W\_0\, x + b
+$$
+
+where:
+- $W\_0 \in \mathbb{R}^{d\_{out} \times d\_{in}}$ is the frozen pre-trained weight matrix
+- $b \in \mathbb{R}^{d\_{out}}$ is the bias vector
+- $y \in \mathbb{R}^{d\_{out}}$ is the output
+
+**LoRA-adapted linear layer.** LoRA modifies only the weight matrix, leaving the bias unchanged:
+
+$$
+y = \left(W\_0 + \frac{\alpha}{r} BA\right) x + b
+$$
+
+where $B \in \mathbb{R}^{d\_{out} \times r}$ and $A \in \mathbb{R}^{r \times d\_{in}}$.
+
+**Entry-wise expansion.** Writing out the $i$-th output element explicitly:
+
+$$
+y\_i = \underbrace{\sum\_{j=1}^{d\_{in}} (W\_0)\_{ij}\, x\_j + b\_i}\_{\text{frozen linear layer}} \;+\; \frac{\alpha}{r} \underbrace{\sum\_{\ell=1}^{r} B\_{i\ell} \left(\sum\_{j=1}^{d\_{in}} A\_{\ell j}\, x\_j\right)}\_{\text{LoRA correction}}
+$$
+
+**Efficient two-step computation.** Define the intermediate variable $z \in \mathbb{R}^r$:
+
+$$
+z\_\ell = \sum\_{j=1}^{d\_{in}} A\_{\ell j}\, x\_j = (Ax)\_\ell \quad \text{for } \ell = 1, \ldots, r
+$$
+
+Then:
+
+$$
+y\_i = (W\_0 x)\_i + b\_i + \frac{\alpha}{r} \sum\_{\ell=1}^{r} B\_{i\ell}\, z\_\ell
+$$
+
+In matrix form, the efficient computation path is:
+
+$$
+y = \underbrace{W\_0 x + b}\_{\text{cost: } O(d\_{out} \cdot d\_{in})} \;+\; \frac{\alpha}{r}\; \underbrace{B}\_{{d\_{out} \times r}}\; \underbrace{(Ax)}\_{{r \times 1}}
+$$
+
+| Step | Operation | FLOPs |
+|------|-----------|-------|
+| 1 | $z = Ax \in \mathbb{R}^r$ (down-project input) | $r \cdot d\_{in}$ |
+| 2 | $Bz \in \mathbb{R}^{d\_{out}}$ (up-project to output) | $d\_{out} \cdot r$ |
+| **Total LoRA overhead** | | $r(d\_{in} + d\_{out})$ |
+
+**Bias treatment.** LoRA does **not** adapt the bias vector $b$. Two reasons:
+
+1. The bias has only $d\_{out}$ parameters — negligible compared to $W\_0$'s $d\_{out} \times d\_{in}$ parameters
+2. The bias adds a constant offset independent of input; task adaptation primarily requires changing the input-dependent transformation $Wx$
+
+**Merge at inference.** After training, compute the merged weight once:
+
+$$
+W\_{\text{merged}} = W\_0 + \frac{\alpha}{r} BA \in \mathbb{R}^{d\_{out} \times d\_{in}}
+$$
+
+The layer then reverts to a standard linear layer $y = W\_{\text{merged}}\, x + b$ with zero additional latency. The bias $b$ passes through unchanged.
+
+**Batch formulation.** For $n$ input vectors as columns $X \in \mathbb{R}^{d\_{in} \times n}$:
+
+$$
+Y = W\_0 X + b \mathbf{1}^T + \frac{\alpha}{r}\, B(AX) \in \mathbb{R}^{d\_{out} \times n}
+$$
+
+where $\mathbf{1} \in \mathbb{R}^n$ broadcasts the bias across the batch.
+
+**Gradient summary** (from Section 2.8, specialized to linear layers):
+
+$$
+\frac{\partial \mathcal{L}}{\partial B} = \frac{\alpha}{r}\, \frac{\partial \mathcal{L}}{\partial y}\,(Ax)^T \in \mathbb{R}^{d\_{out} \times r}
+$$
+
+$$
+\frac{\partial \mathcal{L}}{\partial A} = \frac{\alpha}{r}\, B^T\, \frac{\partial \mathcal{L}}{\partial y}\, x^T \in \mathbb{R}^{r \times d\_{in}}
+$$
+
+**Worked example — LLaMA-7B feed-forward up-projection:**
+
+$d\_{in} = 4096$, $d\_{out} = 11008$, $r = 16$:
+
+| | Parameters | FLOPs/token |
+|---|---|---|
+| Original $W\_0$ | $4096 \times 11008 = 45{,}088{,}768$ | $45{,}088{,}768$ |
+| LoRA $B, A$ | $16 \times (4096 + 11008) = 241{,}664$ | $241{,}664$ |
+| **Compression** | **186.6×** | **0.54\% overhead** |
+
+---
+
+### 2.4.6 LoRA Applied to Convolutional Layers
+
+LoRA extends naturally to convolutional layers by exploiting the equivalence between convolution and matrix multiplication via the **im2col** transformation.
+
+#### 2.4.6.1 One-Dimensional Convolution
+
+**Standard 1D convolution.** Given:
+- Input: $X \in \mathbb{R}^{C\_{in} \times L}$ ($C\_{in}$ channels, $L$ spatial length)
+- Kernel: $\mathcal{K} \in \mathbb{R}^{C\_{out} \times C\_{in} \times k}$ ($k$ is the kernel size)
+- Bias: $b \in \mathbb{R}^{C\_{out}}$
+
+The output at position $t$ for output channel $c$:
+
+$$
+Y\_{c,t} = \sum\_{c'=1}^{C\_{in}} \sum\_{s=0}^{k-1} \mathcal{K}\_{c, c', s} \cdot X\_{c', t+s} + b\_c
+$$
+
+**Reduction to matrix multiplication.** Reshape the 3D kernel tensor into a 2D matrix:
+
+$$
+K = \text{reshape}(\mathcal{K}) \in \mathbb{R}^{C\_{out} \times (C\_{in} \cdot k)}
+$$
+
+Each row of $K$ contains the flattened filter for one output channel. Define the **im2col** operation that unfolds input patches into columns:
+
+$$
+\tilde{X} = \text{im2col}(X) \in \mathbb{R}^{(C\_{in} \cdot k) \times L\_{out}}
+$$
+
+where column $t$ of $\tilde{X}$ is the flattened receptive field patch:
+
+$$
+\tilde{X}\_{:,t} = \text{vec}\bigl([X\_{:, t},\; X\_{:, t+1},\; \ldots,\; X\_{:, t+k-1}]\bigr) \in \mathbb{R}^{C\_{in} \cdot k}
+$$
+
+and $L\_{out}$ is the output length. Now the convolution is a matrix multiplication:
+
+$$
+Y = K\, \tilde{X} + b\, \mathbf{1}^T
+$$
+
+**Applying LoRA.** Since the convolution reduces to $Y = K\tilde{X}$, we apply LoRA to the reshaped kernel $K$:
+
+$$
+K\_{\text{LoRA}} = K\_0 + \frac{\alpha}{r}\, B\_K\, A\_K
+$$
+
+where:
+- $B\_K \in \mathbb{R}^{C\_{out} \times r}$ — maps from rank-$r$ space to output channels
+- $A\_K \in \mathbb{R}^{r \times (C\_{in} \cdot k)}$ — maps from flattened input patch to rank-$r$ space
+
+The adapted convolution output:
+
+$$
+Y = K\_0\, \tilde{X} + \frac{\alpha}{r}\, B\_K\bigl(A\_K\, \tilde{X}\bigr) + b\, \mathbf{1}^T
+$$
+
+**Entry-wise derivation.** For output channel $c$ at position $t$:
+
+$$
+Y\_{c,t} = \underbrace{\sum\_{c'=1}^{C\_{in}} \sum\_{s=0}^{k-1} (K\_0)\_{c, c' \cdot k + s} \cdot X\_{c', t+s}}\_{\text{frozen convolution}} \;+\; \frac{\alpha}{r} \underbrace{\sum\_{\ell=1}^{r} (B\_K)\_{c,\ell} \left(\sum\_{c'=1}^{C\_{in}} \sum\_{s=0}^{k-1} (A\_K)\_{\ell, c' \cdot k + s} \cdot X\_{c', t+s}\right)}\_{\text{LoRA correction}} + b\_c
+$$
+
+Define the intermediate: $z\_{\ell,t} = \sum\_{c'} \sum\_{s} (A\_K)\_{\ell, c' \cdot k + s} \cdot X\_{c', t+s}$, i.e., $Z = A\_K \tilde{X} \in \mathbb{R}^{r \times L\_{out}}$. Then:
+
+$$
+Y\_{c,t} = (K\_0 \tilde{X})\_{c,t} + \frac{\alpha}{r} \sum\_{\ell=1}^{r} (B\_K)\_{c,\ell}\, z\_{\ell,t} + b\_c
+$$
+
+**Parameter comparison:**
+
+| | Parameters |
+|---|---|
+| Original kernel $\mathcal{K}$ | $C\_{out} \cdot C\_{in} \cdot k$ |
+| LoRA adapter ($B\_K$, $A\_K$) | $r\bigl(C\_{out} + C\_{in} \cdot k\bigr)$ |
+| Compression | $\dfrac{C\_{out} \cdot C\_{in} \cdot k}{r(C\_{out} + C\_{in} \cdot k)}$ |
+
+---
+
+#### 2.4.6.2 Two-Dimensional Convolution
+
+**Standard 2D convolution.** Given:
+- Input: $X \in \mathbb{R}^{C\_{in} \times H \times W}$
+- Kernel: $\mathcal{K} \in \mathbb{R}^{C\_{out} \times C\_{in} \times k\_h \times k\_w}$
+- Bias: $b \in \mathbb{R}^{C\_{out}}$
+
+The output at spatial position $(i, j)$ for output channel $c$:
+
+$$
+Y\_{c,i,j} = \sum\_{c'=1}^{C\_{in}} \sum\_{p=0}^{k\_h-1} \sum\_{q=0}^{k\_w-1} \mathcal{K}\_{c, c', p, q} \cdot X\_{c', i+p, j+q} + b\_c
+$$
+
+**Reshape to matrix form:**
+
+$$
+K = \text{reshape}(\mathcal{K}) \in \mathbb{R}^{C\_{out} \times (C\_{in} \cdot k\_h \cdot k\_w)}
+$$
+
+$$
+\tilde{X} = \text{im2col}(X) \in \mathbb{R}^{(C\_{in} \cdot k\_h \cdot k\_w) \times (H\_{out} \cdot W\_{out})}
+$$
+
+$$
+Y\_{\text{flat}} = K\, \tilde{X} + b\, \mathbf{1}^T
+$$
+
+**LoRA adaptation:**
+
+$$
+K\_{\text{LoRA}} = K\_0 + \frac{\alpha}{r}\, B\_K\, A\_K
+$$
+
+where $B\_K \in \mathbb{R}^{C\_{out} \times r}$, $A\_K \in \mathbb{R}^{r \times (C\_{in} \cdot k\_h \cdot k\_w)}$.
+
+**Full adapted convolution:**
+
+$$
+Y\_{\text{flat}} = K\_0\, \tilde{X} + \frac{\alpha}{r}\, B\_K \bigl(A\_K\, \tilde{X}\bigr) + b\, \mathbf{1}^T
+$$
+
+**Bottleneck convolution interpretation.** The LoRA adapter $A\_K$ can be reshaped back into convolutional filters:
+
+$$
+\mathcal{A}\_K = \text{reshape}(A\_K) \in \mathbb{R}^{r \times C\_{in} \times k\_h \times k\_w}
+$$
+
+and $B\_K \in \mathbb{R}^{C\_{out} \times r}$ acts as a $1 \times 1$ (pointwise) convolution. Therefore, the LoRA path decomposes into:
+
+**Step 1** — Apply $r$ standard convolutional filters to the input:
+
+$$
+Z = \mathcal{A}\_K * X \in \mathbb{R}^{r \times H\_{out} \times W\_{out}}
+$$
+
+Each of the $r$ filters has size $C\_{in} \times k\_h \times k\_w$ and produces one feature map. Explicitly, for filter $\ell$ at position $(i,j)$:
+
+$$
+Z\_{\ell,i,j} = \sum\_{c'=1}^{C\_{in}} \sum\_{p=0}^{k\_h-1} \sum\_{q=0}^{k\_w-1} (\mathcal{A}\_K)\_{\ell, c', p, q} \cdot X\_{c', i+p, j+q}
+$$
+
+**Step 2** — Apply a $1 \times 1$ convolution (channel mixing) via $B\_K$:
+
+$$
+\Delta Y\_{c,i,j} = \sum\_{\ell=1}^{r} (B\_K)\_{c,\ell}\, Z\_{\ell,i,j}
+$$
+
+In matrix form: $\Delta Y\_{\text{flat}} = B\_K\, Z\_{\text{flat}} \in \mathbb{R}^{C\_{out} \times (H\_{out} \cdot W\_{out})}$
+
+This architecture — a standard convolution followed by a $1 \times 1$ convolution through a bottleneck of width $r$ — is identical to the **bottleneck convolution blocks** used in MobileNet and ResNet. LoRA on convolutions is structurally equivalent to adding a parallel bottleneck path.
+
+**Gradient derivations.** Let $g\_Y = \frac{\partial \mathcal{L}}{\partial Y\_{\text{flat}}} \in \mathbb{R}^{C\_{out} \times (H\_{out} \cdot W\_{out})}$ be the upstream gradient. Using the same chain rule as for linear layers:
+
+$$
+\frac{\partial \mathcal{L}}{\partial B\_K} = \frac{\alpha}{r}\, g\_Y\, (A\_K \tilde{X})^T \in \mathbb{R}^{C\_{out} \times r}
+$$
+
+$$
+\frac{\partial \mathcal{L}}{\partial A\_K} = \frac{\alpha}{r}\, B\_K^T\, g\_Y\, \tilde{X}^T \in \mathbb{R}^{r \times (C\_{in} \cdot k\_h \cdot k\_w)}
+$$
+
+The im2col transformation merely re-indexes the input; the gradient structure is identical to the linear layer case from Section 2.8.
+
+**Worked example — ResNet-50 conv layer:**
+
+$C\_{in} = 256$, $C\_{out} = 256$, $k\_h = k\_w = 3$, $r = 8$:
+
+| | Parameters |
+|---|---|
+| Original kernel | $256 \times 256 \times 3 \times 3 = 589{,}824$ |
+| LoRA adapter | $8 \times (256 + 256 \times 9) = 8 \times 2{,}560 = 20{,}480$ |
+| **Compression** | **$\approx 28.8\times$** |
+
+---
+
+### 2.4.7 LoRA Applied to Transformer Blocks
+
+The transformer block is where LoRA is most commonly applied in practice. Here we derive the complete forward pass through a transformer layer with LoRA adapters on every eligible linear projection.
+
+> **Convention note.** To match standard transformer notation, we write sequences as $X \in \mathbb{R}^{n \times d}$ (rows are tokens). For a single token $x \in \mathbb{R}^d$ (column vector), the linear projection is $q = W\_Q\, x$. When applied to the full sequence, this becomes $Q = X\, W\_Q^T$ (each row of $Q$ is a query vector). This is consistent with Chapter 2's notation where $W \in \mathbb{R}^{d\_{out} \times d\_{in}}$ maps column vectors.
+
+#### 2.4.7.1 Attention Projections with LoRA (Single Token)
+
+For a single input token $x \in \mathbb{R}^{d}$ (where $d = d\_{\text{model}}$), the four attention projections are:
+
+**Frozen projections:**
+
+$$
+q\_0 = W\_{Q,0}\, x \in \mathbb{R}^d, \quad k\_0 = W\_{K,0}\, x \in \mathbb{R}^d, \quad v\_0 = W\_{V,0}\, x \in \mathbb{R}^d
+$$
+
+where $W\_{Q,0}, W\_{K,0}, W\_{V,0} \in \mathbb{R}^{d \times d}$.
+
+**LoRA-adapted projections:**
+
+$$
+q = W\_{Q,0}\, x + \frac{\alpha}{r}\, B\_Q(A\_Q\, x) = q\_0 + \frac{\alpha}{r}\, B\_Q\, z\_Q
+$$
+
+$$
+k = W\_{K,0}\, x + \frac{\alpha}{r}\, B\_K(A\_K\, x) = k\_0 + \frac{\alpha}{r}\, B\_K\, z\_K
+$$
+
+$$
+v = W\_{V,0}\, x + \frac{\alpha}{r}\, B\_V(A\_V\, x) = v\_0 + \frac{\alpha}{r}\, B\_V\, z\_V
+$$
+
+where each adapter has $B\_\* \in \mathbb{R}^{d \times r}$, $A\_\* \in \mathbb{R}^{r \times d}$, and $z\_\* = A\_\* x \in \mathbb{R}^r$.
+
+**Entry-wise for the query.** The $i$-th element of the LoRA-adapted query:
+
+$$
+q\_i = \sum\_{j=1}^{d} (W\_{Q,0})\_{ij}\, x\_j \;+\; \frac{\alpha}{r} \sum\_{\ell=1}^{r} (B\_Q)\_{i\ell} \left(\sum\_{j=1}^{d} (A\_Q)\_{\ell j}\, x\_j\right)
+$$
+
+The LoRA path follows the same two-step structure as a linear layer (Section 2.4.5): down-project $x$ to $\mathbb{R}^r$ via $A\_Q$, then up-project back to $\mathbb{R}^d$ via $B\_Q$.
+
+---
+
+#### 2.4.7.2 Multi-Head Attention with LoRA — Full Derivation
+
+For a sequence of $n$ tokens $X \in \mathbb{R}^{n \times d}$ (each row is one token embedding):
+
+**Step 1: Compute Q, K, V with LoRA adapters.**
+
+Define the effective weights $\hat{W}\_\* = W\_{\*,0} + \frac{\alpha}{r}\, B\_\*\, A\_\*$ for $\* \in \lbrace Q, K, V\rbrace$.
+
+$$
+Q = X\, \hat{W}\_Q^T = X\, W\_{Q,0}^T + \frac{\alpha}{r}\, (X\, A\_Q^T)\, B\_Q^T \in \mathbb{R}^{n \times d}
+$$
+
+$$
+K = X\, \hat{W}\_K^T = X\, W\_{K,0}^T + \frac{\alpha}{r}\, (X\, A\_K^T)\, B\_K^T \in \mathbb{R}^{n \times d}
+$$
+
+$$
+V = X\, \hat{W}\_V^T = X\, W\_{V,0}^T + \frac{\alpha}{r}\, (X\, A\_V^T)\, B\_V^T \in \mathbb{R}^{n \times d}
+$$
+
+In each equation, the LoRA path computes:
+1. $Z\_\* = X\, A\_\*^T \in \mathbb{R}^{n \times r}$ — project all tokens to rank-$r$ space
+2. $\Delta\_\* = Z\_\* B\_\*^T \in \mathbb{R}^{n \times d}$ — project back to model dimension
+
+**Step 2: Split into $H$ heads.**
+
+Let $d\_h = d / H$ be the per-head dimension. For head $h \in \lbrace 1, \ldots, H\rbrace$:
+
+$$
+Q^{(h)} = Q\_{:,\; (h-1)d\_h\, :\, h\, d\_h} \in \mathbb{R}^{n \times d\_h}
+$$
+
+$$
+K^{(h)} = K\_{:,\; (h-1)d\_h\, :\, h\, d\_h} \in \mathbb{R}^{n \times d\_h}
+$$
+
+$$
+V^{(h)} = V\_{:,\; (h-1)d\_h\, :\, h\, d\_h} \in \mathbb{R}^{n \times d\_h}
+$$
+
+**Step 3: Compute attention scores.**
+
+$$
+S^{(h)} = \frac{Q^{(h)} \left(K^{(h)}\right)^T}{\sqrt{d\_h}} \in \mathbb{R}^{n \times n}
+$$
+
+The attention score between tokens $i$ and $j$ in head $h$:
+
+$$
+S^{(h)}\_{ij} = \frac{1}{\sqrt{d\_h}}\, \bigl(q\_i^{(h)}\bigr)^T k\_j^{(h)}
+$$
+
+**Decomposing the attention score with LoRA terms.** Write $q\_i^{(h)} = q\_{0,i}^{(h)} + \Delta q\_i^{(h)}$ and $k\_j^{(h)} = k\_{0,j}^{(h)} + \Delta k\_j^{(h)}$, where $\Delta q$ and $\Delta k$ are the LoRA corrections. Expanding the dot product:
+
+$$
+\bigl(q\_i^{(h)}\bigr)^T k\_j^{(h)} = \underbrace{\bigl(q\_{0,i}^{(h)}\bigr)^T k\_{0,j}^{(h)}}\_{\text{(i) frozen attention}} + \underbrace{\bigl(q\_{0,i}^{(h)}\bigr)^T \Delta k\_j^{(h)}}\_{\text{(ii) LoRA on K}} + \underbrace{\bigl(\Delta q\_i^{(h)}\bigr)^T k\_{0,j}^{(h)}}\_{\text{(iii) LoRA on Q}} + \underbrace{\bigl(\Delta q\_i^{(h)}\bigr)^T \Delta k\_j^{(h)}}\_{\text{(iv) cross-LoRA}}
+$$
+
+- **Term (i)**: the original pre-trained attention pattern — unchanged
+- **Terms (ii) + (iii)**: the **first-order** LoRA corrections — these are $O(\alpha/r)$ and are the dominant adaptation signal
+- **Term (iv)**: the **second-order** cross-LoRA interaction — this is $O(\alpha^2/r^2)$ and is small for moderate scaling
+
+> **Key insight**: The LoRA correction to the attention pattern is approximately **linear** in the adapters. Each adapter independently shifts the attention distribution — $A\_Q, B\_Q$ controls *where* each token attends (query side), while $A\_K, B\_K$ controls *how visible* each token is (key side).
+
+**Step 4: Softmax and weighted values.**
+
+$$
+P^{(h)} = \text{softmax}\bigl(S^{(h)}\bigr) \in \mathbb{R}^{n \times n}
+$$
+
+where $P^{(h)}\_{ij} = \frac{\exp(S^{(h)}\_{ij})}{\sum\_{j'=1}^{n} \exp(S^{(h)}\_{ij'})}$.
+
+$$
+\text{head}\_h = P^{(h)}\, V^{(h)} \in \mathbb{R}^{n \times d\_h}
+$$
+
+Expanding the $i$-th token's output for head $h$:
+
+$$
+(\text{head}\_h)\_{i,:} = \sum\_{j=1}^{n} P^{(h)}\_{ij}\, v\_j^{(h)} = \sum\_{j=1}^{n} P^{(h)}\_{ij} \bigl(v\_{0,j}^{(h)} + \Delta v\_j^{(h)}\bigr)
+$$
+
+The LoRA adapter on $W\_V$ directly changes *what information* is propagated at each position, weighted by the (potentially LoRA-modified) attention distribution.
+
+**Step 5: Concatenate heads.**
+
+$$
+\text{MultiHead} = \text{Concat}\bigl(\text{head}\_1, \ldots, \text{head}\_H\bigr) \in \mathbb{R}^{n \times d}
+$$
+
+**Step 6: Output projection with LoRA.**
+
+$$
+\text{MHA}(X) = \text{MultiHead} \cdot \hat{W}\_O^T
+$$
+
+where $\hat{W}\_O = W\_{O,0} + \frac{\alpha}{r}\, B\_O\, A\_O$ and $W\_{O,0} \in \mathbb{R}^{d \times d}$.
+
+Expanding:
+
+$$
+\text{MHA}(X) = \text{MultiHead} \cdot W\_{O,0}^T + \frac{\alpha}{r}\, (\text{MultiHead} \cdot A\_O^T)\, B\_O^T
+$$
+
+The output projection adapter $W\_O$ controls how the multi-head outputs are **mixed** — it adapts the cross-head interaction pattern.
+
+---
+
+#### 2.4.7.3 Feed-Forward Network (FFN) with LoRA
+
+Transformer models use different FFN architectures. We derive the LoRA formulation for both.
+
+**Standard ReLU/GELU FFN** (BERT, GPT-2):
+
+$$
+\text{FFN}(x) = W\_2 \cdot \sigma(W\_1\, x + b\_1) + b\_2
+$$
+
+where $W\_1 \in \mathbb{R}^{d\_{ff} \times d}$, $W\_2 \in \mathbb{R}^{d \times d\_{ff}}$, and typically $d\_{ff} = 4d$.
+
+With LoRA on both projections, the computation proceeds step by step:
+
+$$
+\text{Step 1:} \quad h\_1 = W\_{1,0}\, x + \frac{\alpha}{r}\, B\_1(A\_1\, x) + b\_1 \in \mathbb{R}^{d\_{ff}}
+$$
+
+$$
+\text{Step 2:} \quad a = \sigma(h\_1) \in \mathbb{R}^{d\_{ff}}
+$$
+
+$$
+\text{Step 3:} \quad \text{FFN}\_{\text{LoRA}}(x) = W\_{2,0}\, a + \frac{\alpha}{r}\, B\_2(A\_2\, a) + b\_2 \in \mathbb{R}^{d}
+$$
+
+where $B\_1 \in \mathbb{R}^{d\_{ff} \times r}$, $A\_1 \in \mathbb{R}^{r \times d}$, $B\_2 \in \mathbb{R}^{d \times r}$, $A\_2 \in \mathbb{R}^{r \times d\_{ff}}$.
+
+Entry-wise for the first projection:
+
+$$
+(h\_1)\_i = \sum\_{j=1}^{d} (W\_{1,0})\_{ij}\, x\_j + \frac{\alpha}{r} \sum\_{\ell=1}^{r} (B\_1)\_{i\ell} \left(\sum\_{j=1}^{d} (A\_1)\_{\ell j}\, x\_j\right) + (b\_1)\_i
+$$
+
+> **Non-linearity interaction**: Unlike a single linear layer, the LoRA adapter on $W\_1$ interacts with the adapter on $W\_2$ through the non-linear activation $\sigma$. This means the two adapters cannot be merged into a single low-rank update. The overall FFN correction is **not** low-rank in the input $x$ — it is a non-linear function of $x$ parameterized by rank-$r$ perturbations to $W\_1$ and $W\_2$.
+
+**SwiGLU FFN** (LLaMA, Mistral, modern architectures):
+
+$$
+\text{FFN}(x) = W\_{\text{down}} \cdot \bigl[\text{SiLU}(W\_{\text{gate}}\, x) \odot (W\_{\text{up}}\, x)\bigr]
+$$
+
+where:
+- $W\_{\text{gate}} \in \mathbb{R}^{d\_{ff} \times d}$ — gate projection
+- $W\_{\text{up}} \in \mathbb{R}^{d\_{ff} \times d}$ — up projection
+- $W\_{\text{down}} \in \mathbb{R}^{d \times d\_{ff}}$ — down projection
+- $\odot$ denotes element-wise (Hadamard) multiplication
+- $\text{SiLU}(z) = z \cdot \sigma(z)$ where $\sigma$ is the sigmoid function
+- Typically $d\_{ff} = \frac{8}{3}d$ (rounded) for SwiGLU
+
+With LoRA on all three projections:
+
+$$
+\text{Step 1 (gate):} \quad g = W\_{\text{gate},0}\, x + \frac{\alpha}{r}\, B\_g(A\_g\, x) \in \mathbb{R}^{d\_{ff}}
+$$
+
+$$
+\text{Step 2 (up):} \quad u = W\_{\text{up},0}\, x + \frac{\alpha}{r}\, B\_u(A\_u\, x) \in \mathbb{R}^{d\_{ff}}
+$$
+
+$$
+\text{Step 3 (activation):} \quad a = \text{SiLU}(g) \odot u \in \mathbb{R}^{d\_{ff}}
+$$
+
+$$
+\text{Step 4 (down):} \quad \text{FFN}\_{\text{LoRA}}(x) = W\_{\text{down},0}\, a + \frac{\alpha}{r}\, B\_d(A\_d\, a) \in \mathbb{R}^{d}
+$$
+
+Entry-wise for the gate projection (Step 1):
+
+$$
+g\_i = \sum\_{j=1}^{d} (W\_{\text{gate},0})\_{ij}\, x\_j + \frac{\alpha}{r} \sum\_{\ell=1}^{r} (B\_g)\_{i\ell} \left(\sum\_{j=1}^{d} (A\_g)\_{\ell j}\, x\_j\right)
+$$
+
+Entry-wise for the activation (Step 3):
+
+$$
+a\_i = \text{SiLU}(g\_i) \cdot u\_i = g\_i \cdot \sigma(g\_i) \cdot u\_i
+$$
+
+where $\sigma(g\_i) = \frac{1}{1 + e^{-g\_i}}$ is the sigmoid function.
+
+> **Three-way interaction**: In SwiGLU, the gate and up projections interact multiplicatively ($\text{SiLU}(g) \odot u$), so LoRA adapters on $W\_{\text{gate}}$ and $W\_{\text{up}}$ produce a second-order effect even before the down projection. The down projection adapter then further transforms this, creating a three-way non-linear interaction through which the low-rank corrections compose.
+
+---
+
+#### 2.4.7.4 Full Transformer Block — Complete Forward Pass with LoRA
+
+A complete pre-norm transformer block (as used in LLaMA, GPT-NeoX, Mistral):
+
+For input $X \in \mathbb{R}^{n \times d}$ (sequence of $n$ tokens):
+
+$$
+\text{Step 1 (pre-attention norm):} \quad \bar{X} = \text{RMSNorm}(X)
+$$
+
+$$
+\text{Step 2 (multi-head attention with LoRA):} \quad X' = X + \text{MHA}\_{\text{LoRA}}(\bar{X})
+$$
+
+$$
+\text{Step 3 (pre-FFN norm):} \quad \bar{X}' = \text{RMSNorm}(X')
+$$
+
+$$
+\text{Step 4 (FFN with LoRA):} \quad X'' = X' + \text{FFN}\_{\text{LoRA}}(\bar{X}')
+$$
+
+where $\text{MHA}\_{\text{LoRA}}$ and $\text{FFN}\_{\text{LoRA}}$ use the LoRA-adapted projections derived above.
+
+**What LoRA modifies vs. what remains frozen:**
+
+| Component | Modified by LoRA? | Reason |
+|---|---|---|
+| $W\_Q, W\_K, W\_V, W\_O$ | **Yes** — via rank-$r$ adapters | These are linear projections with $d^2$ parameters each |
+| $W\_{\text{gate}}, W\_{\text{up}}, W\_{\text{down}}$ | **Optionally** — via rank-$r$ adapters | These are large linear projections ($d \times d\_{ff}$) |
+| RMSNorm / LayerNorm parameters | No | Only $2d$ parameters — negligible |
+| Residual connections | No | These are fixed identity mappings |
+| Softmax in attention | No | This is a fixed non-linear function |
+| Activation functions (SiLU, GELU) | No | Fixed non-parametric functions |
+| Positional embeddings | No (typically) | Usually frozen during LoRA fine-tuning |
+
+---
+
+#### 2.4.7.5 Which Layers to Adapt — Sensitivity Analysis
+
+The original LoRA paper (Hu et al., 2021) found that adapting $W\_Q$ and $W\_V$ was most effective. Here we analyze why mathematically.
+
+**Gradient magnitude analysis.** Consider the gradient of the loss w.r.t. the LoRA adapter $B\_P$ on projection $W\_P$ (for $P \in \lbrace Q, K, V, O\rbrace$):
+
+$$
+\left\lVert\frac{\partial \mathcal{L}}{\partial B\_P}\right\rVert\_F = \frac{\alpha}{r} \left\lVert g\_P \cdot z\_P^T\right\rVert\_F
+$$
+
+where $g\_P = \frac{\partial \mathcal{L}}{\partial (\text{output of projection } P)}$ is the upstream gradient and $z\_P = A\_P x$ is the low-rank intermediate.
+
+The magnitude depends on two factors:
+1. **Loss sensitivity**: How much does $\mathcal{L}$ change when the projection output changes?
+2. **Signal strength**: How much information does $z\_P$ carry about the input?
+
+**Value projection $W\_V$** — The gradient flows directly from the attention output:
+
+$$
+g\_V = \frac{\partial \mathcal{L}}{\partial v} = P^T \frac{\partial \mathcal{L}}{\partial (\text{head output})}
+$$
+
+Changes in $V$ directly alter *what information* is propagated — this has the most direct effect on the output.
+
+**Query projection $W\_Q$** — The gradient flows through the softmax:
+
+$$
+g\_Q = \frac{\partial \mathcal{L}}{\partial q} = \frac{1}{\sqrt{d\_h}} \frac{\partial \mathcal{L}}{\partial S} \cdot K
+$$
+
+where $\frac{\partial \mathcal{L}}{\partial S} = \frac{\partial \mathcal{L}}{\partial P} \odot P - P \cdot \text{diag}\left(\sum\_j \frac{\partial \mathcal{L}}{\partial P\_{:,j}} \odot P\_{:,j}\right)$ captures the Jacobian of softmax. Changes in $Q$ shift *where* each token attends.
+
+**Key projection $W\_K$** — Symmetric role to $Q$ from the target side:
+
+$$
+g\_K = \frac{\partial \mathcal{L}}{\partial k} = \frac{1}{\sqrt{d\_h}} \left(\frac{\partial \mathcal{L}}{\partial S}\right)^T \cdot Q
+$$
+
+Adapting $K$ shifts *how visible* each token is — often redundant with adapting $Q$.
+
+**Output projection $W\_O$** — The gradient passes directly from later layers:
+
+$$
+g\_O = \frac{\partial \mathcal{L}}{\partial (\text{MHA output})}
+$$
+
+Adapting $W\_O$ changes how the head outputs are combined — important for cross-head interaction.
+
+**Empirical finding**: Adapting $\lbrace W\_Q, W\_V\rbrace$ together gives the best quality per parameter because $Q$ controls attention routing (indirect but powerful) and $V$ controls information content (direct). Adapting all four $\lbrace W\_Q, W\_K, W\_V, W\_O\rbrace$ gives marginal additional gain at twice the parameter cost.
+
+---
+
+#### 2.4.7.6 Parameter Count for a Full Transformer Layer
+
+For a single transformer layer with $d\_{\text{model}} = d$ and FFN hidden dimension $d\_{ff}$:
+
+| Projection | Weight Shape | Original Params | LoRA Params ($r$) |
+|---|---|---|---|
+| $W\_Q$ | $d \times d$ | $d^2$ | $2rd$ |
+| $W\_K$ | $d \times d$ | $d^2$ | $2rd$ |
+| $W\_V$ | $d \times d$ | $d^2$ | $2rd$ |
+| $W\_O$ | $d \times d$ | $d^2$ | $2rd$ |
+| $W\_{\text{up}}$ | $d\_{ff} \times d$ | $d \cdot d\_{ff}$ | $r(d + d\_{ff})$ |
+| $W\_{\text{gate}}$ | $d\_{ff} \times d$ | $d \cdot d\_{ff}$ | $r(d + d\_{ff})$ |
+| $W\_{\text{down}}$ | $d \times d\_{ff}$ | $d\_{ff} \cdot d$ | $r(d\_{ff} + d)$ |
+
+**Worked example — LLaMA-7B** ($d = 4096$, $d\_{ff} = 11008$, $L = 32$ layers, $r = 16$):
+
+*Configuration 1: Attention Q, V only (original LoRA recommendation):*
+
+$$
+\text{LoRA params per layer} = 2 \times 2rd = 2 \times 2 \times 16 \times 4096 = 262{,}144
+$$
+
+$$
+\text{Total} = 32 \times 262{,}144 = 8{,}388{,}608 \approx 0.12\% \text{ of 6.7B}
+$$
+
+*Configuration 2: All attention projections (Q, K, V, O):*
+
+$$
+\text{LoRA params per layer} = 4 \times 2rd = 4 \times 2 \times 16 \times 4096 = 524{,}288
+$$
+
+$$
+\text{Total} = 32 \times 524{,}288 = 16{,}777{,}216 \approx 0.25\% \text{ of 6.7B}
+$$
+
+*Configuration 3: All projections (Q, K, V, O + gate, up, down):*
+
+$$
+\text{Attention LoRA per layer} = 4 \times 2 \times 16 \times 4096 = 524{,}288
+$$
+
+$$
+\text{FFN LoRA per layer} = 3 \times 16 \times (4096 + 11008) = 3 \times 241{,}664 = 724{,}992
+$$
+
+$$
+\text{Total per layer} = 524{,}288 + 724{,}992 = 1{,}249{,}280
+$$
+
+$$
+\text{Total} = 32 \times 1{,}249{,}280 = 39{,}976{,}960 \approx 0.60\% \text{ of 6.7B}
+$$
+
+| Configuration | LoRA Params | % of 6.7B | Typical Quality |
+|---|---|---|---|
+| Q, V only | 8.4M | 0.12% | Good baseline |
+| Q, K, V, O | 16.8M | 0.25% | Better (+0.5-1%) |
+| All projections | 40.0M | 0.60% | Best quality |
 
 ---
 

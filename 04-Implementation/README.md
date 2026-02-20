@@ -44,6 +44,54 @@
 
 Every LoRA layer (Linear, Embedding, Conv2d) shares the same hyperparameters: rank, alpha, scaling, and dropout. We extract these into a **base class** using Python's multiple inheritance.
 
+### Mathematical Foundation: The Scaling Factor
+
+Every LoRA layer requires a scaling constant $s$ that normalizes the adapter output. The choice of $s$ determines how output variance depends on rank $r$.
+
+**Standard LoRA scaling.** Given the adapter output $\Delta h = s \cdot BAx$ with $B \in \mathbb{R}^{d \times r}$, $A \in \mathbb{R}^{r \times k}$, if entries have typical learned variance $\sigma_B^2$ and $\sigma_A^2$ respectively, the output variance per element is:
+
+$$
+\text{Var}(\Delta h_i) = s^2 \cdot r \cdot k \cdot \sigma_B^2 \cdot \sigma_A^2
+$$
+
+**Derivation.** Each element of $w = BAx$ is $w_i = \sum_{\ell=1}^{r} B_{i\ell} \sum_{j=1}^{k} A_{\ell j} x_j$. By independence:
+
+$$
+\text{Var}(w_i) = r \cdot \sigma_B^2 \cdot k \cdot \sigma_A^2 \cdot \text{Var}(x_j) = r \cdot k \cdot \sigma_B^2 \cdot \sigma_A^2
+$$
+
+With standard scaling $s = \alpha / r$:
+
+$$
+\text{Var}(\Delta h_i) = \frac{\alpha^2}{r^2} \cdot r \cdot k \cdot \sigma_B^2 \cdot \sigma_A^2 = \frac{\alpha^2 k \sigma_B^2 \sigma_A^2}{r}
+$$
+
+This **decreases** with $r$ — higher rank produces smaller updates.
+
+With rsLoRA scaling $s = \alpha / \sqrt{r}$:
+
+$$
+\text{Var}(\Delta h_i) = \frac{\alpha^2}{r} \cdot r \cdot k \cdot \sigma_B^2 \cdot \sigma_A^2 = \alpha^2 k \sigma_B^2 \sigma_A^2
+$$
+
+Now the variance is **independent of $r$** — changing rank does not require re-tuning the learning rate. $\square$
+
+**LoRA dropout regularization.** Dropout with probability $p$ on the LoRA path zeros each element of the input with probability $p$ and scales survivors by $1/(1-p)$. For input $x$, the dropout output is $\tilde{x} = \frac{1}{1-p} m \odot x$ where $m_j \sim \text{Bernoulli}(1-p)$. This preserves the expected value:
+
+$$
+\mathbb{E}[\tilde{x}] = \frac{1}{1-p}(1-p)x = x
+$$
+
+while increasing variance:
+
+$$
+\text{Var}(\tilde{x}_j) = \frac{1}{(1-p)} \text{Var}(x_j) + \frac{p}{(1-p)^2} \mathbb{E}[x_j]^2
+$$
+
+Applied only to the LoRA path, dropout regularizes the low-rank update without disturbing the frozen base model's output.
+
+### Implementation
+
 ```python
 import math
 import torch
@@ -117,6 +165,52 @@ class LoRALayerBase:
 </p>
 
 This is the heart of LoRA — wrapping `nn.Linear` to inject a trainable low-rank branch while keeping the original weights frozen.
+
+### Mathematical Derivation
+
+Before writing a single line of code, let us derive every formula that the implementation needs.
+
+**Forward pass.** A standard `nn.Linear` computes $h = W_0^T x + b$ (PyTorch stores weights as $(d_{out}, d_{in})$ and applies $F.linear(x, W) = xW^T$). With LoRA:
+
+$$
+h = x\, W_0^T + b + \frac{\alpha}{r}\, x\, (AB)^T = x\, W_0^T + b + \frac{\alpha}{r}\, (xA)(B^T)
+$$
+
+where $A \in \mathbb{R}^{d_{in} \times r}$ (down-projection) and $B \in \mathbb{R}^{r \times d_{out}}$ (up-projection).
+
+Equivalently, writing $\Delta W = AB \in \mathbb{R}^{d_{in} \times d_{out}}$:
+
+$$
+h_j = \sum_{i=1}^{d_{in}} (W_0)_{ji}\, x_i + b_j + \frac{\alpha}{r} \sum_{i=1}^{d_{in}} \left(\sum_{\ell=1}^{r} A_{i\ell}\, B_{\ell j}\right) x_i
+$$
+
+**Initialization proof.** We need $\Delta W^{(0)} = A^{(0)} B^{(0)} = 0$ so the model starts at the pre-trained solution.
+
+*Claim:* If $B^{(0)} = 0$ (all zeros) and $A^{(0)}$ is any matrix, then $\Delta W^{(0)} = 0$.
+
+*Proof:* $(A^{(0)} B^{(0)})_{ij} = \sum_{\ell=1}^{r} A^{(0)}_{i\ell}\, B^{(0)}_{\ell j} = \sum_{\ell=1}^{r} A^{(0)}_{i\ell} \cdot 0 = 0$. $\square$
+
+The Kaiming uniform initialization for $A$ with $a = \sqrt{5}$ sets $A_{ij} \sim \mathcal{U}(-\text{bound}, \text{bound})$ where $\text{bound} = \sqrt{\frac{6}{(1+a^2) \cdot \text{fan\_in}}}$. This preserves gradient variance through $A$ at the first training step (see Chapter 2, Section 2.6).
+
+**Merge proof.** After training, we want to fold the adapter into a single weight for zero-overhead inference.
+
+*Claim:* $f_{\text{LoRA}}(x) = f_{\text{merged}}(x)$ for all $x$ where $W_{\text{merged}} = W_0 + \frac{\alpha}{r}(AB)^T$.
+
+*Proof:*
+
+$$
+f_{\text{merged}}(x) = x\, W_{\text{merged}}^T + b = x \left(W_0 + \frac{\alpha}{r}(AB)^T\right)^T + b
+$$
+
+Since $(AB)^T$ is transposed by `nn.Linear`'s convention $(d_{out}, d_{in})$, and the stored weight $W_0$ already has shape $(d_{out}, d_{in})$:
+
+$$
+= x W_0^T + \frac{\alpha}{r}\, x(AB) + b = x W_0^T + b + \frac{\alpha}{r}\, x A B = f_{\text{LoRA}}(x) \quad \square
+$$
+
+**Rank constraint.** $\text{rank}(\Delta W) = \text{rank}(AB) \leq \min(\text{rank}(A), \text{rank}(B)) \leq r$. The weight update is provably bounded by rank $r$ at all times during training.
+
+### Implementation
 
 ```python
 class LoRALinear(nn.Linear, LoRALayerBase):
@@ -227,6 +321,48 @@ class LoRALinear(nn.Linear, LoRALayerBase):
 
 LoRA also works on embedding tables. The key difference: A is looked up via `F.embedding()` (not multiplied), then the result is projected through B.
 
+### Mathematical Derivation
+
+**Embedding as matrix selection.** An embedding table $E \in \mathbb{R}^{V \times d}$ (vocabulary size $V$, embedding dimension $d$) maps a token index $t \in \lbrace 0, 1, \ldots, V-1\rbrace$ to a row vector:
+
+$$
+\text{Embed}(t) = E_{t,:} = e_t^T E
+$$
+
+where $e_t \in \mathbb{R}^V$ is the one-hot vector with a 1 at position $t$. This is a **row selection** from $E$, equivalent to multiplication by a one-hot vector.
+
+**LoRA on embeddings.** We factor the update $\Delta E = A_E B_E$ where $A_E \in \mathbb{R}^{V \times r}$ and $B_E \in \mathbb{R}^{r \times d}$:
+
+$$
+\text{Embed}_{\text{LoRA}}(t) = E_{0,t,:} + \frac{\alpha}{r}\, (A_E)_{t,:}\, B_E
+$$
+
+For token $t$, the LoRA path:
+1. **Looks up** row $t$ of $A_E$: $(A_E)_{t,:} \in \mathbb{R}^{1 \times r}$ — a rank-$r$ code for token $t$
+2. **Projects** through $B_E$: $(A_E)_{t,:} B_E \in \mathbb{R}^{1 \times d}$ — maps the code back to embedding space
+
+*Why lookup instead of multiply:* The input to an embedding is a discrete integer, not a continuous vector. For a token $t$, $e_t^T A_E = (A_E)_{t,:}$, so the "matrix multiply" reduces to a row selection — which is exactly `F.embedding()`.
+
+**Merge.** The merged embedding table is:
+
+$$
+E_{\text{merged}} = E_0 + \frac{\alpha}{r}\, A_E B_E \in \mathbb{R}^{V \times d}
+$$
+
+*Proof:* $\text{Embed}_{\text{merged}}(t) = (E_{\text{merged}})_{t,:} = (E_0)_{t,:} + \frac{\alpha}{r}(A_E B_E)_{t,:} = (E_0)_{t,:} + \frac{\alpha}{r}(A_E)_{t,:} B_E = \text{Embed}_{\text{LoRA}}(t)$. $\square$
+
+**Parameter savings.** Original: $V \times d$ parameters. LoRA: $V \times r + r \times d = r(V + d)$. For a 32K vocabulary with $d = 4096$, $r = 16$: compression = $\frac{32768 \times 4096}{16 \times (32768 + 4096)} = \frac{134M}{0.59M} \approx 227\times$.
+
+**Sequence formulation.** For a sequence of tokens $[t_1, t_2, \ldots, t_n]$:
+
+$$
+\text{Embed}_{\text{LoRA}}([t_1, \ldots, t_n]) = E_{0,[t_1,\ldots,t_n],:} + \frac{\alpha}{r}\, (A_E)_{[t_1,\ldots,t_n],:}\, B_E \in \mathbb{R}^{n \times d}
+$$
+
+Each row of the output is the LoRA-adapted embedding for the corresponding token.
+
+### Implementation
+
 ```python
 class LoRAEmbedding(nn.Embedding, LoRALayerBase):
     """
@@ -321,6 +457,59 @@ class LoRAEmbedding(nn.Embedding, LoRALayerBase):
 </p>
 
 LoRA extends to convolutional layers for vision models (ViT, ResNet, UNet in Stable Diffusion).
+
+### Mathematical Derivation
+
+**Standard 2D convolution.** A convolution kernel $\mathcal{K} \in \mathbb{R}^{C_{out} \times C_{in} \times k_h \times k_w}$ applied to input $X \in \mathbb{R}^{C_{in} \times H \times W}$ produces:
+
+$$
+Y_{c,i,j} = \sum_{c'=1}^{C_{in}} \sum_{p=0}^{k_h-1} \sum_{q=0}^{k_w-1} \mathcal{K}_{c, c', p, q} \cdot X_{c', i+p, j+q} + b_c
+$$
+
+**LoRA factorization for convolutions.** The key insight is that a convolution can be decomposed into two stages via a rank-$r$ bottleneck:
+
+**Stage 1 — Down-project via $A$:** Apply $r$ convolutional filters $\mathcal{A} \in \mathbb{R}^{r \times C_{in} \times k_h \times k_w}$:
+
+$$
+Z_{\ell,i,j} = \sum_{c'=1}^{C_{in}} \sum_{p=0}^{k_h-1} \sum_{q=0}^{k_w-1} \mathcal{A}_{\ell, c', p, q} \cdot X_{c', i+p, j+q} \quad \text{for } \ell = 1, \ldots, r
+$$
+
+This produces $Z \in \mathbb{R}^{r \times H_{out} \times W_{out}}$ — $r$ feature maps (the bottleneck).
+
+**Stage 2 — Up-project via $B$:** Apply a pointwise ($1 \times 1$) linear mix $B \in \mathbb{R}^{r \times C_{out}}$:
+
+$$
+\Delta Y_{c,i,j} = \sum_{\ell=1}^{r} B_{\ell c} \cdot Z_{\ell,i,j}
+$$
+
+This expands back to $\Delta Y \in \mathbb{R}^{C_{out} \times H_{out} \times W_{out}}$.
+
+**Equivalence to kernel-level LoRA.** Flattening the kernel into a matrix $K = \text{reshape}(\mathcal{K}) \in \mathbb{R}^{C_{out} \times (C_{in} \cdot k_h \cdot k_w)}$ and similarly $A_{\text{flat}} = \text{reshape}(\mathcal{A}) \in \mathbb{R}^{r \times (C_{in} \cdot k_h \cdot k_w)}$, the LoRA update on the kernel is:
+
+$$
+K_{\text{LoRA}} = K_0 + \frac{\alpha}{r}\, B^T A_{\text{flat}}
+$$
+
+*Proof:* The merged kernel for output channel $c$ and flattened spatial index $m$:
+
+$$
+(K_{\text{LoRA}})_{c,m} = (K_0)_{c,m} + \frac{\alpha}{r} \sum_{\ell=1}^{r} B_{\ell c} \cdot (A_{\text{flat}})_{\ell, m}
+$$
+
+This equals $(K_0 + \frac{\alpha}{r} B^T A_{\text{flat}})_{c,m}$, confirming the matrix factorization. Reshaping back gives the merged 4D kernel. $\square$
+
+**Merge formula.** The merged kernel $\mathcal{K}_{\text{merged}} = \mathcal{K}_0 + \frac{\alpha}{r} \cdot \text{reshape}(B^T A_{\text{flat}})$, where the reshape converts the $(C_{out}, C_{in} \cdot k_h \cdot k_w)$ matrix back to $(C_{out}, C_{in}, k_h, k_w)$.
+
+**Parameter comparison:**
+
+| | Parameters |
+|---|---|
+| Original kernel | $C_{out} \cdot C_{in} \cdot k_h \cdot k_w$ |
+| LoRA: $\mathcal{A}$ | $r \cdot C_{in} \cdot k_h \cdot k_w$ |
+| LoRA: $B$ | $r \cdot C_{out}$ |
+| **Total LoRA** | $r(C_{in} \cdot k_h \cdot k_w + C_{out})$ |
+
+### Implementation
 
 ```python
 class LoRAConv2d(nn.Conv2d, LoRALayerBase):
@@ -1088,7 +1277,52 @@ model.save_pretrained("./my-adapter")
   <img src="./images/dora-implementation.svg" alt="DoRA Weight-Decomposed Architecture" width="100%"/>
 </p>
 
-### From Scratch
+### Mathematical Derivation: Weight Decomposition
+
+**Any weight matrix can be decomposed into magnitude and direction.** For $W \in \mathbb{R}^{d_{out} \times d_{in}}$, define the column-wise norm:
+
+$$
+\lVert W \rVert_c = \bigl[\lVert W_{1,:} \rVert_2, \; \lVert W_{2,:} \rVert_2, \; \ldots, \; \lVert W_{d_{out},:} \rVert_2\bigr]^T \in \mathbb{R}^{d_{out}}
+$$
+
+where $W_{i,:}$ is the $i$-th row of $W$. Then:
+
+$$
+W = \underbrace{\lVert W \rVert_c}_{\text{magnitude } m \in \mathbb{R}^{d_{out}}} \odot \underbrace{\frac{W}{\lVert W \rVert_c}}_{\text{direction } \hat{V} \in \mathbb{R}^{d_{out} \times d_{in}}}
+$$
+
+where $\odot$ denotes row-wise scaling (each row of $\hat{V}$ is a unit vector).
+
+*Proof of decomposition:* For row $i$: $W_{i,:} = \lVert W_{i,:}\rVert_2 \cdot \frac{W_{i,:}}{\lVert W_{i,:}\rVert_2} = m_i \cdot \hat{V}_{i,:}$. Since $\lVert \hat{V}_{i,:}\rVert_2 = 1$, the direction is normalized. $\square$
+
+**DoRA applies LoRA to the direction and learns the magnitude separately:**
+
+$$
+W' = m \odot \frac{W_0 + \frac{\alpha}{r} BA}{\left\lVert W_0 + \frac{\alpha}{r} BA \right\rVert_c}
+$$
+
+where $m \in \mathbb{R}^{d_{out}}$ is a learnable magnitude vector initialized to $m^{(0)} = \lVert W_0 \rVert_c$.
+
+**Initialization proof.** At initialization ($B = 0$):
+
+$$
+W'^{(0)} = m^{(0)} \odot \frac{W_0 + 0}{\lVert W_0 \rVert_c} = \lVert W_0 \rVert_c \odot \frac{W_0}{\lVert W_0 \rVert_c} = W_0 \quad \square
+$$
+
+**Why separate magnitude and direction?** Full fine-tuning independently changes both the magnitude and direction of each weight row. Standard LoRA entangles these: a rank-$r$ update $BA$ simultaneously shifts both. DoRA decouples them:
+
+1. **Direction** ($\hat{V}$) — adapted via LoRA with rank $r$, controls *which features* each neuron responds to
+2. **Magnitude** ($m$) — adapted via a free vector with $d_{out}$ parameters, controls *how strongly* each neuron fires
+
+**Forward pass derivation.** For input $x \in \mathbb{R}^{d_{in}}$, the $i$-th output element:
+
+$$
+h_i = m_i \cdot \frac{(W_0 + \frac{\alpha}{r}BA)_{i,:}}{\lVert (W_0 + \frac{\alpha}{r}BA)_{i,:} \rVert_2} \cdot x = m_i \cdot \hat{V}_{i,:} \cdot x
+$$
+
+**Extra parameter cost:** Only $d_{out}$ parameters for the magnitude vector — negligible. For a $4096 \times 4096$ projection: 4096 magnitude params vs. $2 \times 16 \times 4096 = 131072$ LoRA params — less than 4% overhead.
+
+### Implementation (From Scratch)
 
 ```python
 class DoRALinear(nn.Module):

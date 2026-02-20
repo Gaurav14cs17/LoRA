@@ -75,6 +75,64 @@ $$
 - Rank $ r $ typically 4-64
 - **Zero** inference latency after merging
 
+### Application to Different Layer Types
+
+LoRA's core equation $W = W_0 + \frac{\alpha}{r}BA$ applies to any linear projection. Here is the mathematical form for each layer type encountered in practice (see Chapter 2, Sections 2.4.5–2.4.7 for full derivations):
+
+**Linear (fully connected) layer** — the most direct application:
+
+$$
+y = W_0\, x + b \quad \xrightarrow{\text{LoRA}} \quad y = \left(W_0 + \frac{\alpha}{r}BA\right) x + b
+$$
+
+where $W_0 \in \mathbb{R}^{d_{out} \times d_{in}}$, $B \in \mathbb{R}^{d_{out} \times r}$, $A \in \mathbb{R}^{r \times d_{in}}$. The bias $b$ is **not** adapted. The computation splits into a frozen path $W_0 x + b$ and a LoRA path $\frac{\alpha}{r} B(Ax)$ with cost $r(d_{in} + d_{out}) \ll d_{in} \cdot d_{out}$.
+
+**Convolutional layer** — via kernel reshaping:
+
+A kernel $\mathcal{K} \in \mathbb{R}^{C_{out} \times C_{in} \times k_h \times k_w}$ is reshaped to $K \in \mathbb{R}^{C_{out} \times (C_{in} \cdot k_h \cdot k_w)}$, then:
+
+$$
+K_{\text{LoRA}} = K_0 + \frac{\alpha}{r}\, B_K\, A_K
+$$
+
+where $B_K \in \mathbb{R}^{C_{out} \times r}$ and $A_K \in \mathbb{R}^{r \times (C_{in} \cdot k_h \cdot k_w)}$. The LoRA path is equivalent to a **bottleneck convolution**: $r$ standard filters followed by a $1 \times 1$ pointwise convolution.
+
+**Transformer attention projections** — the primary use case:
+
+For each projection $P \in \lbrace Q, K, V, O\rbrace$ applied to token embedding $x \in \mathbb{R}^d$:
+
+$$
+p = W_{P,0}\, x + \frac{\alpha}{r}\, B_P(A_P\, x)
+$$
+
+The LoRA correction to the attention score between tokens $i$ and $j$ decomposes as:
+
+$$
+q_i^T k_j = \underbrace{q_{0,i}^T k_{0,j}}_{\text{frozen}} + \underbrace{q_{0,i}^T \Delta k_j + \Delta q_i^T k_{0,j}}_{\text{first-order LoRA}} + \underbrace{\Delta q_i^T \Delta k_j}_{O(\alpha^2/r^2)}
+$$
+
+**Transformer FFN** — adapting up/down (or gate/up/down) projections:
+
+For SwiGLU FFN (LLaMA-style):
+
+$$
+g = W_{\text{gate},0}\, x + \frac{\alpha}{r}\, B_g(A_g x), \quad u = W_{\text{up},0}\, x + \frac{\alpha}{r}\, B_u(A_u x)
+$$
+
+$$
+\text{FFN}_{\text{LoRA}}(x) = W_{\text{down},0}\, [\text{SiLU}(g) \odot u] + \frac{\alpha}{r}\, B_d(A_d\, [\text{SiLU}(g) \odot u])
+$$
+
+The gate and up adapters interact **multiplicatively** through the SwiGLU activation, producing a richer adaptation signal than either alone.
+
+### Which Layers to Adapt
+
+| Configuration | LoRA Targets | Params (LLaMA-7B, r=16) | Quality |
+|---|---|---|---|
+| Minimal | $W_Q, W_V$ | 8.4M (0.12%) | Good baseline |
+| Attention-full | $W_Q, W_K, W_V, W_O$ | 16.8M (0.25%) | Better |
+| All projections | + $W_{\text{gate}}, W_{\text{up}}, W_{\text{down}}$ | 40.0M (0.60%) | Best |
+
 ### Limitations
 - Fixed rank across all layers (may be suboptimal)
 - No awareness of which layers need more capacity
@@ -365,7 +423,7 @@ Shared Base Model (GPU Memory)
 For a batch with $ T $ different adapters:
 
 $$
-H = W_0 X + \text{BatchedLoRA}(X, \{B_t, A_t\}_{t=1}^{T})
+H = W_0 X + \text{BatchedLoRA}(X, \lbrace B_t, A_t\rbrace_{t=1}^{T})
 $$
 
 where $ \text{BatchedLoRA} $ applies the correct adapter to each sample in the batch.
@@ -610,7 +668,7 @@ When training LoRA adapters **sequentially** for multiple tasks, constrain each 
 
 ### Mathematical Formulation
 
-Given previously learned adapters $ \{(B_1, A_1), (B_2, A_2), \ldots, (B_{t-1}, A_{t-1})\} $ for tasks $ 1 $ through $ t-1 $, the new adapter $ (B_t, A_t) $ for task $ t $ must satisfy:
+Given previously learned adapters $ \lbrace(B_1, A_1), (B_2, A_2), \ldots, (B_{t-1}, A_{t-1})\rbrace $ for tasks $ 1 $ through $ t-1 $, the new adapter $ (B_t, A_t) $ for task $ t $ must satisfy:
 
 **Orthogonality constraint on B (output space):**
 
