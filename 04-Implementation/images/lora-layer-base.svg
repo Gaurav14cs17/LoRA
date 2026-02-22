@@ -1,45 +1,117 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340">
-  <rect width="800" height="340" rx="12" fill="#0f172a"/>
-  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">LoRALayerBase: Shared Foundation via Multiple Inheritance</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B"/>
+    </marker>
+    <linearGradient id="baseGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.04"/>
+    </linearGradient>
+    <linearGradient id="linearGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#3B82F6" stop-opacity="0.03"/>
+    </linearGradient>
+    <linearGradient id="embGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0.03"/>
+    </linearGradient>
+    <linearGradient id="convGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0.03"/>
+    </linearGradient>
+  </defs>
 
-  <!-- LoRALayerBase box (top center) -->
-  <rect x="250" y="60" width="300" height="130" rx="10" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
-  <text x="400" y="85" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="14" font-weight="bold">LoRALayerBase</text>
-  <line x1="270" y1="95" x2="530" y2="95" stroke="#334155" stroke-width="1"/>
-  <text x="280" y="115" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">rank: int</text>
-  <text x="280" y="132" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">lora_alpha: int</text>
-  <text x="280" y="149" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">scaling: float = &#945;/r or &#945;/&#8730;r</text>
-  <text x="280" y="166" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">lora_dropout: nn.Dropout</text>
-  <text x="280" y="183" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">use_rslora: bool</text>
+  <!-- Background -->
+  <rect width="900" height="520" rx="12" fill="#FAFBFC"/>
+  <rect x="0" y="0" width="900" height="4" rx="2" fill="url(#baseGrad)"/>
 
-  <!-- Arrows down to children -->
-  <line x1="300" y1="190" x2="130" y2="230" stroke="#475569" stroke-width="2"/>
-  <line x1="400" y1="190" x2="400" y2="230" stroke="#475569" stroke-width="2"/>
-  <line x1="500" y1="190" x2="670" y2="230" stroke="#475569" stroke-width="2"/>
+  <!-- Title -->
+  <text x="450" y="38" text-anchor="middle" font-size="18" font-weight="700" fill="#1E293B">LoRALayerBase — Shared Foundation via Multiple Inheritance</text>
+  <line x1="180" y1="50" x2="720" y2="50" stroke="#E2E8F0" stroke-width="1"/>
+
+  <!-- Base Class Box -->
+  <rect x="270" y="68" width="360" height="160" rx="10" fill="url(#baseGrad)" stroke="#8B5CF6" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="270" y="68" width="360" height="36" rx="10" fill="#8B5CF6"/>
+  <rect x="270" y="94" width="360" height="10" fill="#8B5CF6"/>
+  <text x="450" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="#FFF">LoRALayerBase</text>
+  <text x="450" y="96" text-anchor="middle" font-size="10" fill="#C4B5FD">(plain Python class — not nn.Module)</text>
+
+  <!-- Attributes -->
+  <text x="290" y="128" font-size="12.5" fill="#4C1D95" font-family="'Cascadia Code', 'Fira Code', monospace">rank</text>
+  <text x="395" y="128" font-size="11.5" fill="#6B7280">— bottleneck dimension r (4, 8, 16 …)</text>
+  <text x="290" y="148" font-size="12.5" fill="#4C1D95" font-family="'Cascadia Code', 'Fira Code', monospace">lora_alpha</text>
+  <text x="395" y="148" font-size="11.5" fill="#6B7280">— scaling numerator α</text>
+  <text x="290" y="168" font-size="12.5" fill="#4C1D95" font-family="'Cascadia Code', 'Fira Code', monospace">scaling</text>
+  <text x="395" y="168" font-size="11.5" fill="#6B7280">— α/r  or  α/√r (rsLoRA)</text>
+  <text x="290" y="188" font-size="12.5" fill="#4C1D95" font-family="'Cascadia Code', 'Fira Code', monospace">lora_dropout</text>
+  <text x="395" y="188" font-size="11.5" fill="#6B7280">— regularization (LoRA path only)</text>
+  <text x="290" y="208" font-size="12.5" fill="#4C1D95" font-family="'Cascadia Code', 'Fira Code', monospace">use_rslora</text>
+  <text x="395" y="208" font-size="11.5" fill="#6B7280">— rank-stabilized scaling flag</text>
+
+  <!-- Inheritance arrows -->
+  <line x1="270" y1="248" x2="160" y2="310" stroke="#64748B" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="450" y1="248" x2="450" y2="310" stroke="#64748B" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="630" y1="248" x2="740" y2="310" stroke="#64748B" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- "inherits" labels -->
+  <text x="200" y="274" text-anchor="middle" font-size="10" fill="#94A3B8" font-style="italic">inherits</text>
+  <text x="460" y="274" font-size="10" fill="#94A3B8" font-style="italic">inherits</text>
+  <text x="700" y="274" text-anchor="middle" font-size="10" fill="#94A3B8" font-style="italic">inherits</text>
 
   <!-- LoRALinear -->
-  <rect x="30" y="230" width="200" height="85" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
-  <text x="130" y="255" text-anchor="middle" fill="#3b82f6" font-family="Arial,sans-serif" font-size="13" font-weight="bold">LoRALinear</text>
-  <text x="130" y="275" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="10">nn.Linear + LoRALayerBase</text>
-  <text x="130" y="295" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">lora_A: (in, r)</text>
-  <text x="130" y="308" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">lora_B: (r, out)</text>
+  <rect x="30" y="315" width="260" height="185" rx="10" fill="url(#linearGrad)" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="30" y="315" width="260" height="34" rx="10" fill="#3B82F6"/>
+  <rect x="30" y="339" width="260" height="10" fill="#3B82F6"/>
+  <text x="160" y="337" text-anchor="middle" font-size="14" font-weight="700" fill="#FFF">LoRALinear</text>
+
+  <text x="50" y="370" font-size="11" fill="#64748B">Parents:</text>
+  <text x="105" y="370" font-size="11" fill="#1E40AF" font-weight="600">nn.Linear + LoRALayerBase</text>
+  <line x1="50" y1="380" x2="270" y2="380" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="50" y="398" font-size="12" fill="#1E3A5F" font-family="'Cascadia Code', 'Fira Code', monospace">lora_A</text>
+  <text x="130" y="398" font-size="11" fill="#6B7280">(in_features, rank)</text>
+  <text x="50" y="418" font-size="12" fill="#1E3A5F" font-family="'Cascadia Code', 'Fira Code', monospace">lora_B</text>
+  <text x="130" y="418" font-size="11" fill="#6B7280">(rank, out_features)</text>
+  <line x1="50" y1="428" x2="270" y2="428" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="50" y="446" font-size="11" fill="#475569">A: Kaiming uniform init</text>
+  <text x="50" y="464" font-size="11" fill="#475569">B: Zero init → ΔW = 0 at start</text>
+  <text x="50" y="484" font-size="11" fill="#475569">h = xW₀ᵀ + b + (α/r)·xAB</text>
 
   <!-- LoRAEmbedding -->
-  <rect x="300" y="230" width="200" height="85" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
-  <text x="400" y="255" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="13" font-weight="bold">LoRAEmbedding</text>
-  <text x="400" y="275" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="10">nn.Embedding + LoRALayerBase</text>
-  <text x="400" y="295" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">lora_A: (vocab, r)</text>
-  <text x="400" y="308" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">lora_B: (r, dim)</text>
+  <rect x="320" y="315" width="260" height="185" rx="10" fill="url(#embGrad)" stroke="#10B981" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="320" y="315" width="260" height="34" rx="10" fill="#10B981"/>
+  <rect x="320" y="339" width="260" height="10" fill="#10B981"/>
+  <text x="450" y="337" text-anchor="middle" font-size="14" font-weight="700" fill="#FFF">LoRAEmbedding</text>
+
+  <text x="340" y="370" font-size="11" fill="#64748B">Parents:</text>
+  <text x="395" y="370" font-size="11" fill="#065F46" font-weight="600">nn.Embedding + LoRALayerBase</text>
+  <line x1="340" y1="380" x2="560" y2="380" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="340" y="398" font-size="12" fill="#064E3B" font-family="'Cascadia Code', 'Fira Code', monospace">lora_A</text>
+  <text x="420" y="398" font-size="11" fill="#6B7280">(vocab_size, rank)</text>
+  <text x="340" y="418" font-size="12" fill="#064E3B" font-family="'Cascadia Code', 'Fira Code', monospace">lora_B</text>
+  <text x="420" y="418" font-size="11" fill="#6B7280">(rank, embed_dim)</text>
+  <line x1="340" y1="428" x2="560" y2="428" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="340" y="446" font-size="11" fill="#475569">A: Looked up via F.embedding()</text>
+  <text x="340" y="464" font-size="11" fill="#475569">B: Shared projection matrix</text>
+  <text x="340" y="484" font-size="11" fill="#475569">h = E₀[t] + (α/r)·A[t]@B</text>
 
   <!-- LoRAConv2d -->
-  <rect x="570" y="230" width="200" height="85" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
-  <text x="670" y="255" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="13" font-weight="bold">LoRAConv2d</text>
-  <text x="670" y="275" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="10">nn.Conv2d + LoRALayerBase</text>
-  <text x="670" y="295" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">lora_A: Conv2d(in, r, 1)</text>
-  <text x="670" y="308" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">lora_B: Conv2d(r, out, k)</text>
+  <rect x="610" y="315" width="260" height="185" rx="10" fill="url(#convGrad)" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="610" y="315" width="260" height="34" rx="10" fill="#F59E0B"/>
+  <rect x="610" y="339" width="260" height="10" fill="#F59E0B"/>
+  <text x="740" y="337" text-anchor="middle" font-size="14" font-weight="700" fill="#FFF">LoRAConv2d</text>
 
-  <!-- Inheritance labels -->
-  <text x="190" y="218" text-anchor="middle" fill="#475569" font-family="Arial,sans-serif" font-size="9">inherits</text>
-  <text x="400" y="218" text-anchor="middle" fill="#475569" font-family="Arial,sans-serif" font-size="9">inherits</text>
-  <text x="610" y="218" text-anchor="middle" fill="#475569" font-family="Arial,sans-serif" font-size="9">inherits</text>
+  <text x="630" y="370" font-size="11" fill="#64748B">Parents:</text>
+  <text x="685" y="370" font-size="11" fill="#92400E" font-weight="600">nn.Conv2d + LoRALayerBase</text>
+  <line x1="630" y1="380" x2="850" y2="380" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="630" y="398" font-size="12" fill="#78350F" font-family="'Cascadia Code', 'Fira Code', monospace">lora_A</text>
+  <text x="710" y="398" font-size="11" fill="#6B7280">Conv2d(in, r, k×k)</text>
+  <text x="630" y="418" font-size="12" fill="#78350F" font-family="'Cascadia Code', 'Fira Code', monospace">lora_B</text>
+  <text x="710" y="418" font-size="11" fill="#6B7280">(rank, out_channels)</text>
+  <line x1="630" y1="428" x2="850" y2="428" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="630" y="446" font-size="11" fill="#475569">A: Conv2d down-projects channels</text>
+  <text x="630" y="464" font-size="11" fill="#475569">B: Matrix expands back</text>
+  <text x="630" y="484" font-size="11" fill="#475569">Spatial dims preserved</text>
 </svg>

@@ -1,40 +1,133 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 310">
-  <rect width="800" height="310" rx="12" fill="#0f172a"/>
-  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">LoraConfig: Configuration Dataclass</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 480" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrRight" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8B5CF6"/>
+    </marker>
+  </defs>
 
-  <!-- Config box -->
-  <rect x="40" y="55" width="340" height="220" rx="10" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
-  <text x="210" y="80" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="14" font-weight="bold">@dataclass LoraConfig</text>
-  <line x1="60" y1="90" x2="360" y2="90" stroke="#334155" stroke-width="1"/>
+  <rect width="900" height="480" rx="12" fill="#FAFBFC"/>
 
-  <text x="70" y="112" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">rank: int = 8</text>
-  <text x="70" y="132" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">lora_alpha: int = 8</text>
-  <text x="70" y="152" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">lora_dropout: float = 0.0</text>
-  <text x="70" y="172" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">use_rslora: bool = True</text>
-  <text x="70" y="192" fill="#3b82f6" font-family="Arial,sans-serif" font-size="11" font-weight="bold">target_modules: list[str]</text>
-  <text x="70" y="212" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">layers_to_ignore: list[str]</text>
-  <text x="70" y="232" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">layers_pattern: str</text>
-  <text x="70" y="252" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="11" font-weight="bold">save_path: str</text>
-  <text x="70" y="268" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">dtype: torch.dtype</text>
+  <!-- Title -->
+  <text x="450" y="36" text-anchor="middle" font-size="18" font-weight="700" fill="#1E293B">LoraConfig — Configuration Dataclass</text>
+  <text x="450" y="54" text-anchor="middle" font-size="12" fill="#64748B">Controls which layers get adapted and how</text>
+  <line x1="200" y1="66" x2="700" y2="66" stroke="#E2E8F0" stroke-width="1"/>
 
-  <!-- Arrow to LoraModel -->
-  <line x1="380" y1="165" x2="430" y2="165" stroke="#f59e0b" stroke-width="2.5"/>
-  <polygon points="430,159 442,165 430,171" fill="#f59e0b"/>
+  <!-- LoraConfig Box -->
+  <rect x="30" y="85" width="340" height="370" rx="10" fill="white" stroke="#8B5CF6" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="30" y="85" width="340" height="38" rx="10" fill="#8B5CF6"/>
+  <rect x="30" y="113" width="340" height="10" fill="#8B5CF6"/>
+  <text x="200" y="110" text-anchor="middle" font-size="15" font-weight="700" fill="#FFF">@dataclass LoraConfig</text>
 
-  <!-- LoraModel box -->
-  <rect x="450" y="55" width="320" height="220" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
-  <text x="610" y="80" text-anchor="middle" fill="#3b82f6" font-family="Arial,sans-serif" font-size="14" font-weight="bold">LoraModel</text>
-  <line x1="470" y1="90" x2="750" y2="90" stroke="#334155" stroke-width="1"/>
+  <!-- Fields -->
+  <text x="50" y="148" font-size="12" fill="#4C1D95" font-family="'Cascadia Code', 'Fira Code', monospace" font-weight="600">rank</text>
+  <text x="155" y="148" font-size="11" fill="#6B7280">= 8</text>
+  <text x="195" y="148" font-size="10" fill="#94A3B8">Low-rank dimension r</text>
 
-  <text x="470" y="112" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">1. Reads target_modules</text>
-  <text x="470" y="135" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">2. Walks model tree</text>
-  <text x="470" y="158" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">3. Pattern matches names</text>
-  <text x="470" y="181" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">4. Swaps nn.Linear &#8594; LoRALinear</text>
-  <text x="470" y="204" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">5. Swaps nn.Embedding &#8594; LoRAEmb</text>
-  <text x="470" y="227" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">6. Swaps nn.Conv2d &#8594; LoRAConv2d</text>
-  <text x="470" y="250" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">7. Freezes all original weights</text>
-  <text x="470" y="268" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">8. Copies original W into LoRA layers</text>
+  <line x1="50" y1="158" x2="350" y2="158" stroke="#F3F4F6" stroke-width="0.5"/>
 
-  <!-- Bottom -->
-  <text x="400" y="300" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">Config drives the model &#8212; change target_modules and rank to control what gets adapted</text>
+  <text x="50" y="178" font-size="12" fill="#4C1D95" font-family="'Cascadia Code', 'Fira Code', monospace" font-weight="600">lora_alpha</text>
+  <text x="155" y="178" font-size="11" fill="#6B7280">= 8.0</text>
+  <text x="195" y="178" font-size="10" fill="#94A3B8">Scaling numerator α</text>
+
+  <line x1="50" y1="188" x2="350" y2="188" stroke="#F3F4F6" stroke-width="0.5"/>
+
+  <text x="50" y="208" font-size="12" fill="#4C1D95" font-family="'Cascadia Code', 'Fira Code', monospace" font-weight="600">lora_dropout</text>
+  <text x="155" y="208" font-size="11" fill="#6B7280">= 0.0</text>
+  <text x="195" y="208" font-size="10" fill="#94A3B8">Dropout on LoRA path</text>
+
+  <line x1="50" y1="218" x2="350" y2="218" stroke="#F3F4F6" stroke-width="0.5"/>
+
+  <text x="50" y="238" font-size="12" fill="#4C1D95" font-family="'Cascadia Code', 'Fira Code', monospace" font-weight="600">use_rslora</text>
+  <text x="155" y="238" font-size="11" fill="#6B7280">= True</text>
+  <text x="195" y="238" font-size="10" fill="#94A3B8">α/√r vs α/r</text>
+
+  <line x1="50" y1="248" x2="350" y2="248" stroke="#F3F4F6" stroke-width="0.5"/>
+
+  <text x="50" y="268" font-size="12" fill="#4C1D95" font-family="'Cascadia Code', 'Fira Code', monospace" font-weight="600">target_modules</text>
+  <text x="180" y="268" font-size="11" fill="#6B7280">= None</text>
+  <text x="50" y="284" font-size="10" fill="#94A3B8">Layer names to adapt (e.g. ["q_proj", "v_proj"])</text>
+
+  <line x1="50" y1="294" x2="350" y2="294" stroke="#F3F4F6" stroke-width="0.5"/>
+
+  <text x="50" y="314" font-size="12" fill="#4C1D95" font-family="'Cascadia Code', 'Fira Code', monospace" font-weight="600">exclude_modules</text>
+  <text x="180" y="314" font-size="11" fill="#6B7280">= None</text>
+  <text x="50" y="330" font-size="10" fill="#94A3B8">Layer names to skip</text>
+
+  <line x1="50" y1="340" x2="350" y2="340" stroke="#F3F4F6" stroke-width="0.5"/>
+
+  <text x="50" y="360" font-size="12" fill="#4C1D95" font-family="'Cascadia Code', 'Fira Code', monospace" font-weight="600">bias</text>
+  <text x="155" y="360" font-size="11" fill="#6B7280">= "none"</text>
+  <text x="50" y="376" font-size="10" fill="#94A3B8">"none" | "all" | "lora_only"</text>
+
+  <!-- Bias modes mini-table -->
+  <rect x="50" y="390" width="300" height="55" rx="5" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="0.5"/>
+  <text x="65" y="407" font-size="10" font-weight="600" fill="#4C1D95">"none"</text>
+  <text x="130" y="407" font-size="10" fill="#64748B">— no biases trained</text>
+  <text x="65" y="422" font-size="10" font-weight="600" fill="#4C1D95">"all"</text>
+  <text x="130" y="422" font-size="10" fill="#64748B">— all biases trainable</text>
+  <text x="65" y="437" font-size="10" font-weight="600" fill="#4C1D95">"lora_only"</text>
+  <text x="130" y="437" font-size="10" fill="#64748B">— only biases in LoRA layers</text>
+
+  <!-- Arrow from config to LoraModel -->
+  <line x1="370" y1="260" x2="440" y2="260" stroke="#8B5CF6" stroke-width="2.5" stroke-dasharray="6,3" marker-end="url(#arrRight)"/>
+  <text x="405" y="250" text-anchor="middle" font-size="10" fill="#8B5CF6" font-style="italic">feeds into</text>
+
+  <!-- LoraModel Process -->
+  <rect x="450" y="85" width="420" height="370" rx="10" fill="white" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="450" y="85" width="420" height="38" rx="10" fill="#3B82F6"/>
+  <rect x="450" y="113" width="420" height="10" fill="#3B82F6"/>
+  <text x="660" y="110" text-anchor="middle" font-size="15" font-weight="700" fill="#FFF">LoraModel — Injection Process</text>
+
+  <!-- Step 1 -->
+  <rect x="475" y="138" width="30" height="22" rx="11" fill="#DBEAFE"/>
+  <text x="490" y="154" text-anchor="middle" font-size="11" font-weight="700" fill="#1E40AF">1</text>
+  <text x="515" y="154" font-size="12" font-weight="600" fill="#1E293B">Read target_modules from config</text>
+
+  <!-- Step 2 -->
+  <rect x="475" y="170" width="30" height="22" rx="11" fill="#DBEAFE"/>
+  <text x="490" y="186" text-anchor="middle" font-size="11" font-weight="700" fill="#1E40AF">2</text>
+  <text x="515" y="186" font-size="12" font-weight="600" fill="#1E293B">Freeze all parameters</text>
+  <text x="515" y="200" font-size="10" fill="#64748B">param.requires_grad = False</text>
+
+  <!-- Step 3 -->
+  <rect x="475" y="210" width="30" height="22" rx="11" fill="#DBEAFE"/>
+  <text x="490" y="226" text-anchor="middle" font-size="11" font-weight="700" fill="#1E40AF">3</text>
+  <text x="515" y="226" font-size="12" font-weight="600" fill="#1E293B">Walk model tree recursively</text>
+  <text x="515" y="240" font-size="10" fill="#64748B">_apply_lora(module) for each child</text>
+
+  <!-- Step 4 -->
+  <rect x="475" y="252" width="30" height="22" rx="11" fill="#DBEAFE"/>
+  <text x="490" y="268" text-anchor="middle" font-size="11" font-weight="700" fill="#1E40AF">4</text>
+  <text x="515" y="268" font-size="12" font-weight="600" fill="#1E293B">Pattern-match module names</text>
+  <text x="515" y="282" font-size="10" fill="#64748B">any(tgt in name for tgt in target_modules)</text>
+
+  <!-- Step 5 -->
+  <rect x="475" y="294" width="30" height="22" rx="11" fill="#DBEAFE"/>
+  <text x="490" y="310" text-anchor="middle" font-size="11" font-weight="700" fill="#1E40AF">5</text>
+  <text x="515" y="310" font-size="12" font-weight="600" fill="#1E293B">Swap matching layers</text>
+
+  <!-- Swap mapping boxes -->
+  <rect x="515" y="320" width="330" height="68" rx="6" fill="#F0F9FF" stroke="#BFDBFE" stroke-width="0.5"/>
+  <text x="535" y="340" font-size="11" fill="#1E40AF" font-family="'Cascadia Code', 'Fira Code', monospace">nn.Linear</text>
+  <text x="635" y="340" font-size="11" fill="#64748B">→</text>
+  <text x="660" y="340" font-size="11" fill="#F59E0B" font-family="'Cascadia Code', 'Fira Code', monospace">LoRALinear</text>
+  <text x="535" y="358" font-size="11" fill="#1E40AF" font-family="'Cascadia Code', 'Fira Code', monospace">nn.Embedding</text>
+  <text x="645" y="358" font-size="11" fill="#64748B">→</text>
+  <text x="660" y="358" font-size="11" fill="#10B981" font-family="'Cascadia Code', 'Fira Code', monospace">LoRAEmbedding</text>
+  <text x="535" y="376" font-size="11" fill="#1E40AF" font-family="'Cascadia Code', 'Fira Code', monospace">nn.Conv2d</text>
+  <text x="635" y="376" font-size="11" fill="#64748B">→</text>
+  <text x="660" y="376" font-size="11" fill="#D97706" font-family="'Cascadia Code', 'Fira Code', monospace">LoRAConv2d</text>
+
+  <!-- Step 6 -->
+  <rect x="475" y="398" width="30" height="22" rx="11" fill="#DBEAFE"/>
+  <text x="490" y="414" text-anchor="middle" font-size="11" font-weight="700" fill="#1E40AF">6</text>
+  <text x="515" y="414" font-size="12" font-weight="600" fill="#1E293B">Copy pre-trained weights + toggle bias gradients</text>
+  <text x="515" y="428" font-size="10" fill="#64748B">_load_pretrained_weights(state_dict) + _toggle_bias_grad()</text>
+
+  <!-- Result summary -->
+  <rect x="475" y="438" width="375" height="15" rx="3" fill="#F0FDF4"/>
+  <text x="490" y="450" font-size="10" fill="#065F46">✓ Frozen base weights + trainable A, B matrices in matched layers</text>
 </svg>

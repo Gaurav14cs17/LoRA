@@ -1,57 +1,118 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 330">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 520" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
   <defs>
-    <marker id="aq" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0,0 8,3 0,6" fill="#475569"/>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B"/>
     </marker>
   </defs>
-  <rect width="800" height="330" rx="12" fill="#0f172a"/>
-  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">QLoRA Implementation: 4-bit Base + LoRA Adapters</text>
+
+  <rect width="920" height="520" rx="12" fill="#FAFBFC"/>
+
+  <!-- Title -->
+  <text x="460" y="36" text-anchor="middle" font-size="18" font-weight="700" fill="#1E293B">QLoRA — 4-bit Quantized Base + LoRA Adapters</text>
+  <text x="460" y="54" text-anchor="middle" font-size="12" fill="#64748B">Fine-tune a 7B model on a single RTX 3090 (~6 GB VRAM)</text>
+  <line x1="160" y1="68" x2="760" y2="68" stroke="#E2E8F0" stroke-width="1"/>
 
   <!-- Step 1: Load in 4-bit -->
-  <rect x="25" y="60" width="230" height="115" rx="8" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
-  <text x="140" y="85" text-anchor="middle" fill="#ef4444" font-family="Arial,sans-serif" font-size="13" font-weight="bold">Step 1: Load in 4-bit</text>
-  <line x1="45" y1="95" x2="235" y2="95" stroke="#334155" stroke-width="1"/>
-  <text x="45" y="115" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">BitsAndBytesConfig(</text>
-  <text x="55" y="130" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">load_in_4bit=True</text>
-  <text x="55" y="145" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">bnb_4bit_quant_type="nf4"</text>
-  <text x="55" y="160" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="10">bnb_4bit_compute_dtype=bf16</text>
+  <rect x="30" y="90" width="270" height="230" rx="10" fill="white" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="30" y="90" width="270" height="36" rx="10" fill="#3B82F6"/>
+  <rect x="30" y="116" width="270" height="10" fill="#3B82F6"/>
+  <circle cx="55" cy="108" r="11" fill="#2563EB"/>
+  <text x="55" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">1</text>
+  <text x="175" y="113" text-anchor="middle" font-size="13" font-weight="700" fill="#FFF">Load in 4-bit</text>
 
-  <line x1="255" y1="117" x2="285" y2="117" stroke="#475569" stroke-width="2" marker-end="url(#aq)"/>
+  <text x="50" y="148" font-size="11" fill="#475569" font-family="'Cascadia Code', monospace">BitsAndBytesConfig(</text>
+  <text x="60" y="166" font-size="11" fill="#1E40AF" font-family="'Cascadia Code', monospace">load_in_4bit=True,</text>
+  <text x="60" y="184" font-size="11" fill="#475569" font-family="'Cascadia Code', monospace">bnb_4bit_quant_type</text>
+  <text x="60" y="200" font-size="11" fill="#1E40AF" font-family="'Cascadia Code', monospace">  = "nf4",</text>
+  <text x="60" y="218" font-size="11" fill="#475569" font-family="'Cascadia Code', monospace">bnb_4bit_compute_dtype</text>
+  <text x="60" y="234" font-size="11" fill="#1E40AF" font-family="'Cascadia Code', monospace">  = bfloat16,</text>
+  <text x="60" y="252" font-size="11" fill="#475569" font-family="'Cascadia Code', monospace">bnb_4bit_use_double_quant</text>
+  <text x="60" y="268" font-size="11" fill="#1E40AF" font-family="'Cascadia Code', monospace">  = True</text>
+  <text x="50" y="286" font-size="11" fill="#475569" font-family="'Cascadia Code', monospace">)</text>
+
+  <!-- Weight representation diagram -->
+  <rect x="50" y="293" width="230" height="20" rx="4" fill="#DBEAFE"/>
+  <text x="165" y="307" text-anchor="middle" font-size="10" fill="#1E40AF">Weights stored as NF4 (4 bits per param)</text>
+
+  <!-- Arrow 1-2 -->
+  <line x1="300" y1="205" x2="330" y2="205" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- Step 2: Apply LoRA -->
-  <rect x="290" y="60" width="230" height="115" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
-  <text x="405" y="85" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="13" font-weight="bold">Step 2: Apply LoRA</text>
-  <line x1="310" y1="95" x2="500" y2="95" stroke="#334155" stroke-width="1"/>
-  <text x="310" y="115" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">LoraConfig(r=16, ...)</text>
-  <text x="310" y="135" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">get_peft_model(model, cfg)</text>
-  <text x="310" y="160" fill="#10b981" font-family="Arial,sans-serif" font-size="10" font-weight="bold">LoRA adapters in fp16/bf16</text>
-  <text x="310" y="172" fill="#64748b" font-family="Arial,sans-serif" font-size="9">on top of frozen 4-bit base</text>
+  <rect x="335" y="90" width="250" height="230" rx="10" fill="white" stroke="#10B981" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="335" y="90" width="250" height="36" rx="10" fill="#10B981"/>
+  <rect x="335" y="116" width="250" height="10" fill="#10B981"/>
+  <circle cx="360" cy="108" r="11" fill="#059669"/>
+  <text x="360" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">2</text>
+  <text x="470" y="113" text-anchor="middle" font-size="13" font-weight="700" fill="#FFF">Apply LoRA</text>
 
-  <line x1="520" y1="117" x2="550" y2="117" stroke="#475569" stroke-width="2" marker-end="url(#aq)"/>
+  <text x="355" y="148" font-size="11" fill="#475569" font-family="'Cascadia Code', monospace">LoraConfig(</text>
+  <text x="365" y="166" font-size="11" fill="#065F46" font-family="'Cascadia Code', monospace">r=64,</text>
+  <text x="365" y="184" font-size="11" fill="#065F46" font-family="'Cascadia Code', monospace">lora_alpha=16,</text>
+  <text x="365" y="202" font-size="11" fill="#065F46" font-family="'Cascadia Code', monospace">target="all-linear",</text>
+  <text x="365" y="220" font-size="11" fill="#065F46" font-family="'Cascadia Code', monospace">dropout=0.1</text>
+  <text x="355" y="238" font-size="11" fill="#475569" font-family="'Cascadia Code', monospace">)</text>
+
+  <!-- Adapter precision note -->
+  <rect x="355" y="252" width="210" height="15" rx="3" fill="#ECFDF5"/>
+  <text x="460" y="263" text-anchor="middle" font-size="9" fill="#059669">LoRA adapters in fp16/bf16 precision</text>
+
+  <!-- Layer diagram -->
+  <rect x="355" y="273" width="210" height="40" rx="6" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.5"/>
+  <rect x="365" y="280" width="65" height="25" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="0.8"/>
+  <text x="397" y="297" text-anchor="middle" font-size="9" fill="#1E40AF">4-bit W₀</text>
+  <text x="440" y="297" font-size="12" fill="#64748B">+</text>
+  <rect x="455" y="280" width="35" height="25" rx="4" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="472" y="297" text-anchor="middle" font-size="9" fill="#92400E">A</text>
+  <rect x="498" y="280" width="35" height="25" rx="4" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="515" y="297" text-anchor="middle" font-size="9" fill="#92400E">B</text>
+  <text x="545" y="297" font-size="8" fill="#10B981">fp16</text>
+
+  <!-- Arrow 2-3 -->
+  <line x1="585" y1="205" x2="615" y2="205" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- Step 3: Train -->
-  <rect x="555" y="60" width="220" height="115" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
-  <text x="665" y="85" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="13" font-weight="bold">Step 3: Train</text>
-  <line x1="575" y1="95" x2="755" y2="95" stroke="#334155" stroke-width="1"/>
-  <text x="575" y="115" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">paged_adamw_8bit</text>
-  <text x="575" y="135" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">gradient_checkpointing</text>
-  <text x="575" y="155" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="10" font-weight="bold">Only LoRA params update</text>
-  <text x="575" y="172" fill="#64748b" font-family="Arial,sans-serif" font-size="9">4-bit W dequantized on-the-fly</text>
+  <rect x="620" y="90" width="270" height="230" rx="10" fill="white" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="620" y="90" width="270" height="36" rx="10" fill="#F59E0B"/>
+  <rect x="620" y="116" width="270" height="10" fill="#F59E0B"/>
+  <circle cx="645" cy="108" r="11" fill="#D97706"/>
+  <text x="645" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">3</text>
+  <text x="765" y="113" text-anchor="middle" font-size="13" font-weight="700" fill="#FFF">Train</text>
+
+  <text x="640" y="148" font-size="11" fill="#475569">Optimizer:</text>
+  <text x="720" y="148" font-size="11" fill="#92400E" font-weight="600">paged_adamw_8bit</text>
+  <text x="640" y="168" font-size="11" fill="#475569">Gradient checkpointing:</text>
+  <text x="810" y="168" font-size="11" fill="#92400E" font-weight="600">enabled</text>
+  <text x="640" y="188" font-size="11" fill="#475569">Compute dtype:</text>
+  <text x="745" y="188" font-size="11" fill="#92400E" font-weight="600">bf16</text>
+
+  <line x1="640" y1="200" x2="870" y2="200" stroke="#FDE68A" stroke-width="0.5"/>
+  <text x="640" y="220" font-size="11" fill="#78350F">Only LoRA params updated</text>
+  <text x="640" y="240" font-size="11" fill="#78350F">4-bit W₀ dequantized on-the-fly</text>
+  <text x="640" y="260" font-size="11" fill="#78350F">for forward/backward passes</text>
+
+  <rect x="640" y="275" width="230" height="30" rx="5" fill="#FFFBEB" stroke="#FDE68A" stroke-width="0.5"/>
+  <text x="755" y="295" text-anchor="middle" font-size="10" fill="#92400E">~1.2% trainable parameters</text>
 
   <!-- Memory comparison -->
-  <rect x="40" y="200" width="720" height="90" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1"/>
-  <text x="400" y="225" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="13" font-weight="bold">Memory Comparison (LLaMA-7B)</text>
+  <rect x="30" y="350" width="860" height="145" rx="10" fill="white" stroke="#E2E8F0" stroke-width="1" filter="url(#shadow)"/>
+  <text x="460" y="378" text-anchor="middle" font-size="14" font-weight="700" fill="#1E293B">GPU Memory Comparison — LLaMA-7B</text>
+  <line x1="60" y1="390" x2="860" y2="390" stroke="#E2E8F0" stroke-width="1"/>
 
-  <rect x="60" y="240" width="500" height="20" rx="4" fill="#ef4444" opacity="0.3"/>
-  <text x="310" y="255" text-anchor="middle" fill="#ef4444" font-family="Arial,sans-serif" font-size="10">Full FT: ~120 GB (4x A100)</text>
+  <!-- Full FT bar -->
+  <text x="60" y="418" font-size="12" font-weight="600" fill="#64748B">Full Fine-Tuning</text>
+  <rect x="200" y="405" width="640" height="22" rx="4" fill="#FEE2E2" stroke="#FCA5A5" stroke-width="0.5"/>
+  <text x="520" y="420" text-anchor="middle" font-size="11" font-weight="600" fill="#B91C1C">~120 GB — requires 4× A100 80GB</text>
 
-  <rect x="60" y="265" width="133" height="20" rx="4" fill="#f59e0b" opacity="0.3"/>
-  <text x="310" y="280" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="10">LoRA fp16: ~32 GB (1x A100)</text>
+  <!-- LoRA fp16 bar -->
+  <text x="60" y="448" font-size="12" font-weight="600" fill="#64748B">LoRA fp16</text>
+  <rect x="200" y="435" width="171" height="22" rx="4" fill="#DBEAFE" stroke="#93C5FD" stroke-width="0.5"/>
+  <text x="286" y="450" text-anchor="middle" font-size="11" font-weight="600" fill="#1E40AF">~32 GB — 1× A100</text>
 
-  <rect x="60" y="265" width="133" height="20" rx="4" fill="#10b981" opacity="0.5"/>
-  <text x="650" y="255" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="12" font-weight="bold">QLoRA: ~6 GB</text>
-  <text x="650" y="275" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="10">Single RTX 3090!</text>
-
-  <!-- Bottom -->
-  <text x="400" y="318" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="11">QLoRA = BitsAndBytes 4-bit quantization + LoRA &#8594; same code, just add load_in_4bit=True</text>
+  <!-- QLoRA bar -->
+  <text x="60" y="478" font-size="12" font-weight="700" fill="#10B981">QLoRA 4-bit</text>
+  <rect x="200" y="465" width="32" height="22" rx="4" fill="#A7F3D0" stroke="#6EE7B7" stroke-width="0.5"/>
+  <text x="245" y="480" font-size="11" font-weight="700" fill="#065F46">~6 GB — RTX 3090!</text>
 </svg>

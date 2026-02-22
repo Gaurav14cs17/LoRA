@@ -1,43 +1,109 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 260">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 500" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
   <defs>
-    <marker id="amx" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0,0 8,3 0,6" fill="#475569"/>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B"/>
     </marker>
   </defs>
-  <rect width="800" height="260" rx="12" fill="#0f172a"/>
-  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">Merging and Exporting LoRA Adapters</text>
 
-  <!-- Base + Adapter -->
-  <rect x="25" y="70" width="115" height="105" rx="8" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="82" y="110" text-anchor="middle" fill="#ef4444" font-family="Arial,sans-serif" font-size="13" font-weight="bold">W</text>
-  <text x="82" y="130" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Base (14 GB)</text>
-  <text x="157" y="122" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="22">+</text>
-  <rect x="175" y="85" width="80" height="75" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
-  <text x="215" y="118" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="13" font-weight="bold">BA</text>
-  <text x="215" y="140" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">10 MB</text>
+  <rect width="920" height="500" rx="12" fill="#FAFBFC"/>
 
-  <!-- Arrows to 3 options -->
-  <line x1="255" y1="100" x2="325" y2="77" stroke="#475569" stroke-width="2" marker-end="url(#amx)"/>
-  <line x1="255" y1="122" x2="325" y2="132" stroke="#475569" stroke-width="2" marker-end="url(#amx)"/>
-  <line x1="255" y1="145" x2="325" y2="187" stroke="#475569" stroke-width="2" marker-end="url(#amx)"/>
+  <!-- Title -->
+  <text x="460" y="36" text-anchor="middle" font-size="18" font-weight="700" fill="#1E293B">Merging &amp; Exporting LoRA Adapters</text>
+  <text x="460" y="54" text-anchor="middle" font-size="12" fill="#64748B">All three options produce identical model behavior — only storage/deployment differs</text>
+  <line x1="160" y1="68" x2="760" y2="68" stroke="#E2E8F0" stroke-width="1"/>
 
-  <!-- Option 1 -->
-  <rect x="330" y="48" width="445" height="52" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.5"/>
-  <text x="390" y="72" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="11" font-weight="bold">merge_and_unload()</text>
-  <text x="640" y="68" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">W' = W + (&#945;/r)BA &#8594; single model</text>
-  <text x="640" y="88" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">Best for: deployment, GGUF export</text>
+  <!-- Source boxes at top -->
+  <rect x="140" y="85" width="160" height="60" rx="10" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)"/>
+  <text x="220" y="110" text-anchor="middle" font-size="14" font-weight="700" fill="#1E40AF">Base W₀</text>
+  <text x="220" y="128" text-anchor="middle" font-size="11" fill="#3B82F6">~14 GB</text>
 
-  <!-- Option 2 -->
-  <rect x="330" y="108" width="445" height="52" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
-  <text x="390" y="132" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">save_pretrained()</text>
-  <text x="640" y="128" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Save only A, B &#8594; ~10 MB adapter</text>
-  <text x="640" y="148" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">Best for: multi-task, sharing, hot-swap</text>
+  <text x="370" y="115" text-anchor="middle" font-size="22" font-weight="700" fill="#64748B">+</text>
 
-  <!-- Option 3 -->
-  <rect x="330" y="168" width="445" height="52" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="390" y="192" fill="#f59e0b" font-family="Arial,sans-serif" font-size="11" font-weight="bold">push_to_hub()</text>
-  <text x="640" y="188" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Upload adapter to HuggingFace Hub</text>
-  <text x="640" y="208" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">Best for: open-source sharing, CivitAI</text>
+  <rect x="420" y="85" width="160" height="60" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)"/>
+  <text x="500" y="110" text-anchor="middle" font-size="14" font-weight="700" fill="#92400E">LoRA (BA)</text>
+  <text x="500" y="128" text-anchor="middle" font-size="11" fill="#F59E0B">~10 MB</text>
 
-  <text x="400" y="248" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">All three options preserve identical model behavior &#8212; only storage and deployment strategy differ</text>
+  <!-- Downward arrows to three options -->
+  <line x1="270" y1="145" x2="155" y2="200" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="360" y1="145" x2="460" y2="200" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="500" y1="145" x2="760" y2="200" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Option 1: merge_and_unload -->
+  <rect x="30" y="205" width="270" height="250" rx="10" fill="white" stroke="#10B981" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="30" y="205" width="270" height="36" rx="10" fill="#10B981"/>
+  <rect x="30" y="231" width="270" height="10" fill="#10B981"/>
+  <text x="165" y="228" text-anchor="middle" font-size="13" font-weight="700" fill="#FFF">merge_and_unload()</text>
+
+  <!-- Formula -->
+  <rect x="50" y="252" width="230" height="28" rx="5" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="0.5"/>
+  <text x="165" y="270" text-anchor="middle" font-size="12" font-weight="600" fill="#065F46">W' = W₀ + (α/r) · BA</text>
+
+  <text x="50" y="302" font-size="11" fill="#475569">Result: single merged model</text>
+  <text x="50" y="320" font-size="11" fill="#475569">Size: ~14 GB (same as original)</text>
+  <text x="50" y="340" font-size="11" fill="#475569">No LoRA overhead at inference</text>
+
+  <line x1="50" y1="352" x2="280" y2="352" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="50" y="372" font-size="11" font-weight="600" fill="#065F46">Best for:</text>
+  <text x="50" y="390" font-size="11" fill="#475569">• Final deployment</text>
+  <text x="50" y="406" font-size="11" fill="#475569">• GGUF conversion</text>
+  <text x="50" y="422" font-size="11" fill="#475569">• Max inference speed</text>
+
+  <!-- Output icon -->
+  <rect x="50" y="432" width="230" height="16" rx="3" fill="#F0FDF4"/>
+  <text x="165" y="444" text-anchor="middle" font-size="9" fill="#059669">model.safetensors (~14 GB)</text>
+
+  <!-- Option 2: save_pretrained -->
+  <rect x="325" y="205" width="270" height="250" rx="10" fill="white" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="325" y="205" width="270" height="36" rx="10" fill="#F59E0B"/>
+  <rect x="325" y="231" width="270" height="10" fill="#F59E0B"/>
+  <text x="460" y="228" text-anchor="middle" font-size="13" font-weight="700" fill="#FFF">save_pretrained()</text>
+
+  <!-- Info -->
+  <rect x="345" y="252" width="230" height="28" rx="5" fill="#FFFBEB" stroke="#FDE68A" stroke-width="0.5"/>
+  <text x="460" y="270" text-anchor="middle" font-size="12" font-weight="600" fill="#92400E">Save only A, B matrices</text>
+
+  <text x="345" y="302" font-size="11" fill="#475569">Result: tiny adapter file</text>
+  <text x="345" y="320" font-size="11" fill="#475569">Size: ~10-50 MB</text>
+  <text x="345" y="340" font-size="11" fill="#475569">Requires base model to load</text>
+
+  <line x1="345" y1="352" x2="575" y2="352" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="345" y="372" font-size="11" font-weight="600" fill="#92400E">Best for:</text>
+  <text x="345" y="390" font-size="11" fill="#475569">• Multi-task (swap adapters)</text>
+  <text x="345" y="406" font-size="11" fill="#475569">• Sharing / distribution</text>
+  <text x="345" y="422" font-size="11" fill="#475569">• Hot-swapping at runtime</text>
+
+  <!-- Output icon -->
+  <rect x="345" y="432" width="230" height="16" rx="3" fill="#FFFBEB"/>
+  <text x="460" y="444" text-anchor="middle" font-size="9" fill="#B45309">adapter_config.json + adapter_model.safetensors</text>
+
+  <!-- Option 3: push_to_hub -->
+  <rect x="620" y="205" width="270" height="250" rx="10" fill="white" stroke="#8B5CF6" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="620" y="205" width="270" height="36" rx="10" fill="#8B5CF6"/>
+  <rect x="620" y="231" width="270" height="10" fill="#8B5CF6"/>
+  <text x="755" y="228" text-anchor="middle" font-size="13" font-weight="700" fill="#FFF">push_to_hub()</text>
+
+  <!-- Info -->
+  <rect x="640" y="252" width="230" height="28" rx="5" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="0.5"/>
+  <text x="755" y="270" text-anchor="middle" font-size="12" font-weight="600" fill="#7C3AED">Upload to HuggingFace Hub</text>
+
+  <text x="640" y="302" font-size="11" fill="#475569">Result: publicly shared adapter</text>
+  <text x="640" y="320" font-size="11" fill="#475569">Size: ~10-50 MB (adapter only)</text>
+  <text x="640" y="340" font-size="11" fill="#475569">Anyone can download + use</text>
+
+  <line x1="640" y1="352" x2="870" y2="352" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="640" y="372" font-size="11" font-weight="600" fill="#7C3AED">Best for:</text>
+  <text x="640" y="390" font-size="11" fill="#475569">• Open-source sharing</text>
+  <text x="640" y="406" font-size="11" fill="#475569">• CivitAI / community models</text>
+  <text x="640" y="422" font-size="11" fill="#475569">• Reproducible research</text>
+
+  <!-- Output icon -->
+  <rect x="640" y="432" width="230" height="16" rx="3" fill="#F5F3FF"/>
+  <text x="755" y="444" text-anchor="middle" font-size="9" fill="#7C3AED">hub.co/username/my-lora-adapter</text>
+
+  <!-- Bottom note -->
+  <rect x="30" y="468" width="860" height="22" rx="5" fill="#F0FDF4" stroke="#A7F3D0" stroke-width="0.5"/>
+  <text x="460" y="483" text-anchor="middle" font-size="11" fill="#065F46" font-weight="600">All three preserve identical model behavior: f_LoRA(x) = f_merged(x) for all x</text>
 </svg>

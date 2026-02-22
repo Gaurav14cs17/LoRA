@@ -1,59 +1,110 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
   <defs>
-    <marker id="ac2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0,0 8,3 0,6" fill="#475569"/>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B"/>
+    </marker>
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B82F6"/>
+    </marker>
+    <marker id="arrAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F59E0B"/>
     </marker>
   </defs>
-  <rect width="800" height="320" rx="12" fill="#0f172a"/>
-  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">LoRAConv2d: Low-Rank Convolution Adaptation</text>
 
-  <!-- Input feature map -->
-  <rect x="20" y="100" width="90" height="110" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
-  <text x="65" y="150" text-anchor="middle" fill="#60a5fa" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Input</text>
-  <text x="65" y="170" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">C_in &#215; H &#215; W</text>
-  <text x="65" y="190" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">e.g. 256&#215;32&#215;32</text>
+  <rect width="900" height="500" rx="12" fill="#FAFBFC"/>
 
-  <!-- Fork arrows -->
-  <line x1="110" y1="130" x2="155" y2="90" stroke="#475569" stroke-width="2" marker-end="url(#ac2)"/>
-  <line x1="110" y1="180" x2="155" y2="210" stroke="#475569" stroke-width="2" marker-end="url(#ac2)"/>
+  <!-- Title -->
+  <text x="450" y="36" text-anchor="middle" font-size="18" font-weight="700" fill="#1E293B">LoRAConv2d — Low-Rank Convolution Adaptation</text>
+  <text x="450" y="56" text-anchor="middle" font-size="12" fill="#64748B">Factorizes the weight update into a channel bottleneck while preserving spatial structure</text>
+  <line x1="160" y1="68" x2="740" y2="68" stroke="#E2E8F0" stroke-width="1"/>
 
-  <!-- Original Conv path (top) -->
-  <rect x="160" y="55" width="150" height="70" rx="8" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
-  <text x="235" y="85" text-anchor="middle" fill="#ef4444" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Conv2d W</text>
-  <text x="235" y="105" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">(C_out, C_in, k, k) FROZEN</text>
-  <text x="235" y="48" text-anchor="middle" fill="#ef4444" font-family="Arial,sans-serif" font-size="14">&#10060;</text>
+  <!-- Input -->
+  <rect x="30" y="170" width="110" height="80" rx="8" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="85" y="195" text-anchor="middle" font-size="13" font-weight="700" fill="#1E293B">Input</text>
+  <text x="85" y="212" text-anchor="middle" font-size="11" fill="#64748B">C_in × H × W</text>
+  <text x="85" y="228" text-anchor="middle" font-size="10" fill="#94A3B8">e.g. 256×32×32</text>
 
-  <line x1="310" y1="90" x2="520" y2="130" stroke="#475569" stroke-width="2" marker-end="url(#ac2)"/>
-  <text x="420" y="98" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Conv2d(x, W)</text>
+  <!-- Fork -->
+  <circle cx="175" cy="210" r="4" fill="#64748B"/>
+  <line x1="140" y1="210" x2="175" y2="210" stroke="#64748B" stroke-width="2"/>
 
-  <!-- LoRA path (bottom) -->
-  <rect x="160" y="185" width="130" height="80" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
-  <text x="225" y="215" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Conv A</text>
-  <text x="225" y="235" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">1&#215;1 conv: C_in &#8594; r</text>
-  <text x="225" y="250" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">compress channels</text>
+  <!-- === Frozen Conv Path (top) === -->
+  <line x1="175" y1="210" x2="175" y2="145" stroke="#3B82F6" stroke-width="2"/>
+  <line x1="175" y1="145" x2="290" y2="145" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrBlue)"/>
 
-  <line x1="290" y1="225" x2="320" y2="225" stroke="#475569" stroke-width="2" marker-end="url(#ac2)"/>
+  <text x="210" y="112" font-size="11" font-weight="600" fill="#3B82F6">FROZEN PATH</text>
 
-  <rect x="325" y="185" width="130" height="80" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
-  <text x="390" y="215" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Conv B</text>
-  <text x="390" y="235" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">k&#215;k conv: r &#8594; C_out</text>
-  <text x="390" y="250" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">spatial + expand</text>
+  <rect x="295" y="118" width="200" height="55" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)"/>
+  <text x="395" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#1E40AF">Conv2d W₀</text>
+  <text x="395" y="158" text-anchor="middle" font-size="10" fill="#3B82F6">(C_out, C_in, k, k) — frozen ❄️</text>
 
-  <line x1="455" y1="225" x2="520" y2="170" stroke="#475569" stroke-width="2" marker-end="url(#ac2)"/>
-  <text x="500" y="210" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">&#215; scaling</text>
+  <line x1="495" y1="145" x2="590" y2="145" stroke="#3B82F6" stroke-width="2"/>
+
+  <!-- === LoRA Conv Path (bottom) === -->
+  <line x1="175" y1="210" x2="175" y2="290" stroke="#F59E0B" stroke-width="2"/>
+  <line x1="175" y1="290" x2="230" y2="290" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrAmber)"/>
+
+  <text x="210" y="325" font-size="11" font-weight="600" fill="#F59E0B">LoRA PATH</text>
+
+  <!-- Conv A -->
+  <rect x="235" y="262" width="150" height="58" rx="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)"/>
+  <text x="310" y="286" text-anchor="middle" font-size="13" font-weight="700" fill="#92400E">Conv_A</text>
+  <text x="310" y="304" text-anchor="middle" font-size="10" fill="#B45309">(r, C_in, k, k)</text>
+  <text x="310" y="316" text-anchor="middle" font-size="9" fill="#D97706">↓ compress to r channels</text>
+
+  <line x1="385" y1="291" x2="420" y2="291" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrAmber)"/>
+
+  <!-- Bottleneck -->
+  <rect x="425" y="272" width="75" height="38" rx="19" fill="#FDE68A" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="462" y="295" text-anchor="middle" font-size="11" font-weight="600" fill="#92400E">r chans</text>
+
+  <line x1="500" y1="291" x2="530" y2="291" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrAmber)"/>
+
+  <!-- B matrix (permute + matmul) -->
+  <rect x="535" y="262" width="150" height="58" rx="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)"/>
+  <text x="610" y="282" text-anchor="middle" font-size="13" font-weight="700" fill="#92400E">B (matmul)</text>
+  <text x="610" y="300" text-anchor="middle" font-size="10" fill="#B45309">(r, C_out)</text>
+  <text x="610" y="316" text-anchor="middle" font-size="9" fill="#D97706">permute → @ B → permute back</text>
+
+  <!-- Scaling -->
+  <line x1="610" y1="262" x2="610" y2="235" stroke="#F59E0B" stroke-width="2"/>
+  <rect x="580" y="210" width="60" height="25" rx="12" fill="#FEF3C7" stroke="#D97706" stroke-width="1"/>
+  <text x="610" y="227" text-anchor="middle" font-size="11" font-weight="600" fill="#92400E">× α/r</text>
+  <line x1="610" y1="210" x2="610" y2="170" stroke="#F59E0B" stroke-width="2"/>
 
   <!-- Sum -->
-  <circle cx="540" cy="150" r="22" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
-  <text x="540" y="157" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="20" font-weight="bold">+</text>
+  <circle cx="700" cy="155" r="22" fill="#F0FDF4" stroke="#10B981" stroke-width="2.5"/>
+  <text x="700" y="162" text-anchor="middle" font-size="22" font-weight="700" fill="#10B981">+</text>
+
+  <line x1="590" y1="145" x2="678" y2="148" stroke="#3B82F6" stroke-width="2"/>
+  <line x1="610" y1="170" x2="685" y2="155" stroke="#F59E0B" stroke-width="2"/>
 
   <!-- Output -->
-  <line x1="562" y1="150" x2="610" y2="150" stroke="#475569" stroke-width="2" marker-end="url(#ac2)"/>
-  <rect x="615" y="100" width="160" height="100" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
-  <text x="695" y="140" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="12" font-weight="bold">Output</text>
-  <text x="695" y="160" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">C_out &#215; H' &#215; W'</text>
-  <text x="695" y="180" text-anchor="middle" fill="#64748b" font-family="Arial,sans-serif" font-size="9">e.g. 512&#215;32&#215;32</text>
+  <line x1="722" y1="155" x2="755" y2="155" stroke="#10B981" stroke-width="2.5"/>
+  <rect x="760" y="128" width="120" height="55" rx="8" fill="#F0FDF4" stroke="#10B981" stroke-width="2" filter="url(#shadow)"/>
+  <text x="820" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#065F46">Output</text>
+  <text x="820" y="168" text-anchor="middle" font-size="11" fill="#10B981">C_out × H' × W'</text>
+  <text x="820" y="180" text-anchor="middle" font-size="9" fill="#6B7280">e.g. 512×32×32</text>
 
-  <!-- Param comparison -->
-  <text x="160" y="300" fill="#ef4444" font-family="Arial,sans-serif" font-size="11">Full conv: C_in &#215; C_out &#215; k&#178; = 256&#215;512&#215;9 = 1.18M</text>
-  <text x="500" y="300" fill="#10b981" font-family="Arial,sans-serif" font-size="11" font-weight="bold">LoRA: (256&#215;8) + (8&#215;512&#215;9) = 38K (31&#215; less)</text>
+  <!-- Parameter comparison box -->
+  <rect x="50" y="370" width="380" height="100" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1" filter="url(#shadow)"/>
+  <text x="70" y="395" font-size="13" font-weight="700" fill="#1E293B">Parameter Comparison</text>
+  <text x="70" y="415" font-size="11" fill="#64748B">C_in=256, C_out=512, k=3, r=8</text>
+  <line x1="70" y1="422" x2="410" y2="422" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="70" y="440" font-size="12" fill="#3B82F6" font-weight="600">Full Conv2d W:</text>
+  <text x="230" y="440" font-size="12" fill="#1E293B">1,179,648 params</text>
+  <text x="70" y="460" font-size="12" fill="#F59E0B" font-weight="600">LoRA (A + B):</text>
+  <text x="230" y="460" font-size="12" fill="#1E293B">22,528 params (1.9%)</text>
+
+  <!-- Why this decomposition -->
+  <rect x="470" y="370" width="400" height="100" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1" filter="url(#shadow)"/>
+  <text x="490" y="395" font-size="13" font-weight="700" fill="#92400E">Why A is Conv, B is Matrix?</text>
+  <line x1="490" y1="402" x2="850" y2="402" stroke="#FDE68A" stroke-width="0.5"/>
+  <text x="490" y="420" font-size="11" fill="#78350F">• Conv_A preserves spatial structure (same k×k kernels)</text>
+  <text x="490" y="438" font-size="11" fill="#78350F">• Creates r-channel feature map bottleneck</text>
+  <text x="490" y="456" font-size="11" fill="#78350F">• B expands channels via pointwise (1×1) matmul</text>
+  <text x="490" y="472" font-size="11" fill="#78350F">• Equivalent to low-rank factorization of the kernel</text>
 </svg>

@@ -1,71 +1,110 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="Segoe UI,system-ui,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 480" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
   <defs>
-    <filter id="sh5" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
-    <marker id="arr5" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrPurple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8B5CF6"/>
+    </marker>
   </defs>
-  <rect width="800" height="420" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
-  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">LoRA Model Injection: Before and After</text>
 
-  <rect x="30" y="55" width="340" height="330" rx="12" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
-  <text x="200" y="85" text-anchor="middle" font-size="14" font-weight="700" fill="#991b1b">BEFORE</text>
+  <rect width="920" height="480" rx="12" fill="#FAFBFC"/>
 
-  <rect x="60" y="105" width="280" height="120" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
-  <text x="200" y="130" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">model</text>
-  <rect x="85" y="145" width="70" height="35" rx="6" fill="#fecaca" stroke="#dc2626" stroke-width="2"/>
-  <text x="120" y="167" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b">q_proj</text>
-  <rect x="170" y="145" width="70" height="35" rx="6" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
-  <text x="205" y="167" text-anchor="middle" font-size="9" font-weight="600" fill="#6b7280">o_proj</text>
-  <rect x="255" y="145" width="70" height="35" rx="6" fill="#fecaca" stroke="#dc2626" stroke-width="2"/>
-  <text x="290" y="167" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b">v_proj</text>
-  <text x="200" y="215" text-anchor="middle" font-size="9" fill="#64748b">targets (red) = LoRA injection</text>
+  <!-- Title -->
+  <text x="460" y="36" text-anchor="middle" font-size="18" font-weight="700" fill="#1E293B">LoraModel — Automatic Layer Injection</text>
+  <text x="460" y="54" text-anchor="middle" font-size="12" fill="#64748B">_apply_lora() recursively replaces target layers with LoRA-wrapped versions</text>
+  <line x1="160" y1="66" x2="760" y2="66" stroke="#E2E8F0" stroke-width="1"/>
 
-  <line x1="200" y1="230" x2="200" y2="250" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr5)"/>
-  <text x="220" y="245" text-anchor="start" font-size="9" fill="#6366f1">_apply_lora()</text>
-  <text x="220" y="258" text-anchor="start" font-size="8" fill="#64748b">recursive</text>
+  <!-- ======= BEFORE (Left) ======= -->
+  <text x="200" y="94" text-anchor="middle" font-size="15" font-weight="700" fill="#1E293B">Before Injection</text>
 
-  <rect x="60" y="270" width="280" height="100" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
-  <text x="200" y="295" text-anchor="middle" font-size="10" font-weight="700" fill="#475569">model</text>
-  <rect x="85" y="310" width="70" height="40" rx="6" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
-  <text x="120" y="328" text-anchor="middle" font-size="8" font-weight="700" fill="#15803d">LoRA</text>
-  <text x="120" y="342" text-anchor="middle" font-size="7" fill="#16a34a">q_proj</text>
-  <rect x="170" y="310" width="70" height="40" rx="6" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
-  <text x="205" y="332" text-anchor="middle" font-size="9" font-weight="600" fill="#6b7280">o_proj</text>
-  <rect x="255" y="310" width="70" height="40" rx="6" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
-  <text x="290" y="328" text-anchor="middle" font-size="8" font-weight="700" fill="#15803d">LoRA</text>
-  <text x="290" y="342" text-anchor="middle" font-size="7" fill="#16a34a">v_proj</text>
+  <!-- Transformer block -->
+  <rect x="50" y="110" width="300" height="340" rx="10" fill="white" stroke="#CBD5E1" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="200" y="135" text-anchor="middle" font-size="13" font-weight="600" fill="#475569">Transformer Block</text>
+  <line x1="70" y1="145" x2="330" y2="145" stroke="#E2E8F0" stroke-width="1"/>
 
-  <rect x="60" y="382" width="280" height="30" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
-  <text x="200" y="402" text-anchor="middle" font-size="9" fill="#6d28d9">q_proj, v_proj: A,B trainable; W&#8320; frozen</text>
+  <!-- q_proj - target -->
+  <rect x="80" y="160" width="240" height="40" rx="6" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.5"/>
+  <text x="200" y="183" text-anchor="middle" font-size="12" font-weight="600" fill="#B91C1C">q_proj (nn.Linear)</text>
+  <text x="310" y="170" font-size="8" fill="#EF4444">target</text>
 
-  <rect x="395" y="55" width="15" height="120" rx="4" fill="#6366f1"/>
-  <text x="402" y="120" text-anchor="middle" font-size="14" font-weight="800" fill="white">&#8594;</text>
+  <!-- k_proj - not target -->
+  <rect x="80" y="210" width="240" height="40" rx="6" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="200" y="233" text-anchor="middle" font-size="12" fill="#64748B">k_proj (nn.Linear)</text>
 
-  <rect x="430" y="55" width="340" height="330" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
-  <text x="600" y="85" text-anchor="middle" font-size="14" font-weight="700" fill="#15803d">AFTER</text>
+  <!-- v_proj - target -->
+  <rect x="80" y="260" width="240" height="40" rx="6" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.5"/>
+  <text x="200" y="283" text-anchor="middle" font-size="12" font-weight="600" fill="#B91C1C">v_proj (nn.Linear)</text>
+  <text x="310" y="270" font-size="8" fill="#EF4444">target</text>
 
-  <rect x="455" y="105" width="280" height="120" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
-  <text x="595" y="130" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">model</text>
-  <rect x="480" y="145" width="100" height="60" rx="6" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
-  <text x="530" y="165" text-anchor="middle" font-size="9" font-weight="700" fill="#15803d">LoRA</text>
-  <text x="530" y="182" text-anchor="middle" font-size="7" fill="#16a34a">q_proj</text>
-  <rect x="505" y="195" width="25" height="5" rx="1" fill="#86efac"/>
-  <text x="530" y="202" text-anchor="middle" font-size="6" fill="#15803d">A,B</text>
-  <rect x="545" y="145" width="70" height="35" rx="6" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
-  <text x="580" y="167" text-anchor="middle" font-size="9" font-weight="600" fill="#6b7280">o_proj</text>
-  <rect x="630" y="145" width="100" height="60" rx="6" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
-  <text x="680" y="165" text-anchor="middle" font-size="9" font-weight="700" fill="#15803d">LoRA</text>
-  <text x="680" y="182" text-anchor="middle" font-size="7" fill="#16a34a">v_proj</text>
-  <rect x="655" y="195" width="25" height="5" rx="1" fill="#86efac"/>
-  <text x="680" y="202" text-anchor="middle" font-size="6" fill="#15803d">A,B</text>
-  <text x="595" y="225" text-anchor="middle" font-size="9" fill="#64748b">green = LoRA wrapper with A,B sub-blocks</text>
+  <!-- o_proj - not target -->
+  <rect x="80" y="310" width="240" height="40" rx="6" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="200" y="333" text-anchor="middle" font-size="12" fill="#64748B">o_proj (nn.Linear)</text>
 
-  <rect x="455" y="245" width="280" height="140" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
-  <text x="595" y="270" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">Legend</text>
-  <rect x="475" y="285" width="50" height="20" rx="4" fill="#fecaca" stroke="#dc2626"/>
-  <text x="535" y="300" text-anchor="start" font-size="9" fill="#475569">target (injection point)</text>
-  <rect x="475" y="310" width="50" height="20" rx="4" fill="#bbf7d0" stroke="#16a34a"/>
-  <text x="535" y="325" text-anchor="start" font-size="9" fill="#475569">LoRA version</text>
-  <rect x="475" y="335" width="50" height="20" rx="4" fill="#e5e7eb" stroke="#9ca3af"/>
-  <text x="535" y="350" text-anchor="start" font-size="9" fill="#475569">unchanged (no LoRA)</text>
-  <text x="595" y="372" text-anchor="middle" font-size="9" fill="#16a34a">W&#8320;: frozen; A,B: requires_grad=True</text>
+  <!-- MLP layers -->
+  <rect x="80" y="360" width="240" height="40" rx="6" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="200" y="383" text-anchor="middle" font-size="12" fill="#64748B">gate_proj / up_proj / down_proj</text>
+
+  <text x="200" y="425" text-anchor="middle" font-size="11" fill="#94A3B8">target_modules = ["q_proj", "v_proj"]</text>
+
+  <!-- ======= Arrow ======= -->
+  <line x1="370" y1="280" x2="505" y2="280" stroke="#8B5CF6" stroke-width="2.5" marker-end="url(#arrPurple)"/>
+  <rect x="395" y="252" width="100" height="28" rx="6" fill="#F5F3FF" stroke="#C4B5FD" stroke-width="1"/>
+  <text x="445" y="270" text-anchor="middle" font-size="11" font-weight="600" fill="#7C3AED">_apply_lora()</text>
+  <text x="445" y="300" text-anchor="middle" font-size="10" fill="#A78BFA" font-style="italic">recursive</text>
+
+  <!-- ======= AFTER (Right) ======= -->
+  <text x="700" y="94" text-anchor="middle" font-size="15" font-weight="700" fill="#1E293B">After Injection</text>
+
+  <!-- Transformer block -->
+  <rect x="530" y="110" width="360" height="340" rx="10" fill="white" stroke="#CBD5E1" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="710" y="135" text-anchor="middle" font-size="13" font-weight="600" fill="#475569">Transformer Block</text>
+  <line x1="550" y1="145" x2="870" y2="145" stroke="#E2E8F0" stroke-width="1"/>
+
+  <!-- q_proj - LoRA version -->
+  <rect x="560" y="160" width="300" height="55" rx="6" fill="#F0FDF4" stroke="#10B981" stroke-width="2"/>
+  <text x="710" y="180" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">q_proj (LoRALinear)</text>
+  <rect x="575" y="190" width="65" height="18" rx="3" fill="#EFF6FF" stroke="#3B82F6" stroke-width="0.8"/>
+  <text x="607" y="203" text-anchor="middle" font-size="9" fill="#1E40AF">W₀ frozen</text>
+  <rect x="650" y="190" width="45" height="18" rx="3" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="672" y="203" text-anchor="middle" font-size="9" fill="#92400E">A</text>
+  <rect x="703" y="190" width="45" height="18" rx="3" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="725" y="203" text-anchor="middle" font-size="9" fill="#92400E">B</text>
+
+  <!-- k_proj - unchanged -->
+  <rect x="560" y="225" width="300" height="30" rx="6" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="710" y="245" text-anchor="middle" font-size="12" fill="#94A3B8">k_proj (nn.Linear) — unchanged</text>
+
+  <!-- v_proj - LoRA version -->
+  <rect x="560" y="265" width="300" height="55" rx="6" fill="#F0FDF4" stroke="#10B981" stroke-width="2"/>
+  <text x="710" y="285" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">v_proj (LoRALinear)</text>
+  <rect x="575" y="295" width="65" height="18" rx="3" fill="#EFF6FF" stroke="#3B82F6" stroke-width="0.8"/>
+  <text x="607" y="308" text-anchor="middle" font-size="9" fill="#1E40AF">W₀ frozen</text>
+  <rect x="650" y="295" width="45" height="18" rx="3" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="672" y="308" text-anchor="middle" font-size="9" fill="#92400E">A</text>
+  <rect x="703" y="295" width="45" height="18" rx="3" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="725" y="308" text-anchor="middle" font-size="9" fill="#92400E">B</text>
+
+  <!-- o_proj - unchanged -->
+  <rect x="560" y="330" width="300" height="30" rx="6" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="710" y="350" text-anchor="middle" font-size="12" fill="#94A3B8">o_proj (nn.Linear) — unchanged</text>
+
+  <!-- MLP - unchanged -->
+  <rect x="560" y="370" width="300" height="30" rx="6" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="710" y="390" text-anchor="middle" font-size="12" fill="#94A3B8">gate_proj / up_proj / down_proj — unchanged</text>
+
+  <text x="710" y="425" text-anchor="middle" font-size="11" fill="#10B981" font-weight="600">Only matched layers replaced</text>
+
+  <!-- Legend -->
+  <rect x="50" y="452" width="820" height="22" rx="5" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.5"/>
+  <rect x="70" y="457" width="12" height="12" rx="2" fill="#FEF2F2" stroke="#EF4444" stroke-width="1"/>
+  <text x="88" y="467" font-size="10" fill="#64748B">Injection target</text>
+  <rect x="195" y="457" width="12" height="12" rx="2" fill="#F0FDF4" stroke="#10B981" stroke-width="1"/>
+  <text x="213" y="467" font-size="10" fill="#64748B">LoRA-wrapped</text>
+  <rect x="310" y="457" width="12" height="12" rx="2" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1"/>
+  <text x="328" y="467" font-size="10" fill="#64748B">Frozen W₀</text>
+  <rect x="415" y="457" width="12" height="12" rx="2" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1"/>
+  <text x="433" y="467" font-size="10" fill="#64748B">Trainable A, B</text>
+  <rect x="530" y="457" width="12" height="12" rx="2" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="548" y="467" font-size="10" fill="#64748B">Unchanged layers</text>
 </svg>

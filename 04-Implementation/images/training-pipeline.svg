@@ -1,80 +1,130 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 340" font-family="Segoe UI,system-ui,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 480" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
   <defs>
-    <filter id="sh" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
-    <marker id="arr4" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B"/>
+    </marker>
+    <marker id="arrDown" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 5 10 L 10 0 z" fill="#64748B"/>
+    </marker>
   </defs>
-  <rect width="900" height="340" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
-  <text x="450" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">Complete LoRA Training Pipeline</text>
 
-  <rect x="20" y="60" width="130" height="120" rx="10" fill="white" stroke="#3b82f6" stroke-width="2" filter="url(#sh)"/>
-  <circle cx="85" cy="90" r="16" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
-  <text x="85" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8">1</text>
-  <text x="85" y="118" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8">Load Base</text>
-  <text x="85" y="133" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8">Model</text>
-  <text x="85" y="155" text-anchor="middle" font-size="8" fill="#64748b">FP16 / 4-bit</text>
-  <line x1="150" y1="120" x2="168" y2="120" stroke="#475569" stroke-width="1.8" marker-end="url(#arr4)"/>
+  <rect width="920" height="480" rx="12" fill="#FAFBFC"/>
 
-  <rect x="175" y="60" width="130" height="120" rx="10" fill="white" stroke="#ea580c" stroke-width="2" filter="url(#sh)"/>
-  <circle cx="240" cy="90" r="16" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
-  <text x="240" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#c2410c">2</text>
-  <text x="240" y="118" text-anchor="middle" font-size="10" font-weight="700" fill="#c2410c">Configure</text>
-  <text x="240" y="133" text-anchor="middle" font-size="10" font-weight="700" fill="#c2410c">LoRA</text>
-  <text x="240" y="152" text-anchor="middle" font-size="8" fill="#64748b">r=16, &#945;=32</text>
-  <line x1="305" y1="120" x2="323" y2="120" stroke="#475569" stroke-width="1.8" marker-end="url(#arr4)"/>
+  <!-- Title -->
+  <text x="460" y="36" text-anchor="middle" font-size="18" font-weight="700" fill="#1E293B">LoRA Training Pipeline — End to End</text>
+  <line x1="200" y1="50" x2="720" y2="50" stroke="#E2E8F0" stroke-width="1"/>
 
-  <rect x="330" y="60" width="130" height="120" rx="10" fill="white" stroke="#16a34a" stroke-width="2" filter="url(#sh)"/>
-  <circle cx="395" cy="90" r="16" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
-  <text x="395" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#15803d">3</text>
-  <text x="395" y="118" text-anchor="middle" font-size="10" font-weight="700" fill="#16a34a">Prepare</text>
-  <text x="395" y="133" text-anchor="middle" font-size="10" font-weight="700" fill="#16a34a">Data</text>
-  <text x="395" y="152" text-anchor="middle" font-size="8" fill="#64748b">Tokenize</text>
-  <line x1="460" y1="120" x2="478" y2="120" stroke="#475569" stroke-width="1.8" marker-end="url(#arr4)"/>
+  <!-- Step 1: Load Model -->
+  <rect x="30" y="75" width="130" height="105" rx="10" fill="white" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)"/>
+  <circle cx="53" cy="92" r="10" fill="#3B82F6"/>
+  <text x="53" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">1</text>
+  <text x="105" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#1E293B">Load Base</text>
+  <line x1="42" y1="105" x2="148" y2="105" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="95" y="122" text-anchor="middle" font-size="10" fill="#475569">FP16 or 4-bit</text>
+  <text x="95" y="138" text-anchor="middle" font-size="10" fill="#475569">(QLoRA)</text>
+  <text x="95" y="158" text-anchor="middle" font-size="10" fill="#3B82F6" font-family="'Cascadia Code', monospace">from_pretrained()</text>
 
-  <rect x="485" y="55" width="145" height="130" rx="10" fill="white" stroke="#7c3aed" stroke-width="2.5" filter="url(#sh)"/>
-  <circle cx="557" cy="85" r="16" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
-  <text x="557" y="90" text-anchor="middle" font-size="12" font-weight="700" fill="#6d28d9">4</text>
-  <text x="557" y="113" text-anchor="middle" font-size="10" font-weight="700" fill="#6d28d9">Train</text>
-  <text x="557" y="130" text-anchor="middle" font-size="8" fill="#64748b">LR=2e-4, cosine</text>
-  <text x="557" y="141" text-anchor="middle" font-size="8" fill="#64748b">bf16, grad_ckpt</text>
-  <text x="557" y="163" text-anchor="middle" font-size="8" fill="#7c3aed" font-weight="600">Only B,A trained!</text>
-  <line x1="630" y1="120" x2="648" y2="120" stroke="#475569" stroke-width="1.8" marker-end="url(#arr4)"/>
+  <line x1="160" y1="127" x2="180" y2="127" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
 
-  <rect x="655" y="60" width="115" height="120" rx="10" fill="white" stroke="#f59e0b" stroke-width="2" filter="url(#sh)"/>
-  <circle cx="712" cy="90" r="16" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="712" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">5</text>
-  <text x="712" y="118" text-anchor="middle" font-size="10" font-weight="700" fill="#b45309">Save</text>
-  <text x="712" y="133" text-anchor="middle" font-size="10" font-weight="700" fill="#b45309">Adapter</text>
-  <text x="712" y="152" text-anchor="middle" font-size="8" fill="#64748b">Only ~10-50 MB!</text>
-  <line x1="770" y1="120" x2="788" y2="120" stroke="#475569" stroke-width="1.8" marker-end="url(#arr4)"/>
+  <!-- Step 2: Configure -->
+  <rect x="185" y="75" width="130" height="105" rx="10" fill="white" stroke="#8B5CF6" stroke-width="2" filter="url(#shadow)"/>
+  <circle cx="208" cy="92" r="10" fill="#8B5CF6"/>
+  <text x="208" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">2</text>
+  <text x="260" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#1E293B">Configure</text>
+  <line x1="197" y1="105" x2="303" y2="105" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="250" y="122" text-anchor="middle" font-size="10" fill="#475569">r = 16</text>
+  <text x="250" y="138" text-anchor="middle" font-size="10" fill="#475569">alpha = 32</text>
+  <text x="250" y="154" text-anchor="middle" font-size="10" fill="#475569">dropout = 0.05</text>
+  <text x="250" y="170" text-anchor="middle" font-size="10" fill="#8B5CF6" font-family="'Cascadia Code', monospace">LoraConfig()</text>
 
-  <rect x="795" y="60" width="85" height="120" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5" filter="url(#sh)"/>
-  <circle cx="837" cy="90" r="16" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
-  <text x="837" y="95" text-anchor="middle" font-size="12" font-weight="700" fill="#15803d">6</text>
-  <text x="837" y="118" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">Deploy</text>
-  <text x="837" y="140" text-anchor="middle" font-size="8" fill="#64748b">Merge or</text>
-  <text x="837" y="151" text-anchor="middle" font-size="8" fill="#64748b">serve with</text>
-  <text x="837" y="162" text-anchor="middle" font-size="8" fill="#64748b">vLLM/TGI</text>
+  <line x1="315" y1="127" x2="335" y2="127" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
 
-  <rect x="20" y="210" width="860" height="110" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
-  <text x="450" y="235" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">Deploy Options</text>
+  <!-- Step 3: Prepare Data -->
+  <rect x="340" y="75" width="130" height="105" rx="10" fill="white" stroke="#06B6D4" stroke-width="2" filter="url(#shadow)"/>
+  <circle cx="363" cy="92" r="10" fill="#06B6D4"/>
+  <text x="363" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">3</text>
+  <text x="418" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#1E293B">Data Prep</text>
+  <line x1="352" y1="105" x2="458" y2="105" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="405" y="122" text-anchor="middle" font-size="10" fill="#475569">Tokenize</text>
+  <text x="405" y="138" text-anchor="middle" font-size="10" fill="#475569">Format prompts</text>
+  <text x="405" y="154" text-anchor="middle" font-size="10" fill="#475569">Create labels</text>
+  <text x="405" y="170" text-anchor="middle" font-size="10" fill="#06B6D4" font-family="'Cascadia Code', monospace">dataset.map()</text>
 
-  <rect x="45" y="250" width="180" height="55" rx="8" fill="white" stroke="#3b82f6" stroke-width="1.5" filter="url(#sh)"/>
-  <text x="135" y="272" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8">Merge &amp; Export</text>
-  <text x="135" y="290" text-anchor="middle" font-size="9" fill="#3b82f6">merge_and_unload()</text>
+  <line x1="470" y1="127" x2="490" y2="127" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
 
-  <rect x="245" y="250" width="170" height="55" rx="8" fill="white" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh)"/>
-  <text x="330" y="272" text-anchor="middle" font-size="10" font-weight="700" fill="#6d28d9">Serve with vLLM</text>
-  <text x="330" y="290" text-anchor="middle" font-size="9" fill="#7c3aed">adapter stacking</text>
+  <!-- Step 4: Train -->
+  <rect x="495" y="75" width="150" height="105" rx="10" fill="white" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)"/>
+  <circle cx="518" cy="92" r="10" fill="#F59E0B"/>
+  <text x="518" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">4</text>
+  <text x="580" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#1E293B">Train</text>
+  <line x1="507" y1="105" x2="633" y2="105" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="570" y="120" text-anchor="middle" font-size="10" fill="#475569">LR = 2e-4, cosine</text>
+  <text x="570" y="135" text-anchor="middle" font-size="10" fill="#475569">bf16 + grad checkpointing</text>
+  <text x="570" y="150" text-anchor="middle" font-size="10" fill="#B45309" font-weight="600">Only A, B trained</text>
+  <text x="570" y="170" text-anchor="middle" font-size="10" fill="#F59E0B" font-family="'Cascadia Code', monospace">trainer.train()</text>
 
-  <rect x="435" y="250" width="130" height="55" rx="8" fill="white" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh)"/>
-  <text x="500" y="272" text-anchor="middle" font-size="10" font-weight="700" fill="#b45309">Convert to GGUF</text>
-  <text x="500" y="290" text-anchor="middle" font-size="9" fill="#f59e0b">llama.cpp</text>
+  <line x1="645" y1="127" x2="665" y2="127" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
 
-  <rect x="585" y="250" width="150" height="55" rx="8" fill="white" stroke="#16a34a" stroke-width="1.5" filter="url(#sh)"/>
-  <text x="660" y="272" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">Upload to Hub</text>
-  <text x="660" y="290" text-anchor="middle" font-size="9" fill="#16a34a">share adapters</text>
+  <!-- Step 5: Save Adapter -->
+  <rect x="670" y="75" width="115" height="105" rx="10" fill="white" stroke="#10B981" stroke-width="2" filter="url(#shadow)"/>
+  <circle cx="693" cy="92" r="10" fill="#10B981"/>
+  <text x="693" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">5</text>
+  <text x="738" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#1E293B">Save</text>
+  <line x1="682" y1="105" x2="773" y2="105" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="727" y="122" text-anchor="middle" font-size="10" fill="#475569">Adapter only</text>
+  <text x="727" y="138" text-anchor="middle" font-size="10" fill="#065F46" font-weight="600">~10-50 MB</text>
+  <text x="727" y="158" text-anchor="middle" font-size="10" fill="#10B981" font-family="'Cascadia Code', monospace">save_pretrained()</text>
 
-  <rect x="755" y="250" width="105" height="55" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
-  <text x="807" y="272" text-anchor="middle" font-size="9" font-weight="600" fill="#15803d">+ TGI, SGLang</text>
-  <text x="807" y="290" text-anchor="middle" font-size="8" fill="#64748b">etc.</text>
+  <line x1="785" y1="127" x2="805" y2="127" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Step 6: Deploy -->
+  <rect x="810" y="75" width="95" height="105" rx="10" fill="white" stroke="#EF4444" stroke-width="2" filter="url(#shadow)"/>
+  <circle cx="833" cy="92" r="10" fill="#EF4444"/>
+  <text x="833" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">6</text>
+  <text x="866" y="96" text-anchor="middle" font-size="11" font-weight="700" fill="#1E293B">Deploy</text>
+  <line x1="822" y1="105" x2="893" y2="105" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="857" y="122" text-anchor="middle" font-size="10" fill="#475569">Merge or</text>
+  <text x="857" y="138" text-anchor="middle" font-size="10" fill="#475569">serve with</text>
+  <text x="857" y="154" text-anchor="middle" font-size="10" fill="#475569">adapter</text>
+  <text x="857" y="170" text-anchor="middle" font-size="10" fill="#EF4444" font-family="'Cascadia Code', monospace">deploy</text>
+
+  <!-- Deploy options section -->
+  <rect x="30" y="210" width="860" height="245" rx="10" fill="white" stroke="#E2E8F0" stroke-width="1" filter="url(#shadow)"/>
+  <text x="460" y="236" text-anchor="middle" font-size="14" font-weight="700" fill="#1E293B">Deployment Options (Step 6)</text>
+  <line x1="60" y1="248" x2="860" y2="248" stroke="#E2E8F0" stroke-width="1"/>
+
+  <!-- Option 1: Merge & Export -->
+  <rect x="50" y="265" width="250" height="80" rx="8" fill="#F0F9FF" stroke="#BFDBFE" stroke-width="1"/>
+  <text x="175" y="285" text-anchor="middle" font-size="12" font-weight="700" fill="#1E40AF">Merge &amp; Export</text>
+  <text x="175" y="302" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">merge_and_unload()</text>
+  <text x="175" y="320" text-anchor="middle" font-size="10" fill="#64748B">→ Single model file</text>
+  <text x="175" y="335" text-anchor="middle" font-size="10" fill="#94A3B8">Standard HF model, no LoRA needed</text>
+
+  <!-- Option 2: vLLM / TGI -->
+  <rect x="325" y="265" width="265" height="80" rx="8" fill="#FEF3C7" stroke="#FDE68A" stroke-width="1"/>
+  <text x="457" y="285" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">Serve with Adapter</text>
+  <text x="457" y="302" text-anchor="middle" font-size="10" fill="#475569">vLLM adapter stacking</text>
+  <text x="457" y="320" text-anchor="middle" font-size="10" fill="#475569">TGI / SGLang</text>
+  <text x="457" y="335" text-anchor="middle" font-size="10" fill="#94A3B8">Hot-swap adapters at runtime</text>
+
+  <!-- Option 3: GGUF -->
+  <rect x="615" y="265" width="260" height="80" rx="8" fill="#F0FDF4" stroke="#A7F3D0" stroke-width="1"/>
+  <text x="745" y="285" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">Convert to GGUF</text>
+  <text x="745" y="302" text-anchor="middle" font-size="10" fill="#475569">llama.cpp / ollama</text>
+  <text x="745" y="320" text-anchor="middle" font-size="10" fill="#475569">Quantize: Q4_K_M, Q5_K_M</text>
+  <text x="745" y="335" text-anchor="middle" font-size="10" fill="#94A3B8">Run on CPU / edge devices</text>
+
+  <!-- Upload to Hub -->
+  <rect x="50" y="360" width="825" height="40" rx="8" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1"/>
+  <text x="462" y="384" text-anchor="middle" font-size="12" font-weight="600" fill="#7C3AED">Upload to HuggingFace Hub</text>
+  <text x="462" y="396" text-anchor="middle" font-size="10" fill="#A78BFA">push_to_hub() — share adapter or merged model</text>
+
+  <!-- Training config summary -->
+  <rect x="50" y="415" width="825" height="38" rx="8" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="80" y="435" font-size="11" fill="#1E293B" font-weight="600">Typical Config:</text>
+  <text x="185" y="435" font-size="10" fill="#64748B">r=16 | α=32 | LR=2e-4 | cosine schedule | bf16 | grad_checkpointing | paged_adamw_8bit | 3 epochs</text>
+  <text x="80" y="449" font-size="10" fill="#94A3B8">Trainable: ~0.09% of 7B params → adapters save to ~10-50 MB</text>
 </svg>

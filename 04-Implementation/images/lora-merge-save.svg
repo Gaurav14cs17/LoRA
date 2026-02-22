@@ -1,42 +1,100 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 330" font-family="Segoe UI,system-ui,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 450" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
   <defs>
-    <filter id="sh5" x="-3%" y="-3%" width="108%" height="108%"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.1"/></filter>
-    <marker id="arr5" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#64748b"/></marker>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B"/>
+    </marker>
   </defs>
-  <rect width="820" height="330" rx="16" fill="#fafbff" stroke="#e2e8f0" stroke-width="1.5"/>
-  <text x="410" y="32" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">LoRA Save Strategies</text>
 
-  <rect x="30" y="55" width="365" height="250" rx="12" fill="#fff7ed" stroke="#ea580c" stroke-width="2" filter="url(#sh5)"/>
-  <text x="212" y="85" text-anchor="middle" font-size="14" font-weight="700" fill="#c2410c">merge_weights=False</text>
+  <rect width="900" height="450" rx="12" fill="#FAFBFC"/>
 
-  <rect x="55" y="105" width="320" height="55" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1"/>
-  <text x="215" y="128" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">LoRA model</text>
-  <text x="215" y="145" text-anchor="middle" font-size="9" fill="#64748b">filter requires_grad</text>
+  <!-- Title -->
+  <text x="450" y="36" text-anchor="middle" font-size="18" font-weight="700" fill="#1E293B">LoRA Save Strategies — Adapter vs Merged</text>
+  <line x1="200" y1="50" x2="700" y2="50" stroke="#E2E8F0" stroke-width="1"/>
 
-  <line x1="215" y1="160" x2="215" y2="180" stroke="#ea580c" stroke-width="1.8" marker-end="url(#arr5)"/>
+  <!-- LoRA Model (center top) -->
+  <rect x="310" y="65" width="280" height="65" rx="10" fill="white" stroke="#8B5CF6" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="88" text-anchor="middle" font-size="14" font-weight="700" fill="#4C1D95">LoRA Model</text>
+  <rect x="330" y="100" width="60" height="20" rx="4" fill="#EFF6FF" stroke="#3B82F6" stroke-width="0.8"/>
+  <text x="360" y="114" text-anchor="middle" font-size="9" fill="#1E40AF">W₀ frozen</text>
+  <text x="398" y="114" font-size="12" fill="#64748B">+</text>
+  <rect x="410" y="100" width="35" height="20" rx="4" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="427" y="114" text-anchor="middle" font-size="9" fill="#92400E">A</text>
+  <rect x="452" y="100" width="35" height="20" rx="4" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8"/>
+  <text x="469" y="114" text-anchor="middle" font-size="9" fill="#92400E">B</text>
+  <rect x="497" y="100" width="70" height="20" rx="4" fill="#F5F3FF" stroke="#C4B5FD" stroke-width="0.8"/>
+  <text x="532" y="114" text-anchor="middle" font-size="9" fill="#7C3AED">bias (opt)</text>
 
-  <rect x="95" y="185" width="240" height="55" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="215" y="208" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">tiny adapter file</text>
-  <text x="215" y="225" text-anchor="middle" font-size="12" font-weight="800" fill="#92400e">~10 MB</text>
+  <!-- Fork downward -->
+  <line x1="310" y1="130" x2="200" y2="175" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="590" y1="130" x2="700" y2="175" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
 
-  <rect x="55" y="255" width="320" height="35" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
-  <text x="215" y="277" text-anchor="middle" font-size="9" fill="#475569">adapter_config.json + adapter_model.safetensors</text>
+  <!-- Labels on arrows -->
+  <rect x="180" y="145" width="130" height="20" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="245" y="159" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">merge_weights=False</text>
 
-  <rect x="425" y="55" width="365" height="250" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" filter="url(#sh5)"/>
-  <text x="607" y="85" text-anchor="middle" font-size="14" font-weight="700" fill="#15803d">merge_weights=True</text>
+  <rect x="590" y="145" width="130" height="20" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.5"/>
+  <text x="655" y="159" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">merge_weights=True</text>
 
-  <rect x="450" y="105" width="315" height="55" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
-  <text x="607" y="128" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">W&#8320; + BA merge</text>
-  <text x="607" y="145" text-anchor="middle" font-size="9" fill="#64748b">single W' weight matrix</text>
+  <!-- ====== LEFT: Adapter Only ====== -->
+  <rect x="30" y="180" width="380" height="245" rx="10" fill="white" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="30" y="180" width="380" height="36" rx="10" fill="#F59E0B"/>
+  <rect x="30" y="206" width="380" height="10" fill="#F59E0B"/>
+  <text x="220" y="203" text-anchor="middle" font-size="13" font-weight="700" fill="#FFF">Save Adapter Only</text>
 
-  <line x1="607" y1="160" x2="607" y2="180" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arr5)"/>
+  <!-- Process -->
+  <text x="50" y="238" font-size="12" fill="#475569">Filter: params where</text>
+  <text x="215" y="238" font-size="12" fill="#92400E" font-weight="600" font-family="'Cascadia Code', monospace">requires_grad == True</text>
 
-  <rect x="490" y="185" width="235" height="55" rx="8" fill="#bbf7d0" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="607" y="208" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">full model file</text>
-  <text x="607" y="225" text-anchor="middle" font-size="12" font-weight="800" fill="#0f766e">~14 GB</text>
+  <text x="50" y="258" font-size="11" fill="#64748B">→ Saves only lora_A, lora_B, and any trained biases</text>
 
-  <rect x="450" y="255" width="315" height="35" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
-  <text x="607" y="277" text-anchor="middle" font-size="9" fill="#475569">model.safetensors (full weights, no adapter)</text>
+  <!-- File output -->
+  <rect x="50" y="275" width="340" height="70" rx="8" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1"/>
+  <text x="220" y="295" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">Output Files</text>
+  <line x1="70" y1="305" x2="370" y2="305" stroke="#FDE68A" stroke-width="0.5"/>
+  <text x="70" y="320" font-size="11" fill="#475569" font-family="'Cascadia Code', monospace">adapter_config.json</text>
+  <text x="270" y="320" font-size="11" fill="#94A3B8">— LoRA hyperparams</text>
+  <text x="70" y="336" font-size="11" fill="#475569" font-family="'Cascadia Code', monospace">adapter_model.safetensors</text>
+  <text x="270" y="336" font-size="11" fill="#94A3B8">— A, B weights</text>
 
-  <text x="410" y="320" text-anchor="middle" font-size="10" fill="#64748b">Left: deploy with base + adapter. Right: deploy merged model only.</text>
+  <!-- Size badge -->
+  <rect x="50" y="355" width="100" height="25" rx="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="100" y="372" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">~10 MB</text>
+
+  <!-- Deployment note -->
+  <text x="165" y="372" font-size="11" fill="#475569">Deploy with base model + adapter</text>
+  <text x="50" y="395" font-size="11" fill="#475569">Need: base model + this adapter at inference</text>
+  <text x="50" y="412" font-size="11" fill="#059669" font-weight="600">Enables hot-swapping multiple adapters</text>
+
+  <!-- ====== RIGHT: Merged Model ====== -->
+  <rect x="490" y="180" width="380" height="245" rx="10" fill="white" stroke="#10B981" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="490" y="180" width="380" height="36" rx="10" fill="#10B981"/>
+  <rect x="490" y="206" width="380" height="10" fill="#10B981"/>
+  <text x="680" y="203" text-anchor="middle" font-size="13" font-weight="700" fill="#FFF">Merge &amp; Save Full Model</text>
+
+  <!-- Process -->
+  <text x="510" y="238" font-size="12" fill="#475569">Merge:</text>
+  <text x="565" y="238" font-size="12" fill="#065F46" font-weight="600">W' = W₀ + (α/r) · (AB)ᵀ</text>
+
+  <text x="510" y="258" font-size="11" fill="#64748B">→ LoRA folded into weights, no A/B needed</text>
+
+  <!-- File output -->
+  <rect x="510" y="275" width="340" height="70" rx="8" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1"/>
+  <text x="680" y="295" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">Output Files</text>
+  <line x1="530" y1="305" x2="830" y2="305" stroke="#A7F3D0" stroke-width="0.5"/>
+  <text x="530" y="320" font-size="11" fill="#475569" font-family="'Cascadia Code', monospace">model.safetensors</text>
+  <text x="720" y="320" font-size="11" fill="#94A3B8">— full merged weights</text>
+  <text x="530" y="336" font-size="11" fill="#475569" font-family="'Cascadia Code', monospace">config.json</text>
+  <text x="720" y="336" font-size="11" fill="#94A3B8">— model architecture</text>
+
+  <!-- Size badge -->
+  <rect x="510" y="355" width="100" height="25" rx="12" fill="#A7F3D0" stroke="#10B981" stroke-width="1.5"/>
+  <text x="560" y="372" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">~14 GB</text>
+
+  <!-- Deployment note -->
+  <text x="625" y="372" font-size="11" fill="#475569">Deploy as standard model</text>
+  <text x="510" y="395" font-size="11" fill="#475569">Need: only this file — no LoRA code required</text>
+  <text x="510" y="412" font-size="11" fill="#059669" font-weight="600">Zero inference overhead, standard HF model</text>
 </svg>

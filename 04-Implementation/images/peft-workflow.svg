@@ -1,53 +1,125 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 260">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 440" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
   <defs>
-    <marker id="apw" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0,0 8,3 0,6" fill="#475569"/>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B"/>
     </marker>
   </defs>
-  <rect width="800" height="260" rx="12" fill="#0f172a"/>
-  <text x="400" y="35" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-size="18" font-weight="bold">HuggingFace PEFT Workflow</text>
 
-  <!-- Step 1 -->
-  <rect x="15" y="65" width="130" height="80" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
-  <text x="80" y="98" text-anchor="middle" fill="#3b82f6" font-family="Arial,sans-serif" font-size="12" font-weight="bold">1. Load Base</text>
-  <text x="80" y="118" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">AutoModel</text>
-  <text x="80" y="132" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">.from_pretrained()</text>
-  <line x1="145" y1="105" x2="165" y2="105" stroke="#475569" stroke-width="2" marker-end="url(#apw)"/>
+  <rect width="920" height="440" rx="12" fill="#FAFBFC"/>
 
-  <!-- Step 2 -->
-  <rect x="170" y="65" width="120" height="80" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
-  <text x="230" y="98" text-anchor="middle" fill="#f59e0b" font-family="Arial,sans-serif" font-size="12" font-weight="bold">2. Configure</text>
-  <text x="230" y="118" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">LoraConfig(</text>
-  <text x="230" y="132" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">r, alpha, ...)</text>
-  <line x1="290" y1="105" x2="310" y2="105" stroke="#475569" stroke-width="2" marker-end="url(#apw)"/>
+  <!-- Title -->
+  <text x="460" y="36" text-anchor="middle" font-size="18" font-weight="700" fill="#1E293B">HuggingFace PEFT — Production LoRA Workflow</text>
+  <line x1="200" y1="50" x2="720" y2="50" stroke="#E2E8F0" stroke-width="1"/>
 
-  <!-- Step 3 -->
-  <rect x="315" y="65" width="120" height="80" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
-  <text x="375" y="98" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="12" font-weight="bold">3. Inject</text>
-  <text x="375" y="118" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">get_peft_model(</text>
-  <text x="375" y="132" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">model, config)</text>
-  <line x1="435" y1="105" x2="455" y2="105" stroke="#475569" stroke-width="2" marker-end="url(#apw)"/>
+  <!-- Step 1: Load Base -->
+  <rect x="30" y="80" width="150" height="120" rx="10" fill="white" stroke="#3B82F6" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="30" y="80" width="150" height="30" rx="10" fill="#3B82F6"/>
+  <rect x="30" y="100" width="150" height="10" fill="#3B82F6"/>
+  <circle cx="55" cy="95" r="10" fill="#2563EB"/>
+  <text x="55" y="99" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">1</text>
+  <text x="120" y="99" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">Load Base</text>
+  <text x="105" y="130" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">AutoModel</text>
+  <text x="105" y="145" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">.from_pretrained()</text>
+  <text x="105" y="168" text-anchor="middle" font-size="10" fill="#94A3B8">~14 GB</text>
+  <text x="105" y="182" text-anchor="middle" font-size="10" fill="#94A3B8">All params</text>
 
-  <!-- Step 4 -->
-  <rect x="460" y="65" width="120" height="80" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
-  <text x="520" y="98" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="12" font-weight="bold">4. Train</text>
-  <text x="520" y="118" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">SFTTrainer /</text>
-  <text x="520" y="132" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">Trainer.train()</text>
-  <line x1="580" y1="105" x2="600" y2="105" stroke="#475569" stroke-width="2" marker-end="url(#apw)"/>
+  <!-- Arrow 1-2 -->
+  <line x1="180" y1="140" x2="210" y2="140" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
 
-  <!-- Step 5 -->
-  <rect x="605" y="65" width="175" height="80" rx="8" fill="#1e293b" stroke="#ec4899" stroke-width="2"/>
-  <text x="692" y="93" text-anchor="middle" fill="#ec4899" font-family="Arial,sans-serif" font-size="12" font-weight="bold">5. Save / Merge</text>
-  <text x="692" y="113" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">save_pretrained()</text>
-  <text x="692" y="132" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="9">merge_and_unload()</text>
+  <!-- Step 2: Configure -->
+  <rect x="215" y="80" width="150" height="120" rx="10" fill="white" stroke="#8B5CF6" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="215" y="80" width="150" height="30" rx="10" fill="#8B5CF6"/>
+  <rect x="215" y="100" width="150" height="10" fill="#8B5CF6"/>
+  <circle cx="240" cy="95" r="10" fill="#7C3AED"/>
+  <text x="240" y="99" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">2</text>
+  <text x="305" y="99" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">Configure</text>
+  <text x="290" y="128" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">LoraConfig(</text>
+  <text x="290" y="143" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">  r=16, alpha=32,</text>
+  <text x="290" y="158" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">  target_modules,</text>
+  <text x="290" y="173" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">  dropout=0.05)</text>
 
-  <!-- Outputs -->
-  <rect x="80" y="178" width="160" height="38" rx="6" fill="#ef4444" opacity="0.12" stroke="#ef4444" stroke-width="1"/>
-  <text x="160" y="202" text-anchor="middle" fill="#ef4444" font-family="Arial,sans-serif" font-size="11">Base: ~14 GB</text>
-  <rect x="320" y="178" width="160" height="38" rx="6" fill="#10b981" opacity="0.12" stroke="#10b981" stroke-width="1"/>
-  <text x="400" y="202" text-anchor="middle" fill="#10b981" font-family="Arial,sans-serif" font-size="11">Adapter: ~10 MB</text>
-  <rect x="560" y="178" width="160" height="38" rx="6" fill="#8b5cf6" opacity="0.12" stroke="#8b5cf6" stroke-width="1"/>
-  <text x="640" y="202" text-anchor="middle" fill="#8b5cf6" font-family="Arial,sans-serif" font-size="11">Merged: ~14 GB</text>
+  <!-- Arrow 2-3 -->
+  <line x1="365" y1="140" x2="395" y2="140" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
 
-  <text x="400" y="248" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="10">Only adapter weights are saved &#8594; share base model, swap tiny adapters per task</text>
+  <!-- Step 3: Inject -->
+  <rect x="400" y="80" width="150" height="120" rx="10" fill="white" stroke="#10B981" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="400" y="80" width="150" height="30" rx="10" fill="#10B981"/>
+  <rect x="400" y="100" width="150" height="10" fill="#10B981"/>
+  <circle cx="425" cy="95" r="10" fill="#059669"/>
+  <text x="425" y="99" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">3</text>
+  <text x="490" y="99" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">Inject</text>
+  <text x="475" y="128" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">get_peft_model(</text>
+  <text x="475" y="143" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">  model, config)</text>
+  <text x="475" y="168" text-anchor="middle" font-size="10" fill="#059669">Freezes base</text>
+  <text x="475" y="182" text-anchor="middle" font-size="10" fill="#059669">Injects A, B</text>
+
+  <!-- Arrow 3-4 -->
+  <line x1="550" y1="140" x2="580" y2="140" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Step 4: Train -->
+  <rect x="585" y="80" width="150" height="120" rx="10" fill="white" stroke="#F59E0B" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="585" y="80" width="150" height="30" rx="10" fill="#F59E0B"/>
+  <rect x="585" y="100" width="150" height="10" fill="#F59E0B"/>
+  <circle cx="610" cy="95" r="10" fill="#D97706"/>
+  <text x="610" y="99" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">4</text>
+  <text x="675" y="99" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">Train</text>
+  <text x="660" y="128" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">SFTTrainer /</text>
+  <text x="660" y="143" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">Trainer.train()</text>
+  <text x="660" y="168" text-anchor="middle" font-size="10" fill="#B45309">Only A, B get</text>
+  <text x="660" y="182" text-anchor="middle" font-size="10" fill="#B45309">gradients</text>
+
+  <!-- Arrow 4-5 -->
+  <line x1="735" y1="140" x2="765" y2="140" stroke="#64748B" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Step 5: Save/Merge -->
+  <rect x="770" y="80" width="140" height="120" rx="10" fill="white" stroke="#EF4444" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="770" y="80" width="140" height="30" rx="10" fill="#EF4444"/>
+  <rect x="770" y="100" width="140" height="10" fill="#EF4444"/>
+  <circle cx="795" cy="95" r="10" fill="#DC2626"/>
+  <text x="795" y="99" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">5</text>
+  <text x="855" y="99" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">Save</text>
+  <text x="840" y="128" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">save_pretrained()</text>
+  <text x="840" y="148" text-anchor="middle" font-size="10" fill="#475569">or</text>
+  <text x="840" y="165" text-anchor="middle" font-size="10" fill="#475569" font-family="'Cascadia Code', monospace">merge_and_unload()</text>
+
+  <!-- Output section -->
+  <rect x="30" y="240" width="860" height="85" rx="10" fill="white" stroke="#E2E8F0" stroke-width="1" filter="url(#shadow)"/>
+  <text x="460" y="264" text-anchor="middle" font-size="14" font-weight="700" fill="#1E293B">Output Sizes</text>
+  <line x1="60" y1="274" x2="860" y2="274" stroke="#E2E8F0" stroke-width="0.5"/>
+
+  <!-- Base model size -->
+  <rect x="70" y="285" width="220" height="28" rx="6" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1"/>
+  <text x="180" y="304" text-anchor="middle" font-size="12" fill="#1E40AF" font-weight="600">Base Model: ~14 GB</text>
+
+  <!-- Adapter size -->
+  <rect x="340" y="285" width="220" height="28" rx="6" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1"/>
+  <text x="450" y="304" text-anchor="middle" font-size="12" fill="#92400E" font-weight="600">Adapter Only: ~10 MB</text>
+
+  <!-- Merged size -->
+  <rect x="610" y="285" width="220" height="28" rx="6" fill="#F0FDF4" stroke="#10B981" stroke-width="1"/>
+  <text x="720" y="304" text-anchor="middle" font-size="12" fill="#065F46" font-weight="600">Merged Model: ~14 GB</text>
+
+  <!-- Mapping table -->
+  <rect x="30" y="345" width="860" height="85" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="460" y="368" text-anchor="middle" font-size="13" font-weight="700" fill="#1E293B">Our Code ↔ PEFT Mapping</text>
+  <line x1="60" y1="378" x2="860" y2="378" stroke="#E2E8F0" stroke-width="0.5"/>
+
+  <text x="80" y="396" font-size="11" fill="#8B5CF6" font-family="'Cascadia Code', monospace">LoRALinear</text>
+  <text x="200" y="396" font-size="10" fill="#94A3B8">→</text>
+  <text x="215" y="396" font-size="11" fill="#475569">peft.tuners.lora.layer.Linear</text>
+
+  <text x="470" y="396" font-size="11" fill="#8B5CF6" font-family="'Cascadia Code', monospace">LoraModel._apply_lora()</text>
+  <text x="650" y="396" font-size="10" fill="#94A3B8">→</text>
+  <text x="665" y="396" font-size="11" fill="#475569">get_peft_model()</text>
+
+  <text x="80" y="416" font-size="11" fill="#8B5CF6" font-family="'Cascadia Code', monospace">_merge_weights()</text>
+  <text x="215" y="416" font-size="10" fill="#94A3B8">→</text>
+  <text x="230" y="416" font-size="11" fill="#475569">merge_and_unload()</text>
+
+  <text x="470" y="416" font-size="11" fill="#8B5CF6" font-family="'Cascadia Code', monospace">save_model(merge=False)</text>
+  <text x="665" y="416" font-size="10" fill="#94A3B8">→</text>
+  <text x="680" y="416" font-size="11" fill="#475569">save_pretrained()</text>
 </svg>
